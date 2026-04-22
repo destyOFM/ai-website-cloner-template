@@ -1,24 +1,38 @@
 <header class="site-header">
-  <!-- Desktop left: Search + Shop + Brands -->
+  <!-- Desktop left: Search + first half of nav links -->
   <div class="site-header__left">
     <button type="button" class="nav-icon-btn" aria-label="Search">
       {%- render 'icon-search' -%}
     </button>
-    <a href="/collections/all" class="nav-link">SHOP</a>
-    <a href="/pages/brands" class="nav-link">BRANDS</a>
+    {%- assign left_links = section.settings.menu.links -%}
+    {%- assign mid = left_links.size | divided_by: 2 -%}
+    {%- for link in left_links limit: mid -%}
+      <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
+    {%- endfor -%}
   </div>
 
   <!-- Centre: Logo -->
   <div class="site-header__center">
     <a href="/" class="site-header__logo" aria-label="{{ shop.name }}">
-      {%- render 'icon-logo' -%}
+      {%- if section.settings.logo != blank -%}
+        <img
+          src="{{ section.settings.logo | image_url: width: 260 }}"
+          alt="{{ shop.name }}"
+          width="130"
+          height="60"
+          loading="eager"
+        >
+      {%- else -%}
+        {%- render 'icon-logo' -%}
+      {%- endif -%}
     </a>
   </div>
 
-  <!-- Desktop right: Dialogue + Stores + icons -->
+  <!-- Desktop right: second half of nav links + icons -->
   <div class="site-header__right">
-    <a href="/pages/dialogue" class="nav-link">DIALOGUE</a>
-    <a href="/pages/stores" class="nav-link">STORES</a>
+    {%- for link in left_links offset: mid -%}
+      <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
+    {%- endfor -%}
     <div class="site-header__icons">
       <button type="button" class="nav-icon-btn" aria-label="Search">
         {%- render 'icon-search' -%}
@@ -55,6 +69,20 @@
 {% schema %}
 {
   "name": "Header",
-  "settings": []
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "Leave blank to use the default SVG logo."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu",
+      "info": "Links are split evenly: first half on the left, second half on the right of the logo."
+    }
+  ]
 }
 {% endschema %}
