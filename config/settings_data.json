@@ -12,6 +12,7 @@
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",
+        "custom_css": [],
         "settings": {
           "top_message": "Free shipping to Canada on all orders above CA$980.00",
           "bottom_message": "FREE SHIPPING ON ORDERS $500+ (US)"
@@ -19,6 +20,10 @@
       },
       "header": {
         "type": "header",
+        "custom_css": [
+          "/* Agrandir le logo sur Ordinateur */.site-header__logo-img {height: auto !important; width: 150px !important; /* Change 300 par 400 si c'est encore trop petit */ max-width: none !important;}",
+          "/* Ajuster pour le téléphone */@media screen and (max-width: 768px) {.site-header__logo-img {width: 150px !important; /* Taille sur mobile */ }}"
+        ],
         "settings": {
           "logo": "shopify://shop_images/TRUTH._1.png",
           "menu": "main-menu"
