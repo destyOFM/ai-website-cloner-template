@@ -1,4 +1,4 @@
-<header class="site-header">
+<header class="site-header" id="site-header">
   <!-- Desktop left: Search + first half of nav links -->
   <div class="site-header__left">
     <button type="button" class="nav-icon-btn" aria-label="Search">
@@ -16,7 +16,7 @@
     <a href="/" class="site-header__logo-link" aria-label="{{ shop.name }}">
       {%- if section.settings.logo != blank -%}
         <img
-          src="{{ section.settings.logo | image_url: width: 400 }}"
+          src="{{ section.settings.logo | image_url: width: 480 }}"
           alt="{{ shop.name }}"
           class="site-header__logo-img"
           loading="eager"
@@ -26,15 +26,15 @@
           src="{{ 'logo.svg' | asset_url }}"
           alt="{{ shop.name }}"
           class="site-header__logo-img"
-          width="54"
-          height="60"
+          width="65"
+          height="72"
           loading="eager"
         >
       {%- endif -%}
     </a>
   </div>
 
-  <!-- Desktop right: second half of nav links + icons -->
+  <!-- Desktop right: second half of nav links + icons (no wishlist) -->
   <div class="site-header__right">
     {%- for link in all_links offset: mid -%}
       <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
@@ -46,10 +46,7 @@
       <a href="{{ routes.account_url }}" class="nav-icon-btn" aria-label="Account">
         {%- render 'icon-account' -%}
       </a>
-      <button type="button" class="nav-icon-btn" aria-label="Wishlist">
-        {%- render 'icon-wishlist' -%}
-      </button>
-      <a href="{{ routes.cart_url }}" class="cart-icon-wrap" aria-label="Cart ({{ cart.item_count }} items)">
+      <a href="{{ routes.cart_url }}" class="nav-icon-btn cart-icon-wrap" aria-label="Cart ({{ cart.item_count }} items)">
         {%- render 'icon-cart' -%}
         <span class="cart-count" {% if cart.item_count == 0 %}style="display:none"{% endif %}>
           {{ cart.item_count }}
@@ -60,7 +57,7 @@
 
   <!-- Mobile: Cart + hamburger -->
   <div class="site-header__mobile">
-    <a href="{{ routes.cart_url }}" class="cart-icon-wrap" aria-label="Cart">
+    <a href="{{ routes.cart_url }}" class="nav-icon-btn cart-icon-wrap" aria-label="Cart">
       {%- render 'icon-cart' -%}
       <span class="cart-count" {% if cart.item_count == 0 %}style="display:none"{% endif %}>
         {{ cart.item_count }}
@@ -73,19 +70,201 @@
 </header>
 
 <style>
+  /* ── Layout ── */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 105px;
+    padding: 0 32px;
+    will-change: transform;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Tuck away on scroll down; reveal on scroll up */
+  .site-header--hidden {
+    transform: translateY(-100%);
+  }
+
+  .site-header--scrolled {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  /* Offset page content so it doesn't sit under the fixed header */
+  body {
+    padding-top: 105px;
+  }
+
+  /* ── Columns ── */
+  .site-header__left,
+  .site-header__right {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+
+  .site-header__right {
+    justify-content: flex-end;
+  }
+
+  .site-header__center {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+  }
+
+  /* ── Logo ── */
   .site-header__logo-link {
     display: flex;
     align-items: center;
     justify-content: center;
   }
+
   .site-header__logo-img {
     display: block;
-    height: 60px;
+    height: 72px;   /* 60px × 1.2 = 72px */
     width: auto;
-    /* SVG renders as pure vector — never blurry at any display density */
-    image-rendering: auto;
+    /* Force crisp vector rendering on all displays including Retina */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+
+  /* ── Nav links ── */
+  .nav-link {
+    font-family: var(--font-courier, "Courier Prime", monospace);
+    font-size: 13px;
+    color: #171717;
+    text-decoration: none;
+    padding: 0 10px;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+  }
+
+  .nav-link:hover {
+    opacity: 0.55;
+  }
+
+  /* ── Icon buttons ── */
+  .nav-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    color: #171717;
+    transition: opacity 0.2s ease;
+  }
+
+  .nav-icon-btn:hover {
+    opacity: 0.55;
+  }
+
+  .site-header__icons {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: 8px;
+  }
+
+  /* ── Cart badge ── */
+  .cart-icon-wrap {
+    position: relative;
+  }
+
+  .cart-count {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #171717;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Mobile ── */
+  .site-header__mobile {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .hamburger-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #171717;
+    cursor: pointer;
+    padding: 6px;
+    font-family: var(--font-courier, monospace);
+  }
+
+  @media (max-width: 768px) {
+    .site-header__left,
+    .site-header__right {
+      display: none;
+    }
+    .site-header__mobile {
+      display: flex;
+    }
+    .site-header__center {
+      margin-right: auto;
+    }
   }
 </style>
+
+<script>
+  (function () {
+    var header = document.getElementById('site-header');
+    var lastY = 0;
+    var ticking = false;
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(function () {
+          var currentY = window.scrollY;
+
+          if (currentY <= 0) {
+            /* At the very top — fully visible, no shadow */
+            header.classList.remove('site-header--hidden', 'site-header--scrolled');
+          } else if (currentY > lastY) {
+            /* Scrolling down — hide header */
+            header.classList.add('site-header--hidden');
+            header.classList.add('site-header--scrolled');
+          } else {
+            /* Scrolling up — reveal header with subtle shadow */
+            header.classList.remove('site-header--hidden');
+            header.classList.add('site-header--scrolled');
+          }
+
+          lastY = currentY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+</script>
 
 {% schema %}
 {
