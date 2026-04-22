@@ -10,7 +10,7 @@ export function AnnouncementBar() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "36px",
+        height: "48px",
         padding: "0 16px",
       }}
       className="announcement-bar-responsive"
@@ -20,7 +20,7 @@ export function AnnouncementBar() {
       </span>
       <style>{`
         @media (min-width: 768px) {
-          .announcement-bar-responsive { height: 30px !important; padding: 0 40px !important; }
+          .announcement-bar-responsive { height: 42px !important; padding: 0 40px !important; }
         }
       `}</style>
     </div>

@@ -324,19 +324,25 @@ export function Header() {
 
   return (
     <>
+      {/*
+        Mobile:  display:grid  3×(1fr) — col1=left icons, col2=logo, col3=right icons
+        Desktop: display:flex  — left | center | right
+      */}
       <header
         className={cn(
-          "w-full bg-white",
-          "h-16 md:h-[105px]",
-          "flex items-center",
-          "px-2 md:px-8",
-          "border-t border-[#e8e8e8]"
+          "w-full bg-white h-16 md:h-[105px]",
+          /* mobile: 3-equal-column grid */
+          "grid grid-cols-3 md:grid-cols-none items-center",
+          /* desktop: flex */
+          "md:flex",
+          "px-1 md:px-8"
         )}
       >
-        {/* ── MOBILE: Burger + Search | Logo | Account + Cart ── */}
-
-        {/* Left col */}
-        <div className="flex md:hidden items-center flex-1 justify-start">
+        {/* ── MOBILE col 1: Burger + Search (far left) ── */}
+        <div
+          className="flex md:hidden items-center justify-start"
+          style={{ gridColumn: 1 }}
+        >
           <IconBtn label="Open menu" onClick={() => setDrawerOpen(true)}>
             <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
               <line x1="0" y1="1"  x2="22" y2="1"  stroke="#171717" strokeWidth="1.5" strokeLinecap="round"/>
@@ -349,8 +355,11 @@ export function Header() {
           </IconBtn>
         </div>
 
-        {/* Center col — Logo */}
-        <div className="flex items-center justify-center flex-1 md:flex-none md:w-[160px]">
+        {/* ── LOGO — mobile col 2 (center), desktop fixed width ── */}
+        <div
+          className="flex items-center justify-center md:flex-none md:w-[160px]"
+          style={{ gridColumn: 2 } as React.CSSProperties}
+        >
           <a href="/" aria-label="Home" className="flex items-center">
             <span className="hidden md:block">
               <GalleryDeptLogo width={156} height={72} fill="#171717" />
@@ -361,8 +370,11 @@ export function Header() {
           </a>
         </div>
 
-        {/* Right col */}
-        <div className="flex md:hidden items-center flex-1 justify-end">
+        {/* ── MOBILE col 3: Account + Cart (far right) ── */}
+        <div
+          className="flex md:hidden items-center justify-end"
+          style={{ gridColumn: 3 }}
+        >
           <IconBtn label="Account" href="/account">
             <AccountIcon width={20} height={20} color="#171717" />
           </IconBtn>
@@ -371,9 +383,7 @@ export function Header() {
           </IconBtn>
         </div>
 
-        {/* ── DESKTOP: Left nav | Logo | Right nav ── */}
-
-        {/* Desktop left */}
+        {/* ── DESKTOP left nav (hidden on mobile) ── */}
         <div className="hidden md:flex items-center flex-1">
           <IconBtn label="Search">
             <SearchIcon width={20} height={20} color="#171717" />
@@ -383,7 +393,7 @@ export function Header() {
           ))}
         </div>
 
-        {/* Desktop right */}
+        {/* ── DESKTOP right nav (hidden on mobile) ── */}
         <div className="hidden md:flex items-center justify-end flex-1">
           {RIGHT_NAV.map((item) => (
             <DesktopNavItem key={item.label} item={item} />

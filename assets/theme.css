@@ -80,13 +80,13 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
+  height: 48px;
   padding: 0 16px;
   text-align: center;
 }
 
 @media (min-width: 768px) {
-  .announcement-bar { height: 30px; padding: 0 40px; }
+  .announcement-bar { height: 42px; padding: 0 40px; }
 }
 
 .announcement-bar__text {
@@ -100,21 +100,31 @@ img {
    Header
    ============================================================ */
 
+/* ── Mobile: 3-column grid (mathematically centered logo) ── */
 .gd-header {
   width: 100%;
   background: #fff;
   height: 64px;
-  padding: 0 8px;
-  display: flex;
-  align-items: center;
+  padding: 0 4px;
   border-top: 1px solid #e8e8e8;
+
+  /* Grid: equal thirds — logo always in the exact center */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
 }
 
+/* ── Desktop: switch to flex ── */
 @media (min-width: 768px) {
-  .gd-header { height: 105px; padding: 0 32px; }
+  .gd-header {
+    display: flex;
+    height: 105px;
+    padding: 0 32px;
+    border-top: none;
+  }
 }
 
-/* ── Columns ── */
+/* ── Desktop columns (hidden on mobile) ── */
 .gd-header__col {
   display: none;
   align-items: center;
@@ -124,29 +134,45 @@ img {
 .gd-header__col--left  { justify-content: flex-start; }
 .gd-header__col--right { justify-content: flex-end; }
 
+@media (min-width: 768px) {
+  .gd-header__col { display: flex; }
+}
+
+/* ── Logo column: always visible, pinned to grid col 2 on mobile ── */
 .gd-header__col--center {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  flex-shrink: 0;
+  /* Mobile grid: force into the middle column */
+  grid-column: 2;
+  justify-self: center;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
-  .gd-header__col         { display: flex; }
-  .gd-header__col--center { flex: none; width: 160px; }
+  .gd-header__col--center {
+    /* Desktop flex: fixed width, no grid */
+    flex: none;
+    width: 160px;
+    grid-column: unset;
+    justify-self: unset;
+  }
 }
 
-/* Mobile columns */
-.gd-header__mobile-left,
+/* ── Mobile icon columns ── */
+.gd-header__mobile-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  grid-column: 1;   /* explicit: always far left */
+}
+
 .gd-header__mobile-right {
   display: flex;
   align-items: center;
-  flex: 1;
+  justify-content: flex-end;
+  grid-column: 3;   /* explicit: always far right */
 }
-
-.gd-header__mobile-left  { justify-content: flex-start; }
-.gd-header__mobile-right { justify-content: flex-end; }
 
 @media (min-width: 768px) {
   .gd-header__mobile-left,
