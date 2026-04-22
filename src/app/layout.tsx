@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Courier_Prime, Fjalla_One } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const courierPrime = Courier_Prime({
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
   subsets: ["latin"],
+  variable: "--font-courier",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fjallaOne = Fjalla_One({
+  weight: "400",
   subsets: ["latin"],
+  variable: "--font-fjalla",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Website Clone",
-  description: "Pixel-perfect website clone",
+  title: "Gallery Dept. Official Site | Disruptive Art & Classic Craftsmanship – GALLERY DEPT.",
+  description: "Gallery Dept. — Official site for disruptive art and classic craftsmanship.",
 };
 
 export default function RootLayout({
@@ -25,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${courierPrime.variable} ${fjallaOne.variable}`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

@@ -1,0 +1,60 @@
+<header class="site-header">
+  <!-- Desktop left: Search + Shop + Brands -->
+  <div class="site-header__left">
+    <button type="button" class="nav-icon-btn" aria-label="Search">
+      {%- render 'icon-search' -%}
+    </button>
+    <a href="/collections/all" class="nav-link">SHOP</a>
+    <a href="/pages/brands" class="nav-link">BRANDS</a>
+  </div>
+
+  <!-- Centre: Logo -->
+  <div class="site-header__center">
+    <a href="/" class="site-header__logo" aria-label="{{ shop.name }}">
+      {%- render 'icon-logo' -%}
+    </a>
+  </div>
+
+  <!-- Desktop right: Dialogue + Stores + icons -->
+  <div class="site-header__right">
+    <a href="/pages/dialogue" class="nav-link">DIALOGUE</a>
+    <a href="/pages/stores" class="nav-link">STORES</a>
+    <div class="site-header__icons">
+      <button type="button" class="nav-icon-btn" aria-label="Search">
+        {%- render 'icon-search' -%}
+      </button>
+      <a href="{{ routes.account_url }}" class="nav-icon-btn" aria-label="Account">
+        {%- render 'icon-account' -%}
+      </a>
+      <button type="button" class="nav-icon-btn" aria-label="Wishlist">
+        {%- render 'icon-wishlist' -%}
+      </button>
+      <a href="{{ routes.cart_url }}" class="cart-icon-wrap" aria-label="Cart ({{ cart.item_count }} items)">
+        {%- render 'icon-cart' -%}
+        <span class="cart-count" {% if cart.item_count == 0 %}style="display:none"{% endif %}>
+          {{ cart.item_count }}
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile: Cart + hamburger -->
+  <div class="site-header__mobile">
+    <a href="{{ routes.cart_url }}" class="cart-icon-wrap" aria-label="Cart">
+      {%- render 'icon-cart' -%}
+      <span class="cart-count" {% if cart.item_count == 0 %}style="display:none"{% endif %}>
+        {{ cart.item_count }}
+      </span>
+    </a>
+    <button type="button" class="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+      ☰
+    </button>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,50 @@
+{%- assign col = collections[section.settings.collection] -%}
+
+<section class="product-grid-section">
+  <div class="product-grid">
+    {%- if col != blank -%}
+      {%- for product in col.products limit: section.settings.products_limit -%}
+        {%- render 'product-card', product: product -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..section.settings.products_limit) -%}
+        <div class="product-card">
+          <div class="product-card__image-wrap">
+            <div class="product-card__placeholder"></div>
+          </div>
+          <div class="product-card__meta">
+            <p class="product-card__title">PRODUCT TITLE</p>
+            <p class="product-card__price">$0.00</p>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Max products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

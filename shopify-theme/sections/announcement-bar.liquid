@@ -1,0 +1,39 @@
+<div class="announcement-bar">
+  {%- if section.settings.top_message != blank -%}
+    <div class="announcement-bar__top">
+      <span>{{ section.settings.top_message }}</span>
+    </div>
+  {%- endif -%}
+
+  <div class="announcement-bar__bottom">
+    <div class="announcement-bar__locale">
+      <span>{{ localization.country.name | upcase }} ({{ cart.currency.iso_code }}$)</span>
+      <span style="line-height:1;">&#9662;</span>
+    </div>
+    {%- if section.settings.bottom_message != blank -%}
+      <div class="announcement-bar__message">
+        <span>{{ section.settings.bottom_message }}</span>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "top_message",
+      "label": "Top bar message",
+      "default": "Free shipping to Canada on all orders above CA$980.00"
+    },
+    {
+      "type": "text",
+      "id": "bottom_message",
+      "label": "Bottom bar message",
+      "default": "FREE SHIPPING ON ORDERS $500+ (US)"
+    }
+  ]
+}
+{% endschema %}

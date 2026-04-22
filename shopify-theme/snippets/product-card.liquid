@@ -1,0 +1,48 @@
+{%- comment -%}
+  Usage: {% render 'product-card', product: product %}
+{%- endcomment -%}
+
+<div class="product-card">
+  <a href="{{ product.url }}" class="product-card__link">
+    <div class="product-card__image-wrap">
+      {%- if product.featured_image -%}
+        <img
+          src="{{ product.featured_image | img_url: '600x780' }}"
+          srcset="
+            {{ product.featured_image | img_url: '400x520' }} 400w,
+            {{ product.featured_image | img_url: '600x780' }} 600w,
+            {{ product.featured_image | img_url: '800x1040' }} 800w
+          "
+          sizes="(min-width: 768px) 33vw, 50vw"
+          alt="{{ product.featured_image.alt | escape | default: product.title }}"
+          class="product-card__image product-card__image--primary"
+          loading="lazy"
+          width="600"
+          height="780"
+        >
+        {%- if product.images[1] -%}
+          <img
+            src="{{ product.images[1] | img_url: '600x780' }}"
+            alt="{{ product.images[1].alt | escape | default: product.title }}"
+            class="product-card__image product-card__image--secondary"
+            loading="lazy"
+            width="600"
+            height="780"
+          >
+        {%- endif -%}
+      {%- else -%}
+        <div class="product-card__placeholder"></div>
+      {%- endif -%}
+    </div>
+    <div class="product-card__meta">
+      <p class="product-card__title">{{ product.title | upcase }}</p>
+      <p class="product-card__price">
+        {%- if product.price_varies -%}
+          From {{ product.price_min | money }}
+        {%- else -%}
+          {{ product.price | money }}
+        {%- endif -%}
+      </p>
+    </div>
+  </a>
+</div>

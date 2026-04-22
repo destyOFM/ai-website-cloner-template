@@ -1,0 +1,21 @@
+<div class="collection-page__header">
+  <h1 class="collection-page__title">{{ collection.title | upcase }}</h1>
+  <p class="collection-page__count">{{ collection.products_count }} products</p>
+</div>
+
+<section class="product-grid-section" style="padding-top: 0;">
+  <div class="product-grid">
+    {%- for product in collection.products -%}
+      {%- render 'product-card', product: product -%}
+    {%- else -%}
+      <p style="font-family:var(--font-body);font-size:14px;padding:40px;">No products found in this collection.</p>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection",
+  "settings": []
+}
+{% endschema %}

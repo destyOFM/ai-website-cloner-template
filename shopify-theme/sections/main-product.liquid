@@ -1,0 +1,95 @@
+<div class="product-page">
+  <!-- Gallery -->
+  <div class="product-page__gallery">
+    {%- if product.featured_image -%}
+      <img
+        id="product-main-image"
+        src="{{ product.featured_image | img_url: '900x' }}"
+        alt="{{ product.featured_image.alt | escape }}"
+        class="product-page__image"
+        loading="eager"
+      >
+      {%- if product.images.size > 1 -%}
+        <div class="product-page__thumbnails">
+          {%- for image in product.images -%}
+            <img
+              src="{{ image | img_url: '200x' }}"
+              alt="{{ image.alt | escape }}"
+              class="product-page__thumbnail {% if forloop.first %}is-active{% endif %}"
+              data-full="{{ image | img_url: '900x' }}"
+              loading="lazy"
+            >
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+
+  <!-- Info -->
+  <div class="product-page__info">
+    <h1 class="product-page__title">{{ product.title | upcase }}</h1>
+    <p class="product-page__price" id="product-price">
+      {%- if product.price_varies -%}
+        From {{ product.price_min | money }}
+      {%- else -%}
+        {{ product.price | money }}
+      {%- endif -%}
+    </p>
+
+    {%- form 'product', product, id: 'product-form' -%}
+      <div class="product-page__form">
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            <div>
+              <label class="product-page__option-label" for="option-{{ option.position }}">
+                {{ option.name }}
+              </label>
+              <select
+                id="option-{{ option.position }}"
+                name="options[{{ option.name | escape }}]"
+                class="product-page__select"
+              >
+                {%- for value in option.values -%}
+                  <option
+                    value="{{ value | escape }}"
+                    {% if option.selected_value == value %}selected{% endif %}
+                  >
+                    {{ value }}
+                  </option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- endfor -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        {%- else -%}
+          <input type="hidden" name="id" value="{{ product.variants[0].id }}">
+        {%- endunless -%}
+
+        <button
+          type="submit"
+          class="product-page__add-btn"
+          {% unless product.available %}disabled{% endunless %}
+        >
+          {%- if product.available -%}ADD TO CART{%- else -%}SOLD OUT{%- endif -%}
+        </button>
+      </div>
+    {%- endform -%}
+
+    {%- if product.description != blank -%}
+      <div class="product-page__description">
+        {{ product.description }}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  window.__variantData = {{ product.variants | json }};
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": []
+}
+{% endschema %}

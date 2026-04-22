@@ -1,0 +1,38 @@
+<div class="account-page">
+  <h1 class="account-page__title">Login</h1>
+
+  {%- form 'customer_login' -%}
+    {%- if form.errors -%}
+      <div class="account-form__errors">
+        {{ form.errors | default_errors }}
+      </div>
+    {%- endif -%}
+    <div class="account-form">
+      <div>
+        <label class="account-form__label" for="login-email">Email</label>
+        <input
+          type="email"
+          name="customer[email]"
+          id="login-email"
+          class="account-form__input"
+          autocomplete="email"
+          required
+        >
+      </div>
+      <div>
+        <label class="account-form__label" for="login-password">Password</label>
+        <input
+          type="password"
+          name="customer[password]"
+          id="login-password"
+          class="account-form__input"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+      <button type="submit" class="account-form__btn">Sign In</button>
+      <a href="/account/register" class="account-form__link">Create account</a>
+      <a href="/account/forgot_password" class="account-form__link">Forgot password?</a>
+    </div>
+  {%- endform -%}
+</div>

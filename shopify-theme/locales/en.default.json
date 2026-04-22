@@ -1,0 +1,21 @@
+{
+  "general": {
+    "404": {
+      "title": "Page not found",
+      "subtext": "The page you were looking for does not exist.",
+      "link": "Return home"
+    },
+    "password_page": {
+      "login_form_heading": "Enter store password",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your password",
+      "login_form_submit": "Enter",
+      "powered_by_shopify_html": "This shop will be powered by {{ shopify }}"
+    }
+  },
+  "onboarding": {
+    "product_title": "Example Product Title",
+    "product_vendor": "Vendor name",
+    "collection_title": "Example Collection"
+  }
+}
