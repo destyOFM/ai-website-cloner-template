@@ -1,21 +1,13 @@
 <div class="announcement-bar">
   {%- if section.settings.top_message != blank -%}
-    <div class="announcement-bar__top">
-      <span>{{ section.settings.top_message }}</span>
-    </div>
+    <div class="announcement-bar__top">{{ section.settings.top_message }}</div>
   {%- endif -%}
 
-  <div class="announcement-bar__bottom">
-    <div class="announcement-bar__locale">
-      <span>{{ localization.country.name | upcase }} ({{ cart.currency.iso_code }}$)</span>
-      <span style="line-height:1;">&#9662;</span>
+  {%- if section.settings.bottom_message != blank -%}
+    <div class="announcement-bar__bottom">
+      <span class="announcement-bar__message">{{ section.settings.bottom_message }}</span>
     </div>
-    {%- if section.settings.bottom_message != blank -%}
-      <div class="announcement-bar__message">
-        <span>{{ section.settings.bottom_message }}</span>
-      </div>
-    {%- endif -%}
-  </div>
+  {%- endif -%}
 </div>
 
 {% schema %}
@@ -25,13 +17,13 @@
     {
       "type": "text",
       "id": "top_message",
-      "label": "Top bar message",
+      "label": "Top bar message (desktop only)",
       "default": "Free shipping to Canada on all orders above CA$980.00"
     },
     {
       "type": "text",
       "id": "bottom_message",
-      "label": "Bottom bar message",
+      "label": "Main bar message",
       "default": "FREE SHIPPING ON ORDERS $500+ (US)"
     }
   ]

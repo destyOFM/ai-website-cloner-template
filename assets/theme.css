@@ -52,6 +52,53 @@ img {
 }
 
 /* ============================================================
+   Announcement Bar
+   ============================================================ */
+
+.announcement-bar {
+  width: 100%;
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--gd-black);
+}
+
+.announcement-bar__top {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  padding: 0 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 768px) {
+  .announcement-bar__top { display: flex; }
+}
+
+.announcement-bar__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  .announcement-bar__bottom { height: 30px; padding: 0 40px; }
+}
+
+.announcement-bar__message {
+  font-size: 13px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
    Sticky banner wrapper (announcement + header)
    ============================================================ */
 
