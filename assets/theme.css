@@ -71,22 +71,16 @@ img {
    Announcement Bar
    ============================================================ */
 
+/* Structure only — colors/sizes come from scoped <style> in each section */
 .announcement-bar {
   width: 100%;
-  background: #fff;
   font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--gd-black);
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 48px;
+  min-height: 48px;       /* overridden by section settings */
   padding: 0 16px;
   text-align: center;
-}
-
-@media (min-width: 768px) {
-  .announcement-bar { height: 42px; padding: 0 40px; }
 }
 
 .announcement-bar__text {
@@ -100,27 +94,22 @@ img {
    Header
    ============================================================ */
 
-/* ── Mobile: 3-column grid (mathematically centered logo) ── */
+/* ── Mobile: 3-column grid (logo mathematically centered) ── */
 .gd-header {
   width: 100%;
-  background: #fff;
-  height: 64px;
+  min-height: 64px;       /* overridden by section settings */
   padding: 0 4px;
-  border-top: 1px solid #e8e8e8;
-
-  /* Grid: equal thirds — logo always in the exact center */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
 }
 
-/* ── Desktop: switch to flex ── */
+/* ── Desktop: flex layout ── */
 @media (min-width: 768px) {
   .gd-header {
     display: flex;
-    height: 105px;
+    min-height: 105px;    /* overridden by section settings */
     padding: 0 32px;
-    border-top: none;
   }
 }
 

@@ -1,9 +1,42 @@
+{% comment %} Scoped styles — all visual values come from Theme Editor settings {% endcomment %}
+<style>
+  #shopify-section-{{ section.id }} .gd-header {
+    background-color: {{ section.settings.header_bg }};
+    height: {{ section.settings.mobile_height }}px;
+  }
+  #shopify-section-{{ section.id }} .gd-nav-link,
+  #shopify-section-{{ section.id }} .gd-icon-btn,
+  #shopify-section-{{ section.id }} .gd-hamburger svg line,
+  #shopify-section-{{ section.id }} .gd-mega-link {
+    color: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ section.id }} .gd-hamburger svg line,
+  #shopify-section-{{ section.id }} .gd-drawer__close svg line {
+    stroke: {{ section.settings.text_color }};
+  }
+  #shopify-section-{{ section.id }} .gd-logo-img {
+    height: {{ section.settings.logo_height_mobile }}px;
+  }
+  #shopify-section-{{ section.id }} .gd-cart-count {
+    background-color: {{ section.settings.text_color }};
+    color: {{ section.settings.header_bg }};
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .gd-header {
+      height: {{ section.settings.desktop_height }}px;
+    }
+    #shopify-section-{{ section.id }} .gd-logo-img {
+      height: {{ section.settings.logo_height_desktop }}px;
+    }
+  }
+</style>
+
 <header class="gd-header" role="banner">
 
   {% assign all_links = section.settings.menu.links %}
   {% assign mid        = all_links.size | divided_by: 2 %}
 
-  {% comment %} ── DESKTOP LEFT: Search + first half of nav ── {% endcomment %}
+  {% comment %} ── DESKTOP LEFT ── {% endcomment %}
   <div class="gd-header__col gd-header__col--left">
     <button type="button" class="gd-icon-btn" aria-label="Search">
       {%- render 'icon-search' -%}
@@ -34,12 +67,12 @@
     {%- endfor -%}
   </div>
 
-  {% comment %} ── LOGO ── {% endcomment %}
+  {% comment %} ── LOGO (grid col 2 on mobile, fixed center on desktop) ── {% endcomment %}
   <div class="gd-header__col gd-header__col--center">
     <a href="/" class="gd-logo-link" aria-label="{{ shop.name }}">
       {%- if section.settings.logo != blank -%}
         <img
-          src="{{ section.settings.logo | image_url: width: 480 }}"
+          src="{{ section.settings.logo | image_url: width: 600 }}"
           alt="{{ shop.name }}"
           class="gd-logo-img"
           loading="eager"
@@ -49,15 +82,13 @@
           src="{{ 'logo.svg' | asset_url }}"
           alt="{{ shop.name }}"
           class="gd-logo-img gd-logo-img--svg"
-          width="65"
-          height="72"
           loading="eager"
         >
       {%- endif -%}
     </a>
   </div>
 
-  {% comment %} ── DESKTOP RIGHT: second half of nav + icons ── {% endcomment %}
+  {% comment %} ── DESKTOP RIGHT ── {% endcomment %}
   <div class="gd-header__col gd-header__col--right">
     {%- for link in all_links offset: mid -%}
       {%- if link.links.size > 0 -%}
@@ -97,19 +128,13 @@
     </div>
   </div>
 
-  {% comment %} ── MOBILE LEFT: Burger + Search ── {% endcomment %}
+  {% comment %} ── MOBILE LEFT: grid col 1 — Burger + Search ── {% endcomment %}
   <div class="gd-header__mobile-left">
-    <button
-      type="button"
-      class="gd-icon-btn gd-hamburger"
-      aria-label="Open menu"
-      aria-expanded="false"
-      aria-controls="gd-drawer"
-    >
+    <button type="button" class="gd-icon-btn gd-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="gd-drawer">
       <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
-        <line x1="0" y1="1"  x2="22" y2="1"  stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="0" y1="8"  x2="22" y2="8"  stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="0" y1="15" x2="22" y2="15" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="0" y1="1"  x2="22" y2="1"  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="0" y1="8"  x2="22" y2="8"  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="0" y1="15" x2="22" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </button>
     <button type="button" class="gd-icon-btn" aria-label="Search">
@@ -117,7 +142,7 @@
     </button>
   </div>
 
-  {% comment %} ── MOBILE RIGHT: Account + Cart ── {% endcomment %}
+  {% comment %} ── MOBILE RIGHT: grid col 3 — Account + Cart ── {% endcomment %}
   <div class="gd-header__mobile-right">
     <a href="{{ routes.account_url }}" class="gd-icon-btn" aria-label="Account">
       {%- render 'icon-account' -%}
@@ -137,19 +162,18 @@
   <div class="gd-drawer__head">
     <a href="/" class="gd-drawer__logo" aria-label="{{ shop.name }}">
       {%- if section.settings.logo != blank -%}
-        <img src="{{ section.settings.logo | image_url: width: 240 }}" alt="{{ shop.name }}" style="height:38px;width:auto;">
+        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" style="height:40px;width:auto;">
       {%- else -%}
-        <img src="{{ 'logo.svg' | asset_url }}" alt="{{ shop.name }}" width="82" height="38" style="height:38px;width:auto;image-rendering:crisp-edges;">
+        <img src="{{ 'logo.svg' | asset_url }}" alt="{{ shop.name }}" style="height:40px;width:auto;image-rendering:crisp-edges;">
       {%- endif -%}
     </a>
-    <button type="button" class="gd-icon-btn" aria-label="Close menu" data-close-drawer>
+    <button type="button" class="gd-icon-btn gd-drawer__close" aria-label="Close menu" data-close-drawer>
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-        <line x1="1" y1="1"  x2="17" y2="17" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="17" y1="1" x2="1"  y2="17" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="1" y1="1"  x2="17" y2="17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="17" y1="1" x2="1"  y2="17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </button>
   </div>
-
   <ul class="gd-drawer__nav" role="list">
     {%- for link in all_links -%}
       <li class="gd-drawer__item">
@@ -157,7 +181,7 @@
           <button type="button" class="gd-drawer__toggle" aria-expanded="false" data-accordion>
             <span>{{ link.title }}</span>
             <svg class="gd-drawer__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
-              <path d="M1 1l5 5 5-5" stroke="#171717" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
           <div class="gd-drawer__sub" hidden>
@@ -178,17 +202,77 @@
   "name": "Header",
   "settings": [
     {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
       "type": "image_picker",
       "id": "logo",
-      "label": "Logo",
+      "label": "Logo image",
       "info": "Leave blank to use the default SVG logo."
+    },
+    {
+      "type": "range",
+      "id": "logo_height_mobile",
+      "label": "Logo height — mobile (px)",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "logo_height_desktop",
+      "label": "Logo height — desktop (px)",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
     },
     {
       "type": "link_list",
       "id": "menu",
       "label": "Navigation menu",
       "default": "main-menu",
-      "info": "Add sub-links under any item to create a dropdown. Links split left/right of logo automatically."
+      "info": "Sub-links create dropdowns automatically."
+    },
+    {
+      "type": "header",
+      "content": "Layout & Colors"
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Header height — mobile (px)",
+      "min": 48,
+      "max": 96,
+      "step": 2,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Header height — desktop (px)",
+      "min": 64,
+      "max": 140,
+      "step": 2,
+      "default": 105
+    },
+    {
+      "type": "color",
+      "id": "header_bg",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text & icons color",
+      "default": "#171717"
     }
   ]
 }
