@@ -1,5 +1,4 @@
-import { AnnouncementBar } from "@/components/AnnouncementBar";
-import { Header } from "@/components/Header";
+import { StickyBanner } from "@/components/StickyBanner";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { ProductGrid } from "@/components/ProductGrid";
 import { CollectionBanner } from "@/components/CollectionBanner";
@@ -45,8 +44,7 @@ const bottomsCollections = [
 export default function Home() {
   return (
     <>
-      <AnnouncementBar />
-      <Header />
+      <StickyBanner />
       <main>
         <HeroSlideshow />
         <section style={{ padding: "40px 40px 0" }}>
