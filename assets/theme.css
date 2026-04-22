@@ -75,19 +75,71 @@ img {
 .announcement-bar {
   width: 100%;
   font-family: var(--font-body);
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
-  min-height: 48px;       /* overridden by section settings */
+  min-height: 48px;
   padding: 0 16px;
-  text-align: center;
 }
 
 .announcement-bar__text {
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
+}
+
+/* Right spacer mirrors the locale column to keep text perfectly centered */
+.announcement-bar__spacer {
+  justify-self: end;
+}
+
+/* ── Locale / currency selector ── */
+.announcement-bar__locale-form {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+}
+
+.announcement-bar__locale-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.announcement-bar__locale-select {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  font-family: var(--font-body);
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding-right: 14px;
+  outline: none;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.announcement-bar__chevron {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* Mobile: tighter locale text so it can't overlap center message */
+@media (max-width: 749px) {
+  .announcement-bar__locale-select {
+    font-size: 10px;
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 /* ============================================================

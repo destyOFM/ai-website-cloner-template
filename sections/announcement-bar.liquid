@@ -15,7 +15,37 @@
 </style>
 
 <div class="announcement-bar">
+
+  {% comment %} ── LEFT: country / currency selector ── {% endcomment %}
+  {% form 'localization', class: 'announcement-bar__locale-form' %}
+    <div class="announcement-bar__locale-wrap">
+      <select
+        name="country_code"
+        class="announcement-bar__locale-select"
+        onchange="this.form.submit()"
+        aria-label="Select country and currency"
+      >
+        {%- for country in localization.available_countries -%}
+          <option
+            value="{{ country.iso_code }}"
+            {%- if country.iso_code == localization.country.iso_code %} selected{%- endif -%}
+          >
+            {{- country.name }} ({{ country.currency.iso_code -}})
+          </option>
+        {%- endfor -%}
+      </select>
+      <svg class="announcement-bar__chevron" width="8" height="5" viewBox="0 0 8 5" fill="none" aria-hidden="true">
+        <path d="M1 1l3 3 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  {% endform %}
+
+  {% comment %} ── CENTER: announcement message ── {% endcomment %}
   <p class="announcement-bar__text">{{ section.settings.message }}</p>
+
+  {% comment %} ── RIGHT: spacer (mirrors left col width to keep text centred) ── {% endcomment %}
+  <div class="announcement-bar__spacer" aria-hidden="true"></div>
+
 </div>
 
 {% schema %}
