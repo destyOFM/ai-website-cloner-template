@@ -4,33 +4,39 @@
     <button type="button" class="nav-icon-btn" aria-label="Search">
       {%- render 'icon-search' -%}
     </button>
-    {%- assign left_links = section.settings.menu.links -%}
-    {%- assign mid = left_links.size | divided_by: 2 -%}
-    {%- for link in left_links limit: mid -%}
+    {%- assign all_links = section.settings.menu.links -%}
+    {%- assign mid = all_links.size | divided_by: 2 -%}
+    {%- for link in all_links limit: mid -%}
       <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
     {%- endfor -%}
   </div>
 
   <!-- Centre: Logo -->
   <div class="site-header__center">
-    <a href="/" class="site-header__logo" aria-label="{{ shop.name }}">
+    <a href="/" class="site-header__logo-link" aria-label="{{ shop.name }}">
       {%- if section.settings.logo != blank -%}
         <img
-          src="{{ section.settings.logo | image_url: width: 260 }}"
+          src="{{ section.settings.logo | image_url: width: 400 }}"
           alt="{{ shop.name }}"
-          width="130"
-          height="60"
+          class="site-header__logo-img"
           loading="eager"
         >
       {%- else -%}
-        {%- render 'icon-logo' -%}
+        <img
+          src="{{ 'logo.svg' | asset_url }}"
+          alt="{{ shop.name }}"
+          class="site-header__logo-img"
+          width="54"
+          height="60"
+          loading="eager"
+        >
       {%- endif -%}
     </a>
   </div>
 
   <!-- Desktop right: second half of nav links + icons -->
   <div class="site-header__right">
-    {%- for link in left_links offset: mid -%}
+    {%- for link in all_links offset: mid -%}
       <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
     {%- endfor -%}
     <div class="site-header__icons">
@@ -66,6 +72,21 @@
   </div>
 </header>
 
+<style>
+  .site-header__logo-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .site-header__logo-img {
+    display: block;
+    height: 60px;
+    width: auto;
+    /* SVG renders as pure vector — never blurry at any display density */
+    image-rendering: auto;
+  }
+</style>
+
 {% schema %}
 {
   "name": "Header",
@@ -74,14 +95,14 @@
       "type": "image_picker",
       "id": "logo",
       "label": "Logo image",
-      "info": "Leave blank to use the default SVG logo."
+      "info": "Upload a custom logo. Leave blank to use the default high-definition SVG logo."
     },
     {
       "type": "link_list",
       "id": "menu",
       "label": "Navigation menu",
       "default": "main-menu",
-      "info": "Links are split evenly: first half on the left, second half on the right of the logo."
+      "info": "Links are split evenly: first half left of the logo, second half right."
     }
   ]
 }
