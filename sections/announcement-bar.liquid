@@ -5,11 +5,11 @@
     color: {{ section.settings.text_color }};
     min-height: {{ section.settings.bar_height }}px;
     font-size: {{ section.settings.font_size }}px;
-    padding: 0 16px;
   }
   @media (min-width: 768px) {
     #shopify-section-{{ section.id }} .announcement-bar {
-      padding: 0 40px;
+      padding-left: 40px;
+      padding-right: 40px;
     }
   }
 </style>
@@ -40,10 +40,15 @@
     </div>
   {% endform %}
 
-  {% comment %} ── CENTER: announcement message ── {% endcomment %}
-  <p class="announcement-bar__text">{{ section.settings.message }}</p>
+  {% comment %} ── CENTER: two stacked announcement lines ── {% endcomment %}
+  <div class="announcement-bar__messages">
+    <p class="announcement-bar__text">{{ section.settings.message }}</p>
+    {%- if section.settings.message_2 != blank -%}
+      <p class="announcement-bar__text">{{ section.settings.message_2 }}</p>
+    {%- endif -%}
+  </div>
 
-  {% comment %} ── RIGHT: spacer (mirrors left col width to keep text centred) ── {% endcomment %}
+  {% comment %} ── RIGHT: spacer (mirrors locale width to keep messages centred) ── {% endcomment %}
   <div class="announcement-bar__spacer" aria-hidden="true"></div>
 
 </div>
@@ -53,10 +58,25 @@
   "name": "Announcement Bar",
   "settings": [
     {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
       "type": "text",
       "id": "message",
-      "label": "Message",
+      "label": "First announcement",
       "default": "FREE SHIPPING ON ORDERS $500+ (US)"
+    },
+    {
+      "type": "text",
+      "id": "message_2",
+      "label": "Second announcement",
+      "default": "FREE WORLDWIDE SHIPPING",
+      "info": "Leave blank to hide the second line."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
     },
     {
       "type": "color",
@@ -71,13 +91,17 @@
       "default": "#171717"
     },
     {
+      "type": "header",
+      "content": "Size"
+    },
+    {
       "type": "range",
       "id": "bar_height",
       "label": "Bar height (px)",
-      "min": 32,
-      "max": 80,
+      "min": 40,
+      "max": 100,
       "step": 2,
-      "default": 48
+      "default": 64
     },
     {
       "type": "range",
