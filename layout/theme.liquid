@@ -27,8 +27,10 @@
 </head>
 <body>
 
-  {% section 'announcement-bar' %}
-  {% section 'header' %}
+  <div id="gd-sticky-banner" class="gd-sticky-banner">
+    {% section 'announcement-bar' %}
+    {% section 'header' %}
+  </div>
 
   <main id="main-content" tabindex="-1">
     {{ content_for_layout }}

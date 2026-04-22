@@ -52,54 +52,7 @@ img {
 }
 
 /* ============================================================
-   Announcement Bar
-   ============================================================ */
-
-.announcement-bar {
-  width: 100%;
-  background: #fff;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--gd-black);
-}
-
-.announcement-bar__top {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  height: 22px;
-  padding: 0 40px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-@media (min-width: 768px) {
-  .announcement-bar__top { display: flex; }
-}
-
-.announcement-bar__bottom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 36px;
-  padding: 0 16px;
-}
-
-@media (min-width: 768px) {
-  .announcement-bar__bottom { height: 30px; padding: 0 40px; }
-}
-
-.announcement-bar__message {
-  font-size: 13px;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ============================================================
-   Sticky banner wrapper (announcement + header)
+   Sticky banner wrapper (announcement-bar + header sections)
    ============================================================ */
 
 .gd-sticky-banner {
@@ -111,114 +64,36 @@ img {
   transition: transform 0.28s ease, box-shadow 0.28s ease;
 }
 
-.gd-sticky-banner--hidden {
-  transform: translateY(-100%);
-}
-
-.gd-sticky-banner--scrolled {
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
-}
+.gd-sticky-banner--hidden  { transform: translateY(-100%); }
+.gd-sticky-banner--scrolled { box-shadow: 0 1px 0 rgba(0,0,0,0.08); }
 
 /* ============================================================
    Announcement Bar
    ============================================================ */
 
-.gd-announcement {
+.announcement-bar {
   width: 100%;
   background: #fff;
   font-family: var(--font-body);
   font-size: 13px;
   color: var(--gd-black);
-}
-
-/* Top strip — desktop only */
-.gd-announcement__top {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  height: 22px;
-  padding: 0 40px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-@media (min-width: 768px) {
-  .gd-announcement__top { display: flex; }
-}
-
-/* Main bar */
-.gd-announcement__main {
-  position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 36px;
   padding: 0 16px;
-  overflow: hidden;
+  text-align: center;
 }
 
 @media (min-width: 768px) {
-  .gd-announcement__main { height: 30px; padding: 0 40px; }
+  .announcement-bar { height: 30px; padding: 0 40px; }
 }
 
-/* Currency button */
-.gd-announcement__currency {
-  position: relative;
-  z-index: 2;
+.announcement-bar__text {
   white-space: nowrap;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-}
-
-@media (min-width: 768px) {
-  .gd-announcement__currency { min-height: unset; }
-}
-
-/* Message — centered absolutely */
-.gd-announcement__msg-wrap {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
   overflow: hidden;
-}
-
-.gd-announcement__msg {
-  white-space: nowrap;
-  display: block;
-}
-
-/* Mobile: marquee scroll */
-@media (max-width: 767px) {
-  .gd-announcement__msg {
-    animation: gd-marquee 18s linear infinite;
-    padding-left: 100%;
-  }
-}
-
-@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
-  .gd-announcement__msg {
-    animation: none;
-    padding-left: 0;
-    white-space: normal;
-    text-align: center;
-  }
-}
-
-@keyframes gd-marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
-}
-
-/* Mirror spacer keeps message centred on desktop */
-.gd-announcement__spacer {
-  visibility: hidden;
-  white-space: nowrap;
-  pointer-events: none;
-  margin-left: auto;
+  text-overflow: ellipsis;
+  margin: 0;
 }
 
 /* ============================================================

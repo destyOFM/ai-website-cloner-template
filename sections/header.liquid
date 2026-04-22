@@ -1,179 +1,148 @@
-{% comment %} ── Sticky wrapper holds announcement bar + header together ── {% endcomment %}
-<div class="gd-sticky-banner" id="gd-sticky-banner">
+<header class="gd-header" role="banner">
 
-  {% comment %} ══ ANNOUNCEMENT BAR ══ {% endcomment %}
-  <div class="gd-announcement">
-    <div class="gd-announcement__top">
-      {{ section.settings.free_shipping_text }}
-    </div>
-    <div class="gd-announcement__main">
-      <button type="button" class="gd-announcement__currency" aria-label="Select currency">
-        {{ section.settings.currency_label }}&nbsp;&#9662;
-      </button>
-      <div class="gd-announcement__msg-wrap" aria-live="polite">
-        <span class="gd-announcement__msg">{{ section.settings.announcement_text }}</span>
-      </div>
-      <div class="gd-announcement__spacer" aria-hidden="true">{{ section.settings.currency_label }}&nbsp;&#9662;</div>
-    </div>
+  {% assign all_links = section.settings.menu.links %}
+  {% assign mid        = all_links.size | divided_by: 2 %}
+
+  {% comment %} ── DESKTOP LEFT: Search + first half of nav ── {% endcomment %}
+  <div class="gd-header__col gd-header__col--left">
+    <button type="button" class="gd-icon-btn" aria-label="Search">
+      {%- render 'icon-search' -%}
+    </button>
+    {%- for link in all_links limit: mid -%}
+      {%- if link.links.size > 0 -%}
+        <div class="gd-mega-item">
+          <a href="{{ link.url }}" class="gd-nav-link">{{- link.title -}}</a>
+          <div class="gd-mega-dropdown">
+            <div class="gd-mega-dropdown__inner">
+              {%- assign col_break = link.links.size | divided_by: 2 -%}
+              <div class="gd-mega-col">
+                {%- for sublink in link.links limit: col_break -%}
+                  <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
+                {%- endfor -%}
+              </div>
+              <div class="gd-mega-col">
+                {%- for sublink in link.links offset: col_break -%}
+                  <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- else -%}
+        <a href="{{ link.url }}" class="gd-nav-link">{{ link.title }}</a>
+      {%- endif -%}
+    {%- endfor -%}
   </div>
 
-  {% comment %} ══ HEADER ══ {% endcomment %}
-  <header class="gd-header" role="banner">
+  {% comment %} ── LOGO ── {% endcomment %}
+  <div class="gd-header__col gd-header__col--center">
+    <a href="/" class="gd-logo-link" aria-label="{{ shop.name }}">
+      {%- if section.settings.logo != blank -%}
+        <img
+          src="{{ section.settings.logo | image_url: width: 480 }}"
+          alt="{{ shop.name }}"
+          class="gd-logo-img"
+          loading="eager"
+        >
+      {%- else -%}
+        <img
+          src="{{ 'logo.svg' | asset_url }}"
+          alt="{{ shop.name }}"
+          class="gd-logo-img gd-logo-img--svg"
+          width="65"
+          height="72"
+          loading="eager"
+        >
+      {%- endif -%}
+    </a>
+  </div>
 
-    {% assign all_links = section.settings.menu.links %}
-    {% assign mid        = all_links.size | divided_by: 2 %}
-
-    {% comment %} ── DESKTOP LEFT: Search + first half of nav ── {% endcomment %}
-    <div class="gd-header__col gd-header__col--left">
-      <button type="button" class="gd-icon-btn" aria-label="{{ 'general.search' | t | default: 'Search' }}">
-        {%- render 'icon-search' -%}
-      </button>
-      {%- for link in all_links limit: mid -%}
-        {%- if link.links.size > 0 -%}
-          <div class="gd-mega-item">
-            <a href="{{ link.url }}" class="gd-nav-link gd-nav-link--has-dropdown">
-              {{- link.title -}}
-            </a>
-            <div class="gd-mega-dropdown" role="region" aria-label="{{ link.title }}">
-              <div class="gd-mega-dropdown__inner">
-                {%- assign col_break = link.links.size | divided_by: 2 -%}
-                <div class="gd-mega-col">
-                  {%- for sublink in link.links limit: col_break -%}
-                    <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
-                  {%- endfor -%}
-                </div>
-                <div class="gd-mega-col">
-                  {%- for sublink in link.links offset: col_break -%}
-                    <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
-                  {%- endfor -%}
-                </div>
+  {% comment %} ── DESKTOP RIGHT: second half of nav + icons ── {% endcomment %}
+  <div class="gd-header__col gd-header__col--right">
+    {%- for link in all_links offset: mid -%}
+      {%- if link.links.size > 0 -%}
+        <div class="gd-mega-item">
+          <a href="{{ link.url }}" class="gd-nav-link">{{- link.title -}}</a>
+          <div class="gd-mega-dropdown gd-mega-dropdown--right">
+            <div class="gd-mega-dropdown__inner">
+              {%- assign col_break = link.links.size | divided_by: 2 -%}
+              <div class="gd-mega-col">
+                {%- for sublink in link.links limit: col_break -%}
+                  <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
+                {%- endfor -%}
+              </div>
+              <div class="gd-mega-col">
+                {%- for sublink in link.links offset: col_break -%}
+                  <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
+                {%- endfor -%}
               </div>
             </div>
           </div>
-        {%- else -%}
-          <a href="{{ link.url }}" class="gd-nav-link">{{ link.title }}</a>
-        {%- endif -%}
-      {%- endfor -%}
-    </div>
-
-    {% comment %} ── LOGO ── {% endcomment %}
-    <div class="gd-header__col gd-header__col--center">
-      <a href="/" class="gd-logo-link" aria-label="{{ shop.name }}">
-        {%- if section.settings.logo != blank -%}
-          <img
-            src="{{ section.settings.logo | image_url: width: 480 }}"
-            alt="{{ shop.name }}"
-            class="gd-logo-img"
-            loading="eager"
-          >
-        {%- else -%}
-          <img
-            src="{{ 'logo.svg' | asset_url }}"
-            alt="{{ shop.name }}"
-            class="gd-logo-img gd-logo-img--svg"
-            width="65"
-            height="72"
-            loading="eager"
-          >
-        {%- endif -%}
-      </a>
-    </div>
-
-    {% comment %} ── DESKTOP RIGHT: second half of nav + icons ── {% endcomment %}
-    <div class="gd-header__col gd-header__col--right">
-      {%- for link in all_links offset: mid -%}
-        {%- if link.links.size > 0 -%}
-          <div class="gd-mega-item">
-            <a href="{{ link.url }}" class="gd-nav-link gd-nav-link--has-dropdown">
-              {{- link.title -}}
-            </a>
-            <div class="gd-mega-dropdown" role="region" aria-label="{{ link.title }}">
-              <div class="gd-mega-dropdown__inner">
-                {%- assign col_break = link.links.size | divided_by: 2 -%}
-                <div class="gd-mega-col">
-                  {%- for sublink in link.links limit: col_break -%}
-                    <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
-                  {%- endfor -%}
-                </div>
-                <div class="gd-mega-col">
-                  {%- for sublink in link.links offset: col_break -%}
-                    <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
-                  {%- endfor -%}
-                </div>
-              </div>
-            </div>
-          </div>
-        {%- else -%}
-          <a href="{{ link.url }}" class="gd-nav-link">{{ link.title }}</a>
-        {%- endif -%}
-      {%- endfor -%}
-      <div class="gd-header__icons">
-        <button type="button" class="gd-icon-btn" aria-label="{{ 'general.search' | t | default: 'Search' }}">
-          {%- render 'icon-search' -%}
-        </button>
-        <a href="{{ routes.account_url }}" class="gd-icon-btn" aria-label="{{ 'customer.account.title' | t | default: 'Account' }}">
-          {%- render 'icon-account' -%}
-        </a>
-        <a href="{{ routes.cart_url }}" class="gd-icon-btn gd-cart-btn" aria-label="Cart ({{ cart.item_count }} items)">
-          {%- render 'icon-cart' -%}
-          <span class="gd-cart-count"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
-        </a>
-      </div>
-    </div>
-
-    {% comment %} ── MOBILE: Burger+Search | Logo | Account+Cart ── {% endcomment %}
-    <div class="gd-header__mobile-left">
-      <button
-        type="button"
-        class="gd-icon-btn gd-hamburger"
-        aria-label="Open menu"
-        aria-expanded="false"
-        aria-controls="gd-drawer"
-      >
-        <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
-          <line x1="0" y1="1"  x2="22" y2="1"  stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="0" y1="8"  x2="22" y2="8"  stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="0" y1="15" x2="22" y2="15" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </button>
+        </div>
+      {%- else -%}
+        <a href="{{ link.url }}" class="gd-nav-link">{{ link.title }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+    <div class="gd-header__icons">
       <button type="button" class="gd-icon-btn" aria-label="Search">
         {%- render 'icon-search' -%}
       </button>
-    </div>
-
-    <div class="gd-header__mobile-right">
       <a href="{{ routes.account_url }}" class="gd-icon-btn" aria-label="Account">
         {%- render 'icon-account' -%}
       </a>
-      <a href="{{ routes.cart_url }}" class="gd-icon-btn gd-cart-btn" aria-label="Cart">
+      <a href="{{ routes.cart_url }}" class="gd-icon-btn gd-cart-btn" aria-label="Cart ({{ cart.item_count }} items)">
         {%- render 'icon-cart' -%}
         <span class="gd-cart-count"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
       </a>
     </div>
+  </div>
 
-  </header>
-</div>
+  {% comment %} ── MOBILE LEFT: Burger + Search ── {% endcomment %}
+  <div class="gd-header__mobile-left">
+    <button
+      type="button"
+      class="gd-icon-btn gd-hamburger"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="gd-drawer"
+    >
+      <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
+        <line x1="0" y1="1"  x2="22" y2="1"  stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="0" y1="8"  x2="22" y2="8"  stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="0" y1="15" x2="22" y2="15" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button type="button" class="gd-icon-btn" aria-label="Search">
+      {%- render 'icon-search' -%}
+    </button>
+  </div>
+
+  {% comment %} ── MOBILE RIGHT: Account + Cart ── {% endcomment %}
+  <div class="gd-header__mobile-right">
+    <a href="{{ routes.account_url }}" class="gd-icon-btn" aria-label="Account">
+      {%- render 'icon-account' -%}
+    </a>
+    <a href="{{ routes.cart_url }}" class="gd-icon-btn gd-cart-btn" aria-label="Cart">
+      {%- render 'icon-cart' -%}
+      <span class="gd-cart-count"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+    </a>
+  </div>
+
+</header>
 
 {% comment %} ══ MOBILE DRAWER ══ {% endcomment %}
 <div class="gd-drawer-backdrop" id="gd-backdrop" aria-hidden="true"></div>
 
-<nav
-  class="gd-drawer"
-  id="gd-drawer"
-  role="dialog"
-  aria-modal="true"
-  aria-label="Navigation"
-  hidden
->
+<nav class="gd-drawer" id="gd-drawer" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
   <div class="gd-drawer__head">
     <a href="/" class="gd-drawer__logo" aria-label="{{ shop.name }}">
       {%- if section.settings.logo != blank -%}
-        <img src="{{ section.settings.logo | image_url: width: 240 }}" alt="{{ shop.name }}" class="gd-logo-img" style="height:38px;width:auto;">
+        <img src="{{ section.settings.logo | image_url: width: 240 }}" alt="{{ shop.name }}" style="height:38px;width:auto;">
       {%- else -%}
         <img src="{{ 'logo.svg' | asset_url }}" alt="{{ shop.name }}" width="82" height="38" style="height:38px;width:auto;image-rendering:crisp-edges;">
       {%- endif -%}
     </a>
-    <button type="button" class="gd-icon-btn gd-drawer__close" aria-label="Close menu" data-close-drawer>
+    <button type="button" class="gd-icon-btn" aria-label="Close menu" data-close-drawer>
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
         <line x1="1" y1="1"  x2="17" y2="17" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
         <line x1="17" y1="1" x2="1"  y2="17" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
@@ -185,12 +154,7 @@
     {%- for link in all_links -%}
       <li class="gd-drawer__item">
         {%- if link.links.size > 0 -%}
-          <button
-            type="button"
-            class="gd-drawer__toggle"
-            aria-expanded="false"
-            data-accordion
-          >
+          <button type="button" class="gd-drawer__toggle" aria-expanded="false" data-accordion>
             <span>{{ link.title }}</span>
             <svg class="gd-drawer__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
               <path d="M1 1l5 5 5-5" stroke="#171717" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -207,10 +171,6 @@
       </li>
     {%- endfor -%}
   </ul>
-
-  <div class="gd-drawer__foot">
-    <span class="gd-drawer__currency">{{ section.settings.currency_label }}&nbsp;&#9662;</span>
-  </div>
 </nav>
 
 {% schema %}
@@ -228,25 +188,7 @@
       "id": "menu",
       "label": "Navigation menu",
       "default": "main-menu",
-      "info": "Add sub-links under any item to create a dropdown. Links split left/right of the logo automatically."
-    },
-    {
-      "type": "text",
-      "id": "announcement_text",
-      "label": "Announcement bar text",
-      "default": "FREE SHIPPING ON ORDERS $500+ (US)"
-    },
-    {
-      "type": "text",
-      "id": "free_shipping_text",
-      "label": "Top bar text (desktop only)",
-      "default": "Free shipping to Canada on all orders above CA$980.00"
-    },
-    {
-      "type": "text",
-      "id": "currency_label",
-      "label": "Currency selector label",
-      "default": "CANADA (CAD$)"
+      "info": "Add sub-links under any item to create a dropdown. Links split left/right of logo automatically."
     }
   ]
 }
