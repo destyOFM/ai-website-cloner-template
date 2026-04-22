@@ -184,14 +184,32 @@ function DesktopNavItem({ item }: { item: typeof NAV[number] }) {
 /* ─────────────────────────────────────────
    MOBILE DRAWER
 ───────────────────────────────────────── */
+const TILE_STYLE: React.CSSProperties = {
+  display: "flex", flexDirection: "column", gap: 8, textDecoration: "none",
+};
+const TILE_PLACEHOLDER_STYLE: React.CSSProperties = {
+  width: "100%", aspectRatio: "3/4", background: "#f0efed",
+};
+const TILE_LABEL_STYLE: React.CSSProperties = {
+  fontFamily: "var(--font-courier)", fontSize: 10, color: "#171717",
+  letterSpacing: "0.08em", textTransform: "uppercase", textAlign: "center",
+};
+
 function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  // Lock body scroll when drawer is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
+
+  const linkStyle: React.CSSProperties = {
+    fontFamily: "var(--font-courier)", fontSize: 13, color: "#171717",
+    letterSpacing: "0.06em", textTransform: "uppercase",
+  };
+  const subStyle: React.CSSProperties = {
+    ...linkStyle, fontSize: 12, opacity: 0.6, letterSpacing: "0.05em",
+  };
 
   return (
     <>
@@ -205,111 +223,103 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
         aria-hidden="true"
       />
 
-      {/* Slide-in panel */}
+      {/* Full-height slide-in panel */}
       <div
-        className={cn(
-          "fixed top-0 left-0 z-50 h-full w-[85vw] max-w-[360px] bg-white",
-          "flex flex-col overflow-y-auto",
-          "transition-transform duration-300 ease-in-out"
-        )}
+        className="fixed top-0 left-0 z-50 h-full w-[85vw] max-w-[360px] bg-white flex flex-col transition-transform duration-300 ease-in-out"
         style={{ transform: open ? "translateX(0)" : "translateX(-100%)" }}
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
       >
-        {/* Drawer header */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-[#e8e8e8] shrink-0">
-          <a href="/" onClick={onClose} aria-label="Home">
-            <GalleryDeptLogo width={80} height={37} fill="#171717" />
+        {/* ── Header: logo centered, X absolute right ── */}
+        <div className="relative flex items-center justify-center h-[72px] px-14 border-b border-[#e8e8e8] shrink-0">
+          <a href="/" onClick={onClose} aria-label="Home" className="flex items-center leading-none">
+            <GalleryDeptLogo width={87} height={40} fill="#171717" />
           </a>
           <button
             type="button"
             aria-label="Close menu"
             onClick={onClose}
-            className="w-11 h-11 flex items-center justify-center cursor-pointer text-[#171717] hover:opacity-55 transition-opacity"
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center cursor-pointer text-[#171717] hover:opacity-50 transition-opacity"
           >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <line x1="1" y1="1" x2="17" y2="17" stroke="#171717" strokeWidth="1.5" strokeLinecap="round"/>
-              <line x1="17" y1="1" x2="1" y2="17" stroke="#171717" strokeWidth="1.5" strokeLinecap="round"/>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <line x1="2" y1="2" x2="18" y2="18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <line x1="18" y1="2" x2="2" y2="18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </button>
         </div>
 
-        {/* Nav items */}
-        <nav className="flex-1 px-4 pt-4">
-          {NAV.map((item) => (
-            <div key={item.label} className="border-b border-[#e8e8e8]">
-              {item.columns ? (
-                /* Accordion item */
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setExpanded(expanded === item.label ? null : item.label)}
-                    className="w-full flex items-center justify-between h-12 cursor-pointer bg-transparent border-0 p-0"
-                    aria-expanded={expanded === item.label}
-                  >
-                    <span style={{ fontFamily: "var(--font-courier)", fontSize: "13px", color: "#171717" }}>
-                      {item.label}
-                    </span>
-                    <svg
-                      width="12" height="12" viewBox="0 0 12 12" fill="none"
-                      style={{ transform: expanded === item.label ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease" }}
-                    >
-                      <path d="M1 4l5 5 5-5" stroke="#171717" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
+        {/* ── Scrollable body ── */}
+        <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: "none" }}>
 
-                  {/* Accordion content */}
-                  <div
-                    style={{
-                      maxHeight: expanded === item.label ? "600px" : "0",
-                      overflow: "hidden",
-                      transition: "max-height 0.3s ease",
-                    }}
-                  >
-                    {item.columns.map((col) => (
-                      <div key={col.heading} className="pb-4">
-                        <p
-                          className="pt-2 pb-1"
-                          style={{ fontFamily: "var(--font-fjalla)", fontSize: "11px", color: "#888", textTransform: "uppercase", letterSpacing: "0.08em" }}
-                        >
-                          {col.heading}
-                        </p>
-                        {col.links.map((link) => (
-                          <a
-                            key={link.href}
-                            href={link.href}
-                            onClick={onClose}
-                            className="block no-underline"
-                            style={{ fontFamily: "var(--font-courier)", fontSize: "13px", color: "#171717", lineHeight: "2.4", paddingLeft: "8px" }}
-                          >
-                            {link.label}
-                          </a>
+          {/* Nav links */}
+          <ul className="list-none px-5 m-0">
+            {NAV.map((item) => (
+              <li key={item.label} className="border-b border-[#e8e8e8]">
+                {item.columns ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setExpanded(expanded === item.label ? null : item.label)}
+                      className="w-full flex items-center justify-between h-[52px] bg-transparent border-0 p-0 cursor-pointer"
+                      aria-expanded={expanded === item.label}
+                      style={linkStyle}
+                    >
+                      <span>{item.label}</span>
+                      <svg
+                        width="12" height="8" viewBox="0 0 12 8" fill="none"
+                        style={{ flexShrink: 0, transition: "transform 0.22s ease", transform: expanded === item.label ? "rotate(180deg)" : "rotate(0deg)" }}
+                      >
+                        <path d="M1 1l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    <div
+                      style={{ maxHeight: expanded === item.label ? "600px" : "0", overflow: "hidden", transition: "max-height 0.3s ease" }}
+                    >
+                      <div className="pb-3">
+                        {item.columns.map((col) => (
+                          <div key={col.heading}>
+                            <p className="pt-2 pb-1" style={{ fontFamily: "var(--font-fjalla)", fontSize: 11, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                              {col.heading}
+                            </p>
+                            {col.links.map((link) => (
+                              <a key={link.href} href={link.href} onClick={onClose} className="block no-underline py-2 pl-3" style={subStyle}>
+                                {link.label}
+                              </a>
+                            ))}
+                          </div>
                         ))}
                       </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                /* Simple link */
-                <a
-                  href={item.href}
-                  onClick={onClose}
-                  className="flex items-center h-12 no-underline"
-                  style={{ fontFamily: "var(--font-courier)", fontSize: "13px", color: "#171717" }}
-                >
-                  {item.label}
-                </a>
-              )}
-            </div>
-          ))}
-        </nav>
+                    </div>
+                  </>
+                ) : (
+                  <a href={item.href} onClick={onClose} className="flex items-center h-[52px] no-underline" style={linkStyle}>
+                    {item.label}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
 
-        {/* Drawer footer */}
-        <div className="px-4 py-6 border-t border-[#e8e8e8] shrink-0">
-          <span style={{ fontFamily: "var(--font-courier)", fontSize: "12px", color: "#888" }}>
-            CANADA (CAD$) ▾
-          </span>
+          {/* ── Collection tiles ── */}
+          <div className="grid grid-cols-2 gap-2 px-5 pt-5 pb-6 border-t border-[#e8e8e8] mt-1">
+            <a href="/collections/new-release" className="no-underline" style={TILE_STYLE}>
+              <div style={TILE_PLACEHOLDER_STYLE} />
+              <span style={TILE_LABEL_STYLE}>LATEST RELEASES</span>
+            </a>
+            <a href="/collections/all" className="no-underline" style={TILE_STYLE}>
+              <div style={TILE_PLACEHOLDER_STYLE} />
+              <span style={TILE_LABEL_STYLE}>DISCOVER MORE</span>
+            </a>
+          </div>
+
+        </div>
+
+        {/* ── Footer ── */}
+        <div className="border-t border-[#e8e8e8] px-5 py-4 shrink-0">
+          <a href="/pages/stores" onClick={onClose} style={{ ...linkStyle, fontSize: 12, opacity: 0.6 }} className="no-underline hover:opacity-100 transition-opacity">
+            STORES
+          </a>
         </div>
       </div>
     </>
