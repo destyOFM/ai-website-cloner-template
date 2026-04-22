@@ -8,12 +8,12 @@
     fetch('/cart.js')
       .then(function (r) { return r.json(); })
       .then(function (cart) {
-        document.querySelectorAll('.cart-count').forEach(function (el) {
+        document.querySelectorAll('.gd-cart-count').forEach(function (el) {
           if (cart.item_count > 0) {
             el.textContent = cart.item_count;
-            el.style.display = 'flex';
+            el.removeAttribute('hidden');
           } else {
-            el.style.display = 'none';
+            el.setAttribute('hidden', '');
           }
         });
       });
@@ -145,6 +145,12 @@
     backdrop.classList.remove('is-open');
     document.body.style.overflow = '';
     hamburgers.forEach(function (btn) { btn.setAttribute('aria-expanded', 'false'); });
+    // Re-hide from screen readers after the slide-out transition (300ms)
+    setTimeout(function () {
+      if (!drawer.classList.contains('is-open')) {
+        drawer.setAttribute('hidden', '');
+      }
+    }, 310);
   }
 
   hamburgers.forEach(function (btn) {

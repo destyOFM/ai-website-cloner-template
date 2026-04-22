@@ -162,9 +162,9 @@
   <div class="gd-drawer__head">
     <a href="/" class="gd-drawer__logo" aria-label="{{ shop.name }}">
       {%- if section.settings.logo != blank -%}
-        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" style="height:40px;width:auto;">
+        <img src="{{ section.settings.logo | image_url: width: 300 }}" alt="{{ shop.name }}" class="gd-logo-img">
       {%- else -%}
-        <img src="{{ 'logo.svg' | asset_url }}" alt="{{ shop.name }}" style="height:40px;width:auto;image-rendering:crisp-edges;">
+        <img src="{{ 'logo.svg' | asset_url }}" alt="{{ shop.name }}" class="gd-logo-img gd-logo-img--svg">
       {%- endif -%}
     </a>
     <button type="button" class="gd-icon-btn gd-drawer__close" aria-label="Close menu" data-close-drawer>

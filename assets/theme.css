@@ -95,80 +95,119 @@ img {
    ============================================================ */
 
 /* ── Mobile: 3-column grid (logo mathematically centered) ── */
+/* ══════════════════════════════════════════════════════════
+   HEADER — MOBILE  (max-width: 749px)
+   Single-line 3-column grid: [Burger+Search] [Logo] [Account+Cart]
+   ══════════════════════════════════════════════════════════ */
+
 .gd-header {
   width: 100%;
-  min-height: 64px;       /* overridden by section settings */
-  padding: 0 4px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items: center;
+  box-sizing: border-box;
 }
 
-/* ── Desktop: flex layout ── */
-@media (min-width: 768px) {
+@media (max-width: 749px) {
+  .gd-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;   /* single row — nothing wraps */
+    align-items: center;
+    height: 64px;              /* overridden by scoped section style */
+    padding: 0 8px;
+    overflow: hidden;
+  }
+
+  /* Desktop columns — completely off on mobile */
+  .gd-header__col--left,
+  .gd-header__col--right {
+    display: none !important;
+  }
+
+  /* Col 1 — LEFT: Burger + Search */
+  .gd-header__mobile-left {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+
+  /* Col 2 — CENTER: Logo only */
+  .gd-header__col--center {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Col 3 — RIGHT: Account + Cart */
+  .gd-header__mobile-right {
+    grid-column: 3;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  /* Logo size on mobile */
+  .gd-logo-img {
+    height: 40px;
+    width: auto;
+    display: block;
+    max-width: 100%;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   HEADER — DESKTOP  (min-width: 750px)
+   Flex: [Left nav] [Logo] [Right nav]
+   ══════════════════════════════════════════════════════════ */
+
+@media (min-width: 750px) {
   .gd-header {
     display: flex;
-    min-height: 105px;    /* overridden by section settings */
+    align-items: center;
+    height: 105px;             /* overridden by scoped section style */
     padding: 0 32px;
   }
-}
 
-/* ── Desktop columns (hidden on mobile) ── */
-.gd-header__col {
-  display: none;
-  align-items: center;
-  flex: 1;
-}
+  /* Hide mobile-only columns */
+  .gd-header__mobile-left,
+  .gd-header__mobile-right {
+    display: none;
+  }
 
-.gd-header__col--left  { justify-content: flex-start; }
-.gd-header__col--right { justify-content: flex-end; }
+  /* Desktop nav columns */
+  .gd-header__col {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
 
-@media (min-width: 768px) {
-  .gd-header__col { display: flex; }
-}
+  .gd-header__col--left  { justify-content: flex-start; }
+  .gd-header__col--right { justify-content: flex-end; }
 
-/* ── Logo column: always visible, pinned to grid col 2 on mobile ── */
-.gd-header__col--center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Mobile grid: force into the middle column */
-  grid-column: 2;
-  justify-self: center;
-  width: 100%;
-}
-
-@media (min-width: 768px) {
+  /* Logo column — fixed width, centred */
   .gd-header__col--center {
-    /* Desktop flex: fixed width, no grid */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex: none;
     width: 160px;
-    grid-column: unset;
-    justify-self: unset;
+  }
+
+  /* Logo size on desktop */
+  .gd-logo-img {
+    height: 72px;
+    width: auto;
+    display: block;
   }
 }
 
-/* ── Mobile icon columns ── */
-.gd-header__mobile-left {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  grid-column: 1;   /* explicit: always far left */
-}
-
-.gd-header__mobile-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  grid-column: 3;   /* explicit: always far right */
-}
-
-@media (min-width: 768px) {
-  .gd-header__mobile-left,
-  .gd-header__mobile-right { display: none; }
-}
-
-/* ── Logo ── */
+/* ── Logo link wrapper ── */
 .gd-logo-link {
   display: flex;
   align-items: center;
@@ -176,19 +215,12 @@ img {
 }
 
 .gd-logo-img {
-  display: block;
-  height: 72px;
-  width: auto;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
 }
 
 .gd-logo-img--svg {
   image-rendering: auto;
-}
-
-@media (max-width: 767px) {
-  .gd-logo-img { height: 42px; }
 }
 
 /* ── Nav links ── */
