@@ -28,7 +28,8 @@
         "short-sleeve-tees": {
           "type": "collection_item",
           "settings": {
-            "collection": "",
+            "collection": "hoodie",
+            "image": "shopify://shop_images/SaveClip.App_626095495_17848495461672482_5089999346426503997_n.jpg",
             "title": "SHORT SLEEVE TEES",
             "link": ""
           }
