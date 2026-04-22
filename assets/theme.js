@@ -98,15 +98,89 @@
     });
   });
 
-  // ── Mobile menu ───────────────────────────────────────────────────────────
-  var hamburger = document.querySelector('.hamburger-btn');
-  var mobileNav = document.querySelector('.mobile-nav');
-  if (hamburger && mobileNav) {
-    hamburger.addEventListener('click', function () {
-      var isOpen = mobileNav.classList.toggle('is-open');
-      hamburger.setAttribute('aria-expanded', isOpen);
-    });
+  // ── Sticky scroll (hide on down, reveal on up) ────────────────────────────
+  var banner  = document.getElementById('gd-sticky-banner');
+  var lastY   = 0;
+  var rafId   = null;
+
+  if (banner) {
+    window.addEventListener('scroll', function () {
+      if (rafId) return;
+      rafId = requestAnimationFrame(function () {
+        rafId = null;
+        var y = window.scrollY;
+        if (y <= 0) {
+          banner.classList.remove('gd-sticky-banner--hidden', 'gd-sticky-banner--scrolled');
+        } else if (y > lastY) {
+          banner.classList.add('gd-sticky-banner--hidden', 'gd-sticky-banner--scrolled');
+        } else {
+          banner.classList.remove('gd-sticky-banner--hidden');
+          banner.classList.add('gd-sticky-banner--scrolled');
+        }
+        lastY = y;
+      });
+    }, { passive: true });
   }
+
+  // ── Mobile drawer ─────────────────────────────────────────────────────────
+  var drawer   = document.getElementById('gd-drawer');
+  var backdrop = document.getElementById('gd-backdrop');
+  var hamburgers = document.querySelectorAll('.gd-hamburger');
+
+  function openDrawer() {
+    if (!drawer) return;
+    drawer.classList.add('is-open');
+    backdrop.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    hamburgers.forEach(function (btn) { btn.setAttribute('aria-expanded', 'true'); });
+    drawer.removeAttribute('hidden');
+    // focus first focusable element
+    var first = drawer.querySelector('a, button');
+    if (first) first.focus();
+  }
+
+  function closeDrawer() {
+    if (!drawer) return;
+    drawer.classList.remove('is-open');
+    backdrop.classList.remove('is-open');
+    document.body.style.overflow = '';
+    hamburgers.forEach(function (btn) { btn.setAttribute('aria-expanded', 'false'); });
+  }
+
+  hamburgers.forEach(function (btn) {
+    btn.addEventListener('click', openDrawer);
+  });
+
+  if (backdrop) {
+    backdrop.addEventListener('click', closeDrawer);
+  }
+
+  document.querySelectorAll('[data-close-drawer]').forEach(function (btn) {
+    btn.addEventListener('click', closeDrawer);
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  // ── Drawer accordion ──────────────────────────────────────────────────────
+  document.querySelectorAll('[data-accordion]').forEach(function (toggle) {
+    toggle.addEventListener('click', function () {
+      var sub     = toggle.nextElementSibling;
+      var isOpen  = toggle.getAttribute('aria-expanded') === 'true';
+      // Close all other open items
+      document.querySelectorAll('[data-accordion]').forEach(function (t) {
+        if (t !== toggle) {
+          t.setAttribute('aria-expanded', 'false');
+          var s = t.nextElementSibling;
+          if (s) s.hidden = true;
+        }
+      });
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+      if (sub) sub.hidden = isOpen;
+    });
+  });
 
   // ── Initialise ────────────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', function () {
