@@ -18,7 +18,7 @@
     "tops": {
       "type": "featured-collection",
       "settings": {
-        "collection": "collection",
+        "collection": "hoodie",
         "products_limit": 6
       }
     },
