@@ -14,15 +14,19 @@
         "type": "announcement-bar",
         "custom_css": [],
         "settings": {
-          "top_message": "Free shipping to Canada on all orders above CA$980.00",
-          "bottom_message": "FREE SHIPPING ON ORDERS $500+ (US)"
+          "message": "FREE SHIPPING ON ORDERS $500+ (US)",
+          "bg_color": "#ffffff",
+          "text_color": "#171717",
+          "bar_height": 48,
+          "font_size": 13
         }
       },
       "header": {
         "type": "header",
         "custom_css": [
-          "/* Agrandir le logo sur Ordinateur */.site-header__logo-img {height: auto !important; width: 150px !important; /* Change 300 par 400 si c'est encore trop petit */ max-width: none !important;}",
-          "/* Ajuster pour le téléphone */@media screen and (max-width: 768px) {.site-header__logo-img {width: 150px !important; /* Taille sur mobile */ }}"
+          "/* Agrandir le logo sur PC */.gd-logo-img, .gd-logo-img--svg {height: 100px !important; /* Ajuste cette valeur (ex: 80px, 120px) */ width: auto !important; display: block !important; margin: 0 auto !important;}",
+          "/* Ajustement pour Mobile */@media screen and (max-width: 749px) {.gd-logo-img, .gd-logo-img--svg {height: 60px !important; /* Taille sur téléphone */ width: auto !important; }}",
+          "/* On s'assure que le header laisse de la place au logo agrandi */.header, .site-header {padding-top: 20px !important; padding-bottom: 20px !important;}"
         ],
         "settings": {
           "logo": "shopify://shop_images/TRUTH._1.png",
