@@ -1,12 +1,24 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero-slideshow",
-      "settings": {}
+      "settings": {
+        "image_desktop": "shopify://shop_images/630692742_17851837527672482_3021513312761141661_n_1.jpg"
+      }
     },
     "tops": {
       "type": "featured-collection",
       "settings": {
+        "collection": "",
         "products_limit": 6
       }
     },
@@ -16,22 +28,30 @@
         "short-sleeve-tees": {
           "type": "collection_item",
           "settings": {
-            "title": "SHORT SLEEVE TEES"
+            "collection": "",
+            "title": "SHORT SLEEVE TEES",
+            "link": ""
           }
         },
         "sweatshirts": {
           "type": "collection_item",
           "settings": {
-            "title": "SWEATSHIRTS"
+            "collection": "",
+            "title": "SWEATSHIRTS",
+            "link": ""
           }
         }
       },
-      "block_order": ["short-sleeve-tees", "sweatshirts"],
+      "block_order": [
+        "short-sleeve-tees",
+        "sweatshirts"
+      ],
       "settings": {}
     },
     "bottoms": {
       "type": "featured-collection",
       "settings": {
+        "collection": "",
         "products_limit": 6
       }
     },
@@ -41,22 +61,30 @@
         "bottoms-item": {
           "type": "collection_item",
           "settings": {
-            "title": "BOTTOMS"
+            "collection": "",
+            "title": "BOTTOMS",
+            "link": ""
           }
         },
         "denim-item": {
           "type": "collection_item",
           "settings": {
-            "title": "DENIM"
+            "collection": "",
+            "title": "DENIM",
+            "link": ""
           }
         }
       },
-      "block_order": ["bottoms-item", "denim-item"],
+      "block_order": [
+        "bottoms-item",
+        "denim-item"
+      ],
       "settings": {}
     },
     "more": {
       "type": "featured-collection",
       "settings": {
+        "collection": "",
         "products_limit": 5
       }
     },
@@ -85,7 +113,11 @@
           }
         }
       },
-      "block_order": ["latest", "men", "women"],
+      "block_order": [
+        "latest",
+        "men",
+        "women"
+      ],
       "settings": {}
     }
   },
