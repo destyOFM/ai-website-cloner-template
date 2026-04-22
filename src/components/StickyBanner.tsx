@@ -50,7 +50,8 @@ export function StickyBanner() {
         zIndex: 50,
         background: "#fff",
         transition: "transform 0.28s ease, box-shadow 0.28s ease",
-        willChange: "transform",
+        /* willChange: "transform" intentionally omitted —
+           it creates a stacking context that clips fixed-pos drawer */
       }}
     >
       <AnnouncementBar />

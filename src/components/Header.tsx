@@ -216,16 +216,18 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
       {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-black transition-opacity duration-300",
+          "fixed inset-0 bg-black transition-opacity duration-300",
           open ? "opacity-40 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
+        style={{ zIndex: 9998 }}
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Full-height slide-in panel */}
       <div
-        className="fixed top-0 left-0 z-50 h-full w-[85vw] max-w-[360px] bg-white flex flex-col transition-transform duration-300 ease-in-out"
+        className="fixed top-0 left-0 h-screen w-[85vw] max-w-[360px] bg-white flex flex-col transition-transform duration-300 ease-in-out"
+        style={{ zIndex: 9999 }}
         style={{ transform: open ? "translateX(0)" : "translateX(-100%)" }}
         role="dialog"
         aria-modal="true"

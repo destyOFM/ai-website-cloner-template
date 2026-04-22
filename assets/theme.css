@@ -60,7 +60,8 @@ img {
   top: 0;
   z-index: 100;
   background: #fff;
-  will-change: transform;
+  /* No will-change: transform here — that property creates a stacking context
+     which traps position:fixed children (the drawer) to banner height. */
   transition: transform 0.28s ease, box-shadow 0.28s ease;
 }
 
@@ -82,6 +83,7 @@ img {
   align-items: center;
   min-height: 56px;
   padding: 10px 16px;
+  border-bottom: 1px solid #171717;  /* divider between bar and header */
 }
 
 .announcement-bar__messages {
@@ -447,7 +449,7 @@ img {
 .gd-drawer-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 150;
+  z-index: 9998;
   background: rgba(0, 0, 0, 0);
   pointer-events: none;
   transition: background 0.3s ease;
@@ -463,8 +465,8 @@ img {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 200;
-  height: 100%;          /* full viewport — no cut-off */
+  z-index: 9999;
+  height: 100vh;         /* full viewport — guaranteed no cut-off */
   width: 85vw;
   max-width: 360px;
   background: #fff;

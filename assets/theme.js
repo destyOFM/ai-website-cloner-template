@@ -3,6 +3,16 @@
 (function () {
   'use strict';
 
+  // ── Escape sticky-banner stacking context ─────────────────────────────────
+  // position:sticky with transform creates a stacking context that traps
+  // position:fixed children to banner height. Moving to <body> fixes this.
+  (function () {
+    var bd  = document.getElementById('gd-backdrop');
+    var drw = document.getElementById('gd-drawer');
+    if (bd)  document.body.appendChild(bd);
+    if (drw) document.body.appendChild(drw);
+  })();
+
   // ── Cart count badge ──────────────────────────────────────────────────────
   function updateCartCount() {
     fetch('/cart.js')
