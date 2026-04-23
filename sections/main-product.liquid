@@ -1,15 +1,9 @@
 <div class="product-page">
 
-  {%- comment -%}
-  ═══════════════════════════════════════════════════════════════
-    GALLERY — LEFT COLUMN
-  ═══════════════════════════════════════════════════════════════
-  {%- endcomment -%}
+  <!-- ═══ GALERIE GAUCHE ═══════════════════════════════════════ -->
   <div class="product-page__gallery product-page__gallery--{{ section.settings.gallery_type }}">
 
     {%- if section.settings.gallery_type == 'scroll' -%}
-
-      {%- comment -%} Vertical stack — all images flush, no thumbnails {%- endcomment -%}
       <div class="product-page__images-stack">
         {%- for image in product.images -%}
           <img
@@ -24,10 +18,7 @@
           <div style="aspect-ratio:4/5;background:#f0efed;width:100%;display:block;"></div>
         {%- endfor -%}
       </div>
-
     {%- else -%}
-
-      {%- comment -%} Slider — single image + arrows + thumbnails {%- endcomment -%}
       <div class="product-page__slider-wrap" id="pd-slider-wrap">
         {%- if product.featured_image -%}
           <img
@@ -41,11 +32,10 @@
           <div class="product-page__image" style="background:#f0efed;"></div>
         {%- endif -%}
         {%- if product.images.size > 1 -%}
-          <button type="button" class="product-page__slider-btn product-page__slider-btn--prev" id="pd-prev" aria-label="Previous image">&#8592;</button>
-          <button type="button" class="product-page__slider-btn product-page__slider-btn--next" id="pd-next" aria-label="Next image">&#8594;</button>
+          <button type="button" class="product-page__slider-btn product-page__slider-btn--prev" id="pd-prev" aria-label="Image précédente">&#8592;</button>
+          <button type="button" class="product-page__slider-btn product-page__slider-btn--next" id="pd-next" aria-label="Image suivante">&#8594;</button>
         {%- endif -%}
       </div>
-
       {%- if product.images.size > 1 -%}
         <div class="product-page__thumbnails" id="pd-thumbs">
           {%- for image in product.images -%}
@@ -59,34 +49,23 @@
           {%- endfor -%}
         </div>
       {%- endif -%}
-
     {%- endif -%}
   </div>
 
-  {%- comment -%}
-  ═══════════════════════════════════════════════════════════════
-    INFO — RIGHT COLUMN
-    GD layout order:
-      Vendor (optional)
-      Title
-      Price
-      ── divider ──
-      Description (inline, brief — from product.description)
-      Variant selectors (swatches or select)
-      ADD TO CART
-      Buy Now (optional)
-      ── divider ──
-      Accordion blocks
-  ═══════════════════════════════════════════════════════════════
-  {%- endcomment -%}
+  <!-- ═══ INFO DROITE ══════════════════════════════════════════ -->
   <div class="product-page__info">
 
-    {%- if section.settings.show_vendor and product.vendor != blank -%}
-      <p class="product-page__vendor">{{ product.vendor }}</p>
-    {%- endif -%}
+    <!-- Titre + bookmark -->
+    <div class="product-page__info-header">
+      <h1 class="product-page__title">{{ product.title | upcase }}</h1>
+      <button type="button" class="product-page__bookmark" aria-label="Sauvegarder">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+        </svg>
+      </button>
+    </div>
 
-    <h1 class="product-page__title">{{ product.title | upcase }}</h1>
-
+    <!-- Prix -->
     <p class="product-page__price" id="product-price">
       {%- if product.price_varies -%}
         From {{ product.price_min | money }}
@@ -95,58 +74,88 @@
       {%- endif -%}
     </p>
 
-    {%- comment -%} Divider 1: after price {%- endcomment -%}
-    <hr class="product-page__divider">
-
-    {%- comment -%} Inline description — sits between divider and variants {%- endcomment -%}
+    <!-- Description inline -->
     {%- if product.description != blank -%}
       <div class="product-page__description">{{ product.description }}</div>
     {%- endif -%}
 
+    <!-- Formulaire variants + ATC -->
     {%- form 'product', product, id: 'product-form' -%}
       <div class="product-page__form">
 
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
             <div class="product-page__option">
-              <label class="product-page__option-label" for="option-{{ option.position }}">
-                {{ option.name }}
-              </label>
 
-              {%- if section.settings.variant_style == 'buttons' -%}
-                {%- comment -%} Swatch buttons mirror GD size selector {%- endcomment -%}
-                <div class="product-page__swatches" data-option="{{ option.name | escape }}">
+              {%- if option.name == 'Color' or option.name == 'Couleur' or option.name == 'Colour' -%}
+                <!-- Label "Color — Tiger Camo" -->
+                <label class="product-page__option-label">
+                  {{ option.name }} &mdash; <span class="option-selected-value" data-option-label="{{ option.name | escape }}">{{ option.selected_value }}</span>
+                </label>
+                <!-- Swatches cercles -->
+                <div class="product-page__color-swatches">
                   {%- for value in option.values -%}
+                    {%- assign variant_image = nil -%}
+                    {%- for variant in product.variants -%}
+                      {%- if variant.option1 == value or variant.option2 == value or variant.option3 == value -%}
+                        {%- if variant.featured_image -%}
+                          {%- assign variant_image = variant.featured_image -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                    {%- endfor -%}
                     <button
                       type="button"
-                      class="product-page__swatch{% if option.selected_value == value %} is-active{% endif %}"
+                      class="product-page__color-swatch{% if option.selected_value == value %} is-active{% endif %}"
                       data-option="{{ option.name | escape }}"
                       data-value="{{ value | escape }}"
-                    >{{ value }}</button>
+                      title="{{ value }}"
+                      {%- if variant_image -%}
+                        style="background-image:url('{{ variant_image | img_url: '100x100', crop: 'center' }}')"
+                      {%- endif -%}
+                    ></button>
                   {%- endfor -%}
                 </div>
-                {%- comment -%} Hidden select keeps theme.js syncVariant() working {%- endcomment -%}
-                <select
-                  id="option-{{ option.position }}"
-                  name="options[{{ option.name | escape }}]"
-                  aria-hidden="true"
-                  style="display:none;position:absolute;visibility:hidden;"
-                >
-                  {%- for value in option.values -%}
-                    <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
-                  {%- endfor -%}
-                </select>
               {%- else -%}
-                <select
-                  id="option-{{ option.position }}"
-                  name="options[{{ option.name | escape }}]"
-                  class="product-page__select"
-                >
-                  {%- for value in option.values -%}
-                    <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
-                  {%- endfor -%}
-                </select>
+                <!-- Label "Size" -->
+                <label class="product-page__option-label" for="option-{{ option.position }}">
+                  {{ option.name }}
+                </label>
+                <!-- Swatches carrés -->
+                {%- if section.settings.variant_style == 'buttons' -%}
+                  <div class="product-page__swatches">
+                    {%- for value in option.values -%}
+                      <button
+                        type="button"
+                        class="product-page__swatch{% if option.selected_value == value %} is-active{% endif %}"
+                        data-option="{{ option.name | escape }}"
+                        data-value="{{ value | escape }}"
+                      >{{ value }}</button>
+                    {%- endfor -%}
+                  </div>
+                  <select
+                    id="option-{{ option.position }}"
+                    name="options[{{ option.name | escape }}]"
+                    aria-hidden="true"
+                    style="display:none;position:absolute;visibility:hidden;"
+                  >
+                    {%- for value in option.values -%}
+                      <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
+                    {%- endfor -%}
+                  </select>
+                {%- else -%}
+                  <select
+                    id="option-{{ option.position }}"
+                    name="options[{{ option.name | escape }}]"
+                    class="product-page__select"
+                  >
+                    {%- for value in option.values -%}
+                      <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
+                    {%- endfor -%}
+                  </select>
+                {%- endif -%}
               {%- endif -%}
+
             </div>
           {%- endfor -%}
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
@@ -154,14 +163,34 @@
           <input type="hidden" name="id" value="{{ product.variants[0].id }}">
         {%- endunless -%}
 
+        <!-- Badge inventaire "Only X left" -->
+        {%- assign current_variant = product.selected_or_first_available_variant -%}
+        {%- if current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 5 -%}
+          <div class="product-page__inventory" id="pd-inventory">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span id="pd-inventory-text">Only {{ current_variant.inventory_quantity }} left</span>
+          </div>
+        {%- else -%}
+          <div class="product-page__inventory" id="pd-inventory" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span id="pd-inventory-text"></span>
+          </div>
+        {%- endif -%}
+
+        <!-- Bouton Add to Cart -->
         <button
           type="submit"
           class="product-page__add-btn"
           {% unless product.available %}disabled{% endunless %}
         >
-          {%- if product.available -%}ADD TO CART{%- else -%}SOLD OUT{%- endif -%}
+          {%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
         </button>
 
+        <!-- Buy Now (optionnel) -->
         {%- if section.settings.show_dynamic_checkout -%}
           {{ form | payment_button }}
         {%- endif -%}
@@ -169,7 +198,7 @@
       </div>
     {%- endform -%}
 
-    {%- comment -%} Divider 2: before accordion blocks {%- endcomment -%}
+    <!-- Accordéon blocks -->
     {%- if section.blocks.size > 0 -%}
       <hr class="product-page__blocks-divider">
       <div class="product-page__blocks">
@@ -177,7 +206,7 @@
           <div class="product-accordion" {{ block.shopify_attributes }}>
             <button type="button" class="product-accordion__trigger" aria-expanded="false">
               <span>{{ block.settings.heading }}</span>
-              <span class="product-accordion__icon" aria-hidden="true"></span>
+              <span class="product-accordion__icon">+</span>
             </button>
             <div class="product-accordion__body" hidden>
               {{ block.settings.content }}
@@ -190,14 +219,10 @@
   </div>
 </div>
 
-{%- comment -%} Mobile fixed ATC — outside the grid, z-index 50 {%- endcomment -%}
+<!-- Mobile ATC fixe -->
 <div class="product-page__mobile-atc">
   <span class="product-page__mobile-atc-price" id="pd-mobile-price">
-    {%- if product.price_varies -%}
-      From {{ product.price_min | money }}
-    {%- else -%}
-      {{ product.price | money }}
-    {%- endif -%}
+    {%- if product.price_varies -%}From {{ product.price_min | money }}{%- else -%}{{ product.price | money }}{%- endif -%}
   </span>
   <button
     type="submit"
@@ -206,7 +231,7 @@
     id="pd-mobile-atc-btn"
     {% unless product.available %}disabled{% endunless %}
   >
-    {%- if product.available -%}ADD TO CART{%- else -%}SOLD OUT{%- endif -%}
+    {%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
   </button>
 </div>
 
@@ -218,91 +243,84 @@
 (function () {
   'use strict';
 
-  // ── Set sticky top offset to actual banner height ──────────────────────────
-  // Reads #gd-sticky-banner height (announcement bar + header) so the sticky
-  // info panel sticks exactly below the header, not under it.
+  // Sticky offset = hauteur réelle du banner
   function setPdHeaderVar() {
-    var banner = document.getElementById('gd-sticky-banner');
-    if (banner) {
-      document.documentElement.style.setProperty(
-        '--pd-header-h',
-        banner.offsetHeight + 'px'
-      );
-    }
+    var b = document.getElementById('gd-sticky-banner');
+    if (b) document.documentElement.style.setProperty('--pd-header-h', b.offsetHeight + 'px');
   }
   setPdHeaderVar();
   window.addEventListener('resize', setPdHeaderVar);
 
-  // ── Swatch buttons → sync hidden select → fire theme.js syncVariant ───────
-  document.querySelectorAll('.product-page__swatch').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var optName = this.dataset.option;
-      var val     = this.dataset.value;
-
-      // Update hidden select value so theme.js reads the right variant
-      var sel = document.querySelector(
-        '#product-form select[name="options[' + optName + ']"]'
-      );
-      if (sel) {
-        sel.value = val;
-        sel.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-
-      // Update active swatch UI
-      document.querySelectorAll(
-        '.product-page__swatch[data-option="' + optName + '"]'
-      ).forEach(function (b) { b.classList.remove('is-active'); });
-      this.classList.add('is-active');
-    });
-  });
-
-  // ── Product accordion ──────────────────────────────────────────────────────
+  // Accordéon — icône + / −
   document.querySelectorAll('.product-accordion__trigger').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var el     = this.closest('.product-accordion');
       var body   = el.querySelector('.product-accordion__body');
+      var icon   = this.querySelector('.product-accordion__icon');
       var isOpen = el.classList.contains('is-open');
       el.classList.toggle('is-open', !isOpen);
       this.setAttribute('aria-expanded', String(!isOpen));
       if (body) body.hidden = isOpen;
+      if (icon) icon.textContent = isOpen ? '+' : '−';
     });
   });
 
-  // ── Slider prev / next ─────────────────────────────────────────────────────
+  // Swatches taille → sync select caché → theme.js syncVariant
+  document.querySelectorAll('.product-page__swatch').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var optName = this.dataset.option;
+      var val     = this.dataset.value;
+      var sel     = document.querySelector('#product-form select[name="options[' + optName + ']"]');
+      if (sel) { sel.value = val; sel.dispatchEvent(new Event('change', { bubbles: true })); }
+      document.querySelectorAll('.product-page__swatch[data-option="' + optName + '"]')
+        .forEach(function (b) { b.classList.remove('is-active'); });
+      this.classList.add('is-active');
+    });
+  });
+
+  // Swatches couleur → même logique + update label "Color — [value]"
+  document.querySelectorAll('.product-page__color-swatch').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var optName = this.dataset.option;
+      var val     = this.dataset.value;
+      var sel     = document.querySelector('#product-form select[name="options[' + optName + ']"]');
+      if (sel) { sel.value = val; sel.dispatchEvent(new Event('change', { bubbles: true })); }
+      document.querySelectorAll('.product-page__color-swatch[data-option="' + optName + '"]')
+        .forEach(function (b) { b.classList.remove('is-active'); });
+      this.classList.add('is-active');
+      // Met à jour le label "Color — Tiger Camo"
+      var labelSpan = document.querySelector('.option-selected-value[data-option-label="' + optName + '"]');
+      if (labelSpan) labelSpan.textContent = val;
+    });
+  });
+
+  // Slider
   var prevBtn  = document.getElementById('pd-prev');
   var nextBtn  = document.getElementById('pd-next');
   var thumbsEl = document.getElementById('pd-thumbs');
-  var thumbs   = thumbsEl
-    ? Array.from(thumbsEl.querySelectorAll('.product-page__thumbnail'))
-    : [];
+  var thumbs   = thumbsEl ? Array.from(thumbsEl.querySelectorAll('.product-page__thumbnail')) : [];
   var current  = 0;
-
   function goTo(idx) {
     if (!thumbs.length) return;
     current = (idx + thumbs.length) % thumbs.length;
-    var mainImg = document.getElementById('product-main-image');
-    if (mainImg) mainImg.src = thumbs[current].dataset.full || thumbs[current].src;
+    var m = document.getElementById('product-main-image');
+    if (m) m.src = thumbs[current].dataset.full || thumbs[current].src;
     thumbs.forEach(function (t, i) { t.classList.toggle('is-active', i === current); });
   }
-
   if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); });
   if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); });
-  thumbs.forEach(function (t, i) {
-    t.addEventListener('click', function () { current = i; });
-  });
+  thumbs.forEach(function (t, i) { t.addEventListener('click', function () { current = i; }); });
 
-  // ── Mobile ATC bar — mirror price + state from variant changes ─────────────
+  // Mobile ATC — sync prix et état
   var mobileBtn     = document.getElementById('pd-mobile-atc-btn');
   var mobilePriceEl = document.getElementById('pd-mobile-price');
   var desktopPrice  = document.getElementById('product-price');
   var desktopBtn    = document.querySelector('#product-form .product-page__add-btn');
-
   if (desktopPrice && mobilePriceEl) {
     new MutationObserver(function () {
       mobilePriceEl.textContent = desktopPrice.textContent.trim();
     }).observe(desktopPrice, { childList: true, subtree: true, characterData: true });
   }
-
   if (desktopBtn && mobileBtn) {
     new MutationObserver(function () {
       mobileBtn.disabled    = desktopBtn.disabled;
@@ -319,20 +337,19 @@
     {
       "type": "select",
       "id": "gallery_type",
-      "label": "Gallery Layout",
-      "info": "Vertical Scroll stacks all product images. Slider shows one at a time with arrows.",
+      "label": "Galerie",
       "options": [
-        { "value": "scroll", "label": "Vertical Scroll (Gallery Dept. style)" },
-        { "value": "slider", "label": "Slider with thumbnails" }
+        { "value": "scroll", "label": "Défilement vertical" },
+        { "value": "slider", "label": "Slider" }
       ],
       "default": "scroll"
     },
     {
       "type": "select",
       "id": "variant_style",
-      "label": "Variant selector style",
+      "label": "Style des variantes (taille)",
       "options": [
-        { "value": "buttons", "label": "Buttons — XS S M L (Gallery Dept. style)" },
+        { "value": "buttons", "label": "Boutons XS S M L" },
         { "value": "select", "label": "Dropdown" }
       ],
       "default": "buttons"
@@ -340,15 +357,14 @@
     {
       "type": "checkbox",
       "id": "show_vendor",
-      "label": "Show vendor name",
+      "label": "Afficher le vendeur",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "show_dynamic_checkout",
-      "label": "Show Buy Now button",
-      "info": "Displays Shopify's dynamic checkout button (Shop Pay, PayPal, etc.) below Add to Cart.",
-      "default": false
+      "label": "Afficher le bouton Buy Now",
+      "default": true
     }
   ],
   "blocks": [
@@ -357,18 +373,8 @@
       "name": "Artistic Details",
       "limit": 1,
       "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Artistic Details"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>Add artistic details, fit notes, and design information here.</p>"
-        }
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Artistic Details" },
+        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Décrivez les détails artistiques du produit ici.</p>" }
       ]
     },
     {
@@ -376,18 +382,8 @@
       "name": "Material",
       "limit": 1,
       "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Material"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>100% Cotton</p>"
-        }
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Material" },
+        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>100% Cotton</p>" }
       ]
     },
     {
@@ -395,18 +391,8 @@
       "name": "Care Instructions",
       "limit": 1,
       "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Care Instructions"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>Machine wash cold. Tumble dry low. Do not bleach or dry clean.</p>"
-        }
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Care Instructions" },
+        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Machine wash cold. Tumble dry low.</p>" }
       ]
     },
     {
@@ -414,18 +400,8 @@
       "name": "Shipping & Returns",
       "limit": 1,
       "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Shipping & Returns"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>Free standard shipping on orders over $150. Returns accepted within 30 days of purchase.</p>"
-        }
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Shipping & Returns" },
+        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Livraison gratuite à partir de 150$. Retours sous 30 jours.</p>" }
       ]
     },
     {
@@ -433,18 +409,8 @@
       "name": "Size Guide",
       "limit": 1,
       "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Size Guide"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>XS: Chest 34\", S: Chest 36\", M: Chest 38\", L: Chest 40\", XL: Chest 42\"</p>"
-        }
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Size Guide" },
+        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>XS: Poitrine 86cm / S: 91cm / M: 96cm / L: 101cm / XL: 106cm</p>" }
       ]
     }
   ],
@@ -453,7 +419,6 @@
       "name": "Product Page",
       "blocks": [
         { "type": "artistic_details" },
-        { "type": "material" },
         { "type": "care" },
         { "type": "shipping" }
       ]
