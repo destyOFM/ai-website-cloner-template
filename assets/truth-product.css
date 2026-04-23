@@ -105,10 +105,14 @@
 @media (min-width: 768px) {
   .product-page__info {
     position: sticky !important;
-    top: var(--pd-header-h, 105px) !important;
-    max-height: calc(100vh - var(--pd-header-h, 105px)) !important;
+    /* fallback 0px : le header (z-index:100) passe par-dessus visuellement */
+    top: 0 !important;
+    top: var(--pd-header-h, 0px) !important;
+    max-height: calc(100vh - var(--pd-header-h, 0px)) !important;
     overflow-y: auto !important;
     scrollbar-width: none !important;
+    /* fond blanc solide pour couvrir les images lors du scroll */
+    background: #fff !important;
   }
   .product-page__info::-webkit-scrollbar { display: none !important; }
 }
@@ -121,15 +125,17 @@
   }
 }
 
-/* ── FONT universelle monospace sur tout le panneau info ─────── */
+/* ── FONT universelle monospace — sans toucher au background ─── */
 
-.product-page__info,
-.product-page__info *,
+.product-page__info * {
+  font-family: "Courier New", Courier, monospace !important;
+  color: #000 !important;
+}
+
 .product-page__mobile-atc,
 .product-page__mobile-atc * {
   font-family: "Courier New", Courier, monospace !important;
   color: #000 !important;
-  background: transparent !important;
 }
 
 /* ── Header titre + bookmark ────────────────────────────────── */

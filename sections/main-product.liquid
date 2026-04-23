@@ -244,11 +244,23 @@
   'use strict';
 
   // Sticky offset = hauteur réelle du banner
+  // On attend que le layout soit calculé avant de lire offsetHeight
   function setPdHeaderVar() {
     var b = document.getElementById('gd-sticky-banner');
-    if (b) document.documentElement.style.setProperty('--pd-header-h', b.offsetHeight + 'px');
+    if (b && b.offsetHeight > 0) {
+      document.documentElement.style.setProperty('--pd-header-h', b.offsetHeight + 'px');
+    }
   }
+
+  // Tente immédiatement, puis après le layout complet
   setPdHeaderVar();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      requestAnimationFrame(setPdHeaderVar);
+    });
+  } else {
+    requestAnimationFrame(setPdHeaderVar);
+  }
   window.addEventListener('resize', setPdHeaderVar);
 
   // Accordéon — icône + / −
