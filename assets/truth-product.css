@@ -1,9 +1,16 @@
 /* ============================================================
-   truth-product.css — replication exacte du screenshot
-   Charge en dernier, !important sur tout.
+   truth-product.css — Minimalist Black & White
+   Règle absolue : uniquement #000 et #fff.
+   Zéro bordure sur les images. Zéro gris. Zéro ombre.
    ============================================================ */
 
-/* ── Layout 2 colonnes ──────────────────────────────────────── */
+/* ── Reset total du product-page ────────────────────────────── */
+
+.product-page,
+.product-page * {
+  box-shadow: none !important;
+  outline: none !important;
+}
 
 .product-page {
   display: grid !important;
@@ -13,6 +20,7 @@
   margin: 0 !important;
   align-items: start !important;
   width: 100% !important;
+  background: #fff !important;
   box-sizing: border-box !important;
 }
 
@@ -22,17 +30,21 @@
   }
 }
 
-/* ── Galerie gauche ─────────────────────────────────────────── */
+/* ── Galerie — images flottantes sur fond blanc ─────────────── */
 
 .product-page__gallery {
-  display: block !important;
+  background: #fff !important;
   padding: 0 !important;
   margin: 0 !important;
   line-height: 0 !important;
   font-size: 0 !important;
+  border: none !important;
 }
 
-.product-page__images-stack { display: block !important; }
+.product-page__images-stack {
+  display: block !important;
+  background: #fff !important;
+}
 
 .product-page__stack-image {
   display: block !important;
@@ -41,6 +53,8 @@
   object-fit: cover !important;
   margin: 0 !important;
   padding: 0 !important;
+  border: none !important;
+  background: #fff !important;
 }
 
 .product-page__image {
@@ -48,18 +62,44 @@
   width: 100% !important;
   aspect-ratio: 4 / 5 !important;
   object-fit: cover !important;
+  border: none !important;
   margin: 0 !important;
 }
 
-/* ── Info droite ─────────────────────────────────────────────── */
+.product-page__slider-btn {
+  background: #fff !important;
+  border: 1px solid #000 !important;
+  border-radius: 0 !important;
+  color: #000 !important;
+  box-shadow: none !important;
+}
+
+.product-page__thumbnails {
+  background: #fff !important;
+  padding: 8px 0 !important;
+  gap: 4px !important;
+}
+
+.product-page__thumbnail {
+  border: 1px solid transparent !important;
+  opacity: 0.5 !important;
+}
+
+.product-page__thumbnail.is-active,
+.product-page__thumbnail:hover {
+  opacity: 1 !important;
+  border-color: #000 !important;
+}
+
+/* ── Info panel — zéro bordure, whitespace généreux ─────────── */
 
 .product-page__info {
-  padding: 28px 32px 110px !important;
-  margin: 0 !important;
   background: #fff !important;
-  border-left: 1px solid #e8e8e8 !important;
+  border: none !important;
+  border-left: none !important;
+  padding: 48px 48px 120px !important;
+  margin: 0 !important;
   box-sizing: border-box !important;
-  position: relative !important;
 }
 
 @media (min-width: 768px) {
@@ -75,32 +115,42 @@
 
 @media (max-width: 767px) {
   .product-page__info {
-    border-left: none !important;
-    padding: 24px 20px 110px !important;
+    padding: 28px 24px 110px !important;
     position: static !important;
+    border: none !important;
   }
 }
 
-/* ── Header de l'info: titre + bookmark ─────────────────────── */
+/* ── FONT universelle monospace sur tout le panneau info ─────── */
+
+.product-page__info,
+.product-page__info *,
+.product-page__mobile-atc,
+.product-page__mobile-atc * {
+  font-family: "Courier New", Courier, monospace !important;
+  color: #000 !important;
+  background: transparent !important;
+}
+
+/* ── Header titre + bookmark ────────────────────────────────── */
 
 .product-page__info-header {
   display: flex !important;
   align-items: flex-start !important;
   justify-content: space-between !important;
-  gap: 12px !important;
-  margin-bottom: 6px !important;
+  gap: 16px !important;
+  margin: 0 0 10px !important;
 }
 
 .product-page__bookmark {
   background: none !important;
   border: none !important;
-  padding: 0 !important;
+  padding: 4px 0 0 !important;
   cursor: pointer !important;
   color: #000 !important;
   flex-shrink: 0 !important;
-  opacity: 0.6 !important;
+  opacity: 0.4 !important;
   transition: opacity 0.15s !important;
-  margin-top: 2px !important;
 }
 
 .product-page__bookmark:hover { opacity: 1 !important; }
@@ -111,55 +161,52 @@
   display: block !important;
 }
 
-/* ── Titre — bold large uppercase ───────────────────────────── */
+/* ── Titre — grand, bold, monospace ─────────────────────────── */
 
 .product-page__title {
-  font-family: "Fjalla One", "Arial Black", sans-serif !important;
-  font-size: 22px !important;
-  font-weight: 400 !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
   color: #000 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.02em !important;
-  line-height: 1.15 !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.2 !important;
   margin: 0 !important;
   padding: 0 !important;
   flex: 1 !important;
 }
 
-/* ── Prix — bleu ─────────────────────────────────────────────── */
+/* ── Prix — noir, pas de couleur ────────────────────────────── */
 
 .product-page__price {
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 16px !important;
+  font-size: 15px !important;
   font-weight: 400 !important;
-  color: #2B5BA8 !important;
+  color: #000 !important;
   letter-spacing: 0.02em !important;
-  margin: 0 0 14px !important;
+  margin: 0 0 28px !important;
   padding: 0 !important;
 }
 
 /* ── Description ─────────────────────────────────────────────── */
 
 .product-page__description {
-  font-family: "Courier New", Courier, monospace !important;
   font-size: 13px !important;
   font-weight: 400 !important;
-  color: #222 !important;
-  line-height: 1.6 !important;
-  margin: 0 0 20px !important;
+  color: #000 !important;
+  line-height: 1.75 !important;
+  margin: 0 0 28px !important;
   padding: 0 !important;
 }
 
-.product-page__description p { margin: 0 0 6px !important; }
-.product-page__description p:last-child { margin-bottom: 0 !important; }
+.product-page__description p { margin: 0 0 8px !important; }
+.product-page__description p:last-child { margin: 0 !important; }
 
 /* ── Form ────────────────────────────────────────────────────── */
 
 .product-page__form {
   display: flex !important;
   flex-direction: column !important;
-  gap: 16px !important;
-  margin: 0 0 16px !important;
+  gap: 20px !important;
+  margin: 0 !important;
   padding: 0 !important;
 }
 
@@ -169,23 +216,23 @@
   gap: 10px !important;
 }
 
-/* Label "Color — Tiger Camo" ou "Size" */
 .product-page__option-label {
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 13px !important;
+  font-size: 11px !important;
   font-weight: 400 !important;
   color: #000 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
   display: block !important;
   margin: 0 !important;
   padding: 0 !important;
-  letter-spacing: 0.01em !important;
 }
 
-.product-page__option-label .option-selected-value {
-  color: #555 !important;
+.option-selected-value {
+  color: #000 !important;
+  font-weight: 400 !important;
 }
 
-/* ── Swatches couleur — cercles ─────────────────────────────── */
+/* ── Swatches couleur — cercles noir/blanc ───────────────────── */
 
 .product-page__color-swatches {
   display: flex !important;
@@ -194,29 +241,28 @@
 }
 
 .product-page__color-swatch {
-  width: 28px !important;
-  height: 28px !important;
+  width: 26px !important;
+  height: 26px !important;
   border-radius: 50% !important;
-  border: 2px solid #e0e0e0 !important;
+  border: 1px solid #000 !important;
   cursor: pointer !important;
   background-size: cover !important;
   background-position: center !important;
-  background-color: #ccc !important;
+  background-color: #fff !important;
   padding: 0 !important;
-  transition: border-color 0.15s !important;
   box-sizing: border-box !important;
+  transition: opacity 0.15s !important;
+  box-shadow: none !important;
 }
 
-.product-page__color-swatch:hover {
-  border-color: #888 !important;
-}
+.product-page__color-swatch:hover { opacity: 0.7 !important; }
 
 .product-page__color-swatch.is-active {
-  border-color: #000 !important;
   border-width: 2px !important;
+  border-color: #000 !important;
 }
 
-/* ── Swatches taille — carrés ───────────────────────────────── */
+/* ── Swatches taille — carrés minimalistes ───────────────────── */
 
 .product-page__swatches {
   display: flex !important;
@@ -228,70 +274,70 @@
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  min-width: 40px !important;
+  min-width: 42px !important;
   height: 36px !important;
-  padding: 0 10px !important;
+  padding: 0 12px !important;
   background: #fff !important;
-  border: 1px solid #ccc !important;
+  border: 1px solid #000 !important;
   border-radius: 0 !important;
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 12px !important;
+  font-size: 11px !important;
   font-weight: 400 !important;
   color: #000 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.03em !important;
+  letter-spacing: 0.05em !important;
   cursor: pointer !important;
   box-sizing: border-box !important;
-  transition: border-color 0.12s !important;
+  transition: background 0.12s, color 0.12s !important;
 }
 
-.product-page__swatch:hover { border-color: #000 !important; }
+.product-page__swatch:hover {
+  background: #000 !important;
+  color: #fff !important;
+}
 
 .product-page__swatch.is-active {
+  background: #000 !important;
+  color: #fff !important;
   border-color: #000 !important;
-  background: #fff !important;
-  color: #000 !important;
 }
 
-/* Select caché */
+/* Select caché (variant sync) */
 .product-page__select {
   width: 100% !important;
   height: 44px !important;
   border: 1px solid #000 !important;
   border-radius: 0 !important;
   background: #fff !important;
-  font-family: "Courier New", Courier, monospace !important;
   font-size: 13px !important;
   color: #000 !important;
-  padding: 0 12px !important;
+  padding: 0 14px !important;
   -webkit-appearance: none !important;
   appearance: none !important;
   cursor: pointer !important;
   box-sizing: border-box !important;
 }
 
-/* ── Badge "Only X left" ─────────────────────────────────────── */
+/* ── Badge inventaire ────────────────────────────────────────── */
 
 .product-page__inventory {
   display: flex !important;
   align-items: center !important;
   gap: 6px !important;
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 12px !important;
-  color: #B45309 !important;
-  margin-top: -4px !important;
+  font-size: 11px !important;
+  color: #000 !important;
+  letter-spacing: 0.04em !important;
 }
 
 .product-page__inventory svg {
-  width: 14px !important;
-  height: 14px !important;
+  width: 13px !important;
+  height: 13px !important;
   flex-shrink: 0 !important;
-  color: #B45309 !important;
+  color: #000 !important;
 }
 
 .product-page__inventory[hidden] { display: none !important; }
 
-/* ── Bouton Add to Cart ─────────────────────────────────────── */
+/* ── Bouton Add to Cart — rectangle noir pur ─────────────────── */
 
 .product-page__add-btn {
   display: block !important;
@@ -302,56 +348,57 @@
   background: #000 !important;
   color: #fff !important;
   border: none !important;
-  border-radius: 3px !important;
+  border-radius: 0 !important;
   font-family: "Courier New", Courier, monospace !important;
-  font-size: 14px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
-  letter-spacing: 0.04em !important;
-  text-transform: none !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
   cursor: pointer !important;
   transition: opacity 0.15s !important;
   box-sizing: border-box !important;
+  box-shadow: none !important;
 }
 
-.product-page__add-btn:hover:not(:disabled) { opacity: 0.82 !important; }
-.product-page__add-btn:disabled { opacity: 0.3 !important; cursor: not-allowed !important; }
+.product-page__add-btn:hover:not(:disabled) { opacity: 0.75 !important; }
+.product-page__add-btn:disabled { opacity: 0.25 !important; cursor: not-allowed !important; }
 
 @media (max-width: 767px) {
   .product-page__add-btn { display: none !important; }
 }
 
-/* ── Bouton Buy Now ─────────────────────────────────────────── */
+/* ── Buy Now — outlined propre ───────────────────────────────── */
 
-.shopify-payment-button {
-  margin-top: 10px !important;
-}
+.shopify-payment-button { margin-top: 10px !important; }
 
 .shopify-payment-button__button {
-  border-radius: 3px !important;
-  height: 52px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 .shopify-payment-button__button--unbranded {
-  font-family: "Courier New", Courier, monospace !important;
-  font-size: 14px !important;
-  letter-spacing: 0.04em !important;
   background: #fff !important;
-  color: #2B5BA8 !important;
+  color: #000 !important;
   border: 1px solid #000 !important;
+  font-family: "Courier New", Courier, monospace !important;
+  font-size: 12px !important;
+  letter-spacing: 0.12em !important;
+  height: 52px !important;
 }
 
-/* ── Divider avant accordéon ────────────────────────────────── */
+/* ── Dividers — 1px noir, pas de gris ───────────────────────── */
 
 .product-page__divider,
 .product-page__blocks-divider {
   border: 0 !important;
-  border-top: 1px solid #e0e0e0 !important;
+  border-top: 1px solid #000 !important;
   height: 0 !important;
-  margin: 20px 0 0 !important;
+  margin: 28px 0 0 !important;
   display: block !important;
+  background: none !important;
 }
 
-/* ── Accordéon ──────────────────────────────────────────────── */
+/* ── Accordéon — lignes noires, "+" propre ───────────────────── */
 
 .product-page__blocks {
   margin: 0 !important;
@@ -359,67 +406,73 @@
 }
 
 .product-accordion {
-  border-top: 1px solid #e0e0e0 !important;
+  border-top: 1px solid #000 !important;
   margin: 0 !important;
+  background: #fff !important;
 }
 
 .product-accordion:last-child {
-  border-bottom: 1px solid #e0e0e0 !important;
+  border-bottom: 1px solid #000 !important;
 }
 
 .product-accordion__trigger {
   width: 100% !important;
-  background: none !important;
+  background: #fff !important;
   border: none !important;
-  padding: 14px 0 !important;
+  padding: 16px 0 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   cursor: pointer !important;
   font-family: "Courier New", Courier, monospace !important;
-  font-size: 12px !important;
+  font-size: 11px !important;
   font-weight: 400 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.06em !important;
+  letter-spacing: 0.1em !important;
   color: #000 !important;
   text-align: left !important;
+  transition: opacity 0.15s !important;
 }
 
-.product-accordion__trigger:hover { opacity: 0.55 !important; }
+.product-accordion__trigger:hover { opacity: 0.45 !important; }
 
-/* Icône "+" / "−" à droite */
 .product-accordion__icon {
   font-family: "Courier New", Courier, monospace !important;
-  font-size: 18px !important;
+  font-size: 16px !important;
   font-weight: 400 !important;
   line-height: 1 !important;
   color: #000 !important;
   flex-shrink: 0 !important;
   margin-left: 12px !important;
+  /* désactive les pseudo-éléments de l'ancienne version */
   width: auto !important;
   height: auto !important;
   position: static !important;
-  transition: none !important;
+  background: none !important;
 }
 
 .product-accordion__icon::before,
-.product-accordion__icon::after { display: none !important; }
-
-/* Le contenu du span est géré par JS (+ / −) */
+.product-accordion__icon::after {
+  display: none !important;
+}
 
 .product-accordion__body {
-  padding: 0 0 16px !important;
+  padding: 0 0 18px !important;
   font-family: "Courier New", Courier, monospace !important;
-  font-size: 13px !important;
-  line-height: 1.65 !important;
-  color: #333 !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.7 !important;
+  color: #000 !important;
+  background: #fff !important;
 }
 
 .product-accordion__body[hidden] { display: none !important; }
 .product-accordion__body p { margin: 0 0 6px !important; }
 .product-accordion__body p:last-child { margin: 0 !important; }
+.product-accordion__body ul { margin: 0 !important; padding-left: 16px !important; }
+.product-accordion__body li { margin-bottom: 4px !important; }
 
-/* ── Mobile ATC bar ─────────────────────────────────────────── */
+/* ── Mobile ATC fixe ─────────────────────────────────────────── */
 
 .product-page__mobile-atc { display: none !important; }
 
@@ -427,42 +480,53 @@
   .product-page__mobile-atc {
     display: flex !important;
     align-items: center !important;
-    gap: 10px !important;
+    gap: 12px !important;
     position: fixed !important;
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
     z-index: 50 !important;
     background: #fff !important;
-    border-top: 1px solid #e0e0e0 !important;
-    padding: 10px 16px !important;
-    padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    border-top: 1px solid #000 !important;
+    padding: 12px 20px !important;
+    padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
     box-sizing: border-box !important;
+    box-shadow: none !important;
   }
 
   .product-page__mobile-atc-price {
-    font-family: "Courier New", Courier, monospace !important;
     font-size: 14px !important;
-    color: #2B5BA8 !important;
+    font-weight: 400 !important;
+    color: #000 !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
   }
 
   .product-page__mobile-atc-btn {
     flex: 1 !important;
-    height: 44px !important;
+    height: 46px !important;
     background: #000 !important;
     color: #fff !important;
     border: none !important;
-    border-radius: 3px !important;
+    border-radius: 0 !important;
     font-family: "Courier New", Courier, monospace !important;
-    font-size: 13px !important;
-    letter-spacing: 0.04em !important;
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
     cursor: pointer !important;
+    box-shadow: none !important;
   }
 
   .product-page__mobile-atc-btn:disabled {
-    opacity: 0.3 !important;
+    opacity: 0.25 !important;
     cursor: not-allowed !important;
+  }
+
+  /* Galerie full-bleed mobile */
+  .product-page__stack-image,
+  .product-page__image {
+    width: 100% !important;
+    aspect-ratio: 4 / 5 !important;
   }
 }
