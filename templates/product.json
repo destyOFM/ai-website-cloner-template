@@ -2,7 +2,48 @@
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {}
+      "blocks": {
+        "artistic_details": {
+          "type": "artistic_details",
+          "settings": {
+            "heading": "Artistic Details",
+            "content": "<p>Add artistic details, fit notes, and design information here.<\/p>"
+          }
+        },
+        "material": {
+          "type": "material",
+          "settings": {
+            "heading": "Material",
+            "content": "<p>100% Cotton<\/p>"
+          }
+        },
+        "care": {
+          "type": "care",
+          "settings": {
+            "heading": "Care Instructions",
+            "content": "<p>Machine wash cold. Tumble dry low. Do not bleach.<\/p>"
+          }
+        },
+        "shipping": {
+          "type": "shipping",
+          "settings": {
+            "heading": "Shipping & Returns",
+            "content": "<p>Free standard shipping on orders over $150. Returns accepted within 30 days.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "artistic_details",
+        "material",
+        "care",
+        "shipping"
+      ],
+      "settings": {
+        "gallery_type": "scroll",
+        "variant_style": "buttons",
+        "show_vendor": false,
+        "show_dynamic_checkout": false
+      }
     }
   },
   "order": ["main"]
