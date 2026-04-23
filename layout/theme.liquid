@@ -24,6 +24,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Fjalla+One&display=swap" rel="stylesheet">
 
   {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {%- if template == 'product' -%}
+    {{ 'custom-product.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
 </head>
 <body>
 
