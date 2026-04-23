@@ -15,6 +15,7 @@
         "custom_css": [],
         "settings": {
           "message": "FREE SHIPPING ON ORDERS $500+ (US)",
+          "message_2": "FREE WORLDWIDE SHIPPING",
           "bg_color": "#ffffff",
           "text_color": "#171717",
           "bar_height": 48,
@@ -24,13 +25,19 @@
       "header": {
         "type": "header",
         "custom_css": [
-          "/* Agrandir le logo sur PC */.gd-logo-img, .gd-logo-img--svg {height: 100px !important; /* Ajuste cette valeur (ex: 80px, 120px) */ width: auto !important; display: block !important; margin: 0 auto !important;}",
-          "/* Ajustement pour Mobile */@media screen and (max-width: 749px) {.gd-logo-img, .gd-logo-img--svg {height: 60px !important; /* Taille sur téléphone */ width: auto !important; }}",
-          "/* On s'assure que le header laisse de la place au logo agrandi */.header, .site-header {padding-top: 20px !important; padding-bottom: 20px !important;}"
+          "/* Agrandir le logo sur PC */.gd-logo-img,.gd-logo-img--svg {height: 100px !important; /* Ajuste cette valeur (ex: 80px, 120px) */ width: auto !important; display: block !important; margin: 0 auto !important;}",
+          " /* Ajustement pour Mobile */@media screen and (max-width: 749px) {.gd-logo-img, .gd-logo-img--svg {height: 60px !important; /* Taille sur téléphone */ width: auto !important; }}",
+          " /* On s'assure que le header laisse de la place au logo agrandi */.header,.site-header {padding-top: 20px !important; padding-bottom: 20px !important;}"
         ],
         "settings": {
           "logo": "shopify://shop_images/TRUTH._1.png",
-          "menu": "main-menu"
+          "menu": "main-menu",
+          "drawer_tile_1_link": "",
+          "drawer_tile_1_label": "LATEST RELEASES",
+          "drawer_tile_2_link": "",
+          "drawer_tile_2_label": "DISCOVER MORE",
+          "drawer_footer_text": "",
+          "drawer_footer_url": ""
         }
       },
       "footer": {
