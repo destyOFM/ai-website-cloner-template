@@ -1,10 +1,15 @@
 <div class="product-page">
 
-  {%- comment -%}── Gallery ────────────────────────────────────────────────{%- endcomment -%}
+  {%- comment -%}
+  ═══════════════════════════════════════════════════════════════
+    GALLERY — LEFT COLUMN
+  ═══════════════════════════════════════════════════════════════
+  {%- endcomment -%}
   <div class="product-page__gallery product-page__gallery--{{ section.settings.gallery_type }}">
 
     {%- if section.settings.gallery_type == 'scroll' -%}
 
+      {%- comment -%} Vertical stack — all images flush, no thumbnails {%- endcomment -%}
       <div class="product-page__images-stack">
         {%- for image in product.images -%}
           <img
@@ -16,12 +21,13 @@
             height="{{ image.height }}"
           >
         {%- else -%}
-          <div style="aspect-ratio:3/4;background:#f0efed;"></div>
+          <div style="aspect-ratio:4/5;background:#f0efed;width:100%;display:block;"></div>
         {%- endfor -%}
       </div>
 
     {%- else -%}
 
+      {%- comment -%} Slider — single image + arrows + thumbnails {%- endcomment -%}
       <div class="product-page__slider-wrap" id="pd-slider-wrap">
         {%- if product.featured_image -%}
           <img
@@ -57,7 +63,22 @@
     {%- endif -%}
   </div>
 
-  {%- comment -%}── Info ──────────────────────────────────────────────────{%- endcomment -%}
+  {%- comment -%}
+  ═══════════════════════════════════════════════════════════════
+    INFO — RIGHT COLUMN
+    GD layout order:
+      Vendor (optional)
+      Title
+      Price
+      ── divider ──
+      Description (inline, brief — from product.description)
+      Variant selectors (swatches or select)
+      ADD TO CART
+      Buy Now (optional)
+      ── divider ──
+      Accordion blocks
+  ═══════════════════════════════════════════════════════════════
+  {%- endcomment -%}
   <div class="product-page__info">
 
     {%- if section.settings.show_vendor and product.vendor != blank -%}
@@ -74,15 +95,17 @@
       {%- endif -%}
     </p>
 
+    {%- comment -%} Divider 1: after price {%- endcomment -%}
     <hr class="product-page__divider">
 
-    {%- comment -%} Brief inline description — mirrors GD layout {%- endcomment -%}
+    {%- comment -%} Inline description — sits between divider and variants {%- endcomment -%}
     {%- if product.description != blank -%}
       <div class="product-page__description">{{ product.description }}</div>
     {%- endif -%}
 
     {%- form 'product', product, id: 'product-form' -%}
       <div class="product-page__form">
+
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
             <div class="product-page__option">
@@ -91,7 +114,7 @@
               </label>
 
               {%- if section.settings.variant_style == 'buttons' -%}
-                {%- comment -%} Swatch buttons — update hidden select on click {%- endcomment -%}
+                {%- comment -%} Swatch buttons mirror GD size selector {%- endcomment -%}
                 <div class="product-page__swatches" data-option="{{ option.name | escape }}">
                   {%- for value in option.values -%}
                     <button
@@ -102,12 +125,12 @@
                     >{{ value }}</button>
                   {%- endfor -%}
                 </div>
+                {%- comment -%} Hidden select keeps theme.js syncVariant() working {%- endcomment -%}
                 <select
                   id="option-{{ option.position }}"
                   name="options[{{ option.name | escape }}]"
-                  class="product-page__select"
                   aria-hidden="true"
-                  style="display:none"
+                  style="display:none;position:absolute;visibility:hidden;"
                 >
                   {%- for value in option.values -%}
                     <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
@@ -142,11 +165,13 @@
         {%- if section.settings.show_dynamic_checkout -%}
           {{ form | payment_button }}
         {%- endif -%}
+
       </div>
     {%- endform -%}
 
-    {%- comment -%} Accordion blocks {%- endcomment -%}
+    {%- comment -%} Divider 2: before accordion blocks {%- endcomment -%}
     {%- if section.blocks.size > 0 -%}
+      <hr class="product-page__blocks-divider">
       <div class="product-page__blocks">
         {%- for block in section.blocks -%}
           <div class="product-accordion" {{ block.shopify_attributes }}>
@@ -165,7 +190,7 @@
   </div>
 </div>
 
-{%- comment -%}── Mobile fixed ATC bar ─────────────────────────────────────{%- endcomment -%}
+{%- comment -%} Mobile fixed ATC — outside the grid, z-index 50 {%- endcomment -%}
 <div class="product-page__mobile-atc">
   <span class="product-page__mobile-atc-price" id="pd-mobile-price">
     {%- if product.price_varies -%}
@@ -191,6 +216,46 @@
 
 <script>
 (function () {
+  'use strict';
+
+  // ── Set sticky top offset to actual banner height ──────────────────────────
+  // Reads #gd-sticky-banner height (announcement bar + header) so the sticky
+  // info panel sticks exactly below the header, not under it.
+  function setPdHeaderVar() {
+    var banner = document.getElementById('gd-sticky-banner');
+    if (banner) {
+      document.documentElement.style.setProperty(
+        '--pd-header-h',
+        banner.offsetHeight + 'px'
+      );
+    }
+  }
+  setPdHeaderVar();
+  window.addEventListener('resize', setPdHeaderVar);
+
+  // ── Swatch buttons → sync hidden select → fire theme.js syncVariant ───────
+  document.querySelectorAll('.product-page__swatch').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var optName = this.dataset.option;
+      var val     = this.dataset.value;
+
+      // Update hidden select value so theme.js reads the right variant
+      var sel = document.querySelector(
+        '#product-form select[name="options[' + optName + ']"]'
+      );
+      if (sel) {
+        sel.value = val;
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      // Update active swatch UI
+      document.querySelectorAll(
+        '.product-page__swatch[data-option="' + optName + '"]'
+      ).forEach(function (b) { b.classList.remove('is-active'); });
+      this.classList.add('is-active');
+    });
+  });
+
   // ── Product accordion ──────────────────────────────────────────────────────
   document.querySelectorAll('.product-accordion__trigger').forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -203,34 +268,13 @@
     });
   });
 
-  // ── Variant swatch buttons → sync hidden select → trigger theme.js ────────
-  document.querySelectorAll('.product-page__swatch').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var optionName = this.dataset.option;
-      var value      = this.dataset.value;
-
-      // Update hidden select so theme.js syncVariant() reads the right value
-      var select = document.querySelector(
-        '#product-form select[name="options[' + optionName + ']"]'
-      );
-      if (select) {
-        select.value = value;
-        select.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-
-      // Update active swatch
-      document.querySelectorAll(
-        '.product-page__swatch[data-option="' + optionName + '"]'
-      ).forEach(function (b) { b.classList.remove('is-active'); });
-      this.classList.add('is-active');
-    });
-  });
-
   // ── Slider prev / next ─────────────────────────────────────────────────────
   var prevBtn  = document.getElementById('pd-prev');
   var nextBtn  = document.getElementById('pd-next');
   var thumbsEl = document.getElementById('pd-thumbs');
-  var thumbs   = thumbsEl ? Array.from(thumbsEl.querySelectorAll('.product-page__thumbnail')) : [];
+  var thumbs   = thumbsEl
+    ? Array.from(thumbsEl.querySelectorAll('.product-page__thumbnail'))
+    : [];
   var current  = 0;
 
   function goTo(idx) {
@@ -243,12 +287,11 @@
 
   if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); });
   if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); });
-
   thumbs.forEach(function (t, i) {
     t.addEventListener('click', function () { current = i; });
   });
 
-  // ── Mobile ATC — mirror price and state from variant changes ───────────────
+  // ── Mobile ATC bar — mirror price + state from variant changes ─────────────
   var mobileBtn     = document.getElementById('pd-mobile-atc-btn');
   var mobilePriceEl = document.getElementById('pd-mobile-price');
   var desktopPrice  = document.getElementById('product-price');
@@ -277,9 +320,10 @@
       "type": "select",
       "id": "gallery_type",
       "label": "Gallery Layout",
+      "info": "Vertical Scroll stacks all product images. Slider shows one at a time with arrows.",
       "options": [
-        { "value": "scroll", "label": "Vertical Scroll" },
-        { "value": "slider", "label": "Slider" }
+        { "value": "scroll", "label": "Vertical Scroll (Gallery Dept. style)" },
+        { "value": "slider", "label": "Slider with thumbnails" }
       ],
       "default": "scroll"
     },
@@ -288,8 +332,8 @@
       "id": "variant_style",
       "label": "Variant selector style",
       "options": [
-        { "value": "select", "label": "Dropdown" },
-        { "value": "buttons", "label": "Buttons (Gallery Dept. style)" }
+        { "value": "buttons", "label": "Buttons — XS S M L (Gallery Dept. style)" },
+        { "value": "select", "label": "Dropdown" }
       ],
       "default": "buttons"
     },
@@ -303,6 +347,7 @@
       "type": "checkbox",
       "id": "show_dynamic_checkout",
       "label": "Show Buy Now button",
+      "info": "Displays Shopify's dynamic checkout button (Shop Pay, PayPal, etc.) below Add to Cart.",
       "default": false
     }
   ],
@@ -322,7 +367,7 @@
           "type": "richtext",
           "id": "content",
           "label": "Content",
-          "default": "<p>Enter artistic details, fit notes, and design information here.</p>"
+          "default": "<p>Add artistic details, fit notes, and design information here.</p>"
         }
       ]
     },
@@ -360,7 +405,7 @@
           "type": "richtext",
           "id": "content",
           "label": "Content",
-          "default": "<p>Machine wash cold. Tumble dry low. Do not bleach.</p>"
+          "default": "<p>Machine wash cold. Tumble dry low. Do not bleach or dry clean.</p>"
         }
       ]
     },
