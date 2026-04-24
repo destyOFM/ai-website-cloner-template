@@ -47,7 +47,10 @@
         "care",
         "shipping"
       ],
-      "custom_css": [],
+      "custom_css": [
+        ".product-page {display: flex !important; align-items: stretch !important; position: relative !important;}",
+        ".product-page__info {position: sticky !important; top: 50px !important; height: max-content !important; align-self: flex-start !important;}"
+      ],
       "settings": {
         "gallery_type": "scroll",
         "variant_style": "buttons",
