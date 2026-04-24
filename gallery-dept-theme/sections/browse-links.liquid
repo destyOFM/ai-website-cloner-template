@@ -1,0 +1,42 @@
+<div class="browse-links">
+  {%- for block in section.blocks -%}
+    <a href="{{ block.settings.link }}" class="browse-links__link" {{ block.shopify_attributes }}>
+      {{ block.settings.label }}
+    </a>
+  {%- endfor -%}
+</div>
+
+{% schema %}
+{
+  "name": "Browse Links",
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "SHOP"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Browse Links",
+      "blocks": [
+        { "type": "link", "settings": { "label": "LATEST" } },
+        { "type": "link", "settings": { "label": "MEN" } },
+        { "type": "link", "settings": { "label": "WOMEN" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

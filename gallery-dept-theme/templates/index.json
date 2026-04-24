@@ -1,0 +1,138 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero-slideshow",
+      "settings": {
+        "image_desktop": "shopify://shop_images/630692742_17851837527672482_3021513312761141661_n_1.jpg"
+      }
+    },
+    "tops": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "hoodie",
+        "products_limit": 6
+      }
+    },
+    "tops-collections": {
+      "type": "collection-list",
+      "blocks": {
+        "short-sleeve-tees": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "hoodie",
+            "image": "shopify://shop_images/SaveClip.App_626095495_17848495461672482_5089999346426503997_n.jpg",
+            "title": "SHORT SLEEVE TEES",
+            "link": ""
+          }
+        },
+        "sweatshirts": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "title": "SWEATSHIRTS",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "short-sleeve-tees",
+        "sweatshirts"
+      ],
+      "settings": {}
+    },
+    "bottoms": {
+      "type": "featured-collection",
+      "disabled": true,
+      "settings": {
+        "collection": "",
+        "products_limit": 6
+      }
+    },
+    "bottoms-collections": {
+      "type": "collection-list",
+      "blocks": {
+        "bottoms-item": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "title": "BOTTOMS",
+            "link": ""
+          }
+        },
+        "denim-item": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "title": "DENIM",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "bottoms-item",
+        "denim-item"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "more": {
+      "type": "featured-collection",
+      "disabled": true,
+      "settings": {
+        "collection": "",
+        "products_limit": 5
+      }
+    },
+    "browse-links": {
+      "type": "browse-links",
+      "blocks": {
+        "latest": {
+          "type": "link",
+          "settings": {
+            "label": "LATEST",
+            "link": "/collections/new-release"
+          }
+        },
+        "men": {
+          "type": "link",
+          "settings": {
+            "label": "MEN",
+            "link": "/collections/men"
+          }
+        },
+        "women": {
+          "type": "link",
+          "settings": {
+            "label": "WOMEN",
+            "link": "/collections/women"
+          }
+        }
+      },
+      "block_order": [
+        "latest",
+        "men",
+        "women"
+      ],
+      "disabled": true,
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "tops",
+    "tops-collections",
+    "bottoms",
+    "bottoms-collections",
+    "more",
+    "browse-links"
+  ]
+}

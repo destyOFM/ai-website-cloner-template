@@ -138,7 +138,7 @@
                       data-value="{{ value | escape }}"
                       title="{{ value }}"
                       {%- if variant_image -%}
-                        style="background-image:url({{ variant_image | image_url: width: 100, height: 100, crop: 'center' }})"
+                        style="background-image:url('{{ variant_image | img_url: '100x100', crop: 'center' }}')"
                       {%- endif -%}
                     ></button>
                   {%- endfor -%}
@@ -333,69 +333,7 @@
     });
   });
 
-  // ── Variant sync — met à jour input[name="id"], prix, dispo ────
-  function syncVariant() {
-    var variants = window.__variantData || [];
-    var form     = document.getElementById('product-form');
-    if (!form || !variants.length) return;
-
-    // Lit toutes les valeurs sélectionnées depuis les selects cachés
-    var selected = [];
-    form.querySelectorAll('select[name^="options["]').forEach(function (s) {
-      if (s.value) selected.push(s.value);
-    });
-    if (!selected.length) return;
-
-    // Trouve la variante dont les options correspondent exactement
-    var match = null;
-    for (var i = 0; i < variants.length; i++) {
-      var v    = variants[i];
-      var opts = [v.option1, v.option2, v.option3].filter(function (o) { return o != null; });
-      if (opts.length !== selected.length) continue;
-      if (opts.every(function (o, idx) { return o === selected[idx]; })) { match = v; break; }
-    }
-    if (!match) return;
-
-    // 1. Met à jour l'input caché — corrige le variant soumis au panier
-    var idInput = form.querySelector('input[name="id"]');
-    if (idInput) idInput.value = match.id;
-
-    // 2. Met à jour le prix affiché
-    var priceEl = document.getElementById('product-price');
-    if (priceEl && match.price != null) {
-      var formatted = (match.price / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-      priceEl.textContent = formatted;
-    }
-
-    // 3. Badge inventaire
-    var invEl   = document.getElementById('pd-inventory');
-    var invText = document.getElementById('pd-inventory-text');
-    if (invEl) {
-      if (match.inventory_management === 'shopify' && match.inventory_quantity > 0 && match.inventory_quantity <= 5) {
-        invEl.removeAttribute('hidden');
-        if (invText) invText.textContent = 'Only ' + match.inventory_quantity + ' left';
-      } else {
-        invEl.setAttribute('hidden', '');
-      }
-    }
-
-    // 4. État du bouton ATC
-    var available = match.available;
-    var label     = available ? 'Add to Cart' : 'Sold Out';
-    var atcBtn    = form.querySelector('.product-page__add-btn');
-    var mobileBtn = document.getElementById('pd-mobile-atc-btn');
-    [atcBtn, mobileBtn].forEach(function (btn) {
-      if (!btn) return;
-      btn.disabled    = !available;
-      btn.textContent = label;
-    });
-
-    // 5. Met à jour le prix mobile
-    var mobilePriceEl = document.getElementById('pd-mobile-price');
-    if (mobilePriceEl && priceEl) mobilePriceEl.textContent = priceEl.textContent;
-  }
-
-  // Swatches taille → sync select caché + variant
+  // Swatches taille → sync select caché → theme.js syncVariant
   document.querySelectorAll('.product-page__swatch').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var optName = this.dataset.option;
@@ -405,7 +343,6 @@
       document.querySelectorAll('.product-page__swatch[data-option="' + optName + '"]')
         .forEach(function (b) { b.classList.remove('is-active'); });
       this.classList.add('is-active');
-      syncVariant();
     });
   });
 
@@ -419,9 +356,9 @@
       document.querySelectorAll('.product-page__color-swatch[data-option="' + optName + '"]')
         .forEach(function (b) { b.classList.remove('is-active'); });
       this.classList.add('is-active');
+      // Met à jour le label "Color — Tiger Camo"
       var labelSpan = document.querySelector('.option-selected-value[data-option-label="' + optName + '"]');
       if (labelSpan) labelSpan.textContent = val;
-      syncVariant();
     });
   });
 

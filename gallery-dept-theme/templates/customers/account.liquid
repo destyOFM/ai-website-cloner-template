@@ -1,0 +1,23 @@
+<div class="account-page">
+  <h1 class="account-page__title">My Account</h1>
+  <p style="font-family:var(--font-body);font-size:14px;margin-bottom:24px;">
+    Welcome, {{ customer.first_name }}! &nbsp;
+    <a href="/account/logout" class="account-form__link">Log out</a>
+  </p>
+
+  <h2 style="font-family:var(--font-heading);font-size:18px;text-transform:uppercase;margin-bottom:16px;">Order History</h2>
+
+  {%- if customer.orders.size > 0 -%}
+    {%- for order in customer.orders -%}
+      <div style="border-bottom:1px solid var(--gd-black);padding:16px 0;font-family:var(--font-body);font-size:14px;">
+        <strong>{{ order.name }}</strong> &mdash;
+        {{ order.created_at | date: '%B %d, %Y' }} &mdash;
+        {{ order.financial_status | capitalize }} &mdash;
+        {{ order.total_price | money }}
+        &nbsp; <a href="{{ order.customer_url }}" class="account-form__link">View order</a>
+      </div>
+    {%- endfor -%}
+  {%- else -%}
+    <p style="font-family:var(--font-body);font-size:14px;">No orders yet. <a href="/collections/all" class="account-form__link">Start shopping</a></p>
+  {%- endif -%}
+</div>

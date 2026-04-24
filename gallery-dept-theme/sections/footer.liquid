@@ -1,0 +1,57 @@
+<footer class="site-footer">
+  <div class="site-footer__grid">
+    <div class="footer-col">
+      <span class="footer-col__heading">Company</span>
+      <ul class="footer-col__links">
+        <li><a href="/pages/careers" class="footer-col__link">Careers</a></li>
+        <li><a href="/pages/stores" class="footer-col__link">Stores</a></li>
+        <li><a href="/pages/stop-being-racist" class="footer-col__link">STOP BEING RACIST</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <span class="footer-col__heading">Customer</span>
+      <ul class="footer-col__links">
+        <li><a href="/pages/contact" class="footer-col__link">Contact Us</a></li>
+        <li><a href="/pages/shipping-returns" class="footer-col__link">Shipping, Returns &amp; More</a></li>
+        <li><a href="/pages/gift-card-balance" class="footer-col__link">Check Gift Card Balance</a></li>
+        <li><a href="{{ shop.privacy_policy.url }}" class="footer-col__link">Privacy Policy</a></li>
+        <li><a href="/pages/ccpa-notice" class="footer-col__link">CCPA Notice</a></li>
+        <li><a href="/pages/privacy-choices" class="footer-col__link">&#9432; Your Privacy Choices</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <span class="footer-col__heading">Get on the list</span>
+      <p class="footer-col__desc">We'll send you email notifications on events and new releases.</p>
+      {%- form 'customer', id: 'footer-newsletter' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="footer-email-form">
+          <input
+            type="email"
+            name="contact[email]"
+            id="footer-email"
+            placeholder="Your email"
+            class="footer-email-input"
+            autocomplete="email"
+            required
+            aria-label="Email address"
+          >
+          <button type="submit" class="footer-email-btn">Subscribe</button>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+
+  <div class="site-footer__bottom">
+    <span class="footer-copyright">&copy; {{ 'now' | date: '%Y' }} {{ shop.name | upcase }}.</span>
+    <a href="/" class="footer-brand-link">{{ shop.name | upcase }}.</a>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,120 @@
+{% comment %} Scoped styles — driven entirely by Theme Editor settings {% endcomment %}
+<style>
+  #shopify-section-{{ section.id }} .announcement-bar {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    min-height: {{ section.settings.bar_height }}px;
+    font-size: {{ section.settings.font_size }}px;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .announcement-bar {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+  }
+</style>
+
+<div class="announcement-bar">
+
+  {% comment %} ── LEFT: country / currency selector ── {% endcomment %}
+  {% form 'localization', class: 'announcement-bar__locale-form' %}
+    <div class="announcement-bar__locale-wrap">
+      <select
+        name="country_code"
+        class="announcement-bar__locale-select"
+        onchange="this.form.submit()"
+        aria-label="Select country and currency"
+      >
+        {%- for country in localization.available_countries -%}
+          <option
+            value="{{ country.iso_code }}"
+            {%- if country.iso_code == localization.country.iso_code %} selected{%- endif -%}
+          >
+            {{- country.name }} ({{ country.currency.iso_code -}})
+          </option>
+        {%- endfor -%}
+      </select>
+      <svg class="announcement-bar__chevron" width="8" height="5" viewBox="0 0 8 5" fill="none" aria-hidden="true">
+        <path d="M1 1l3 3 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  {% endform %}
+
+  {% comment %} ── CENTER: two stacked announcement lines ── {% endcomment %}
+  <div class="announcement-bar__messages">
+    <p class="announcement-bar__text">{{ section.settings.message }}</p>
+    {%- if section.settings.message_2 != blank -%}
+      <p class="announcement-bar__text">{{ section.settings.message_2 }}</p>
+    {%- endif -%}
+  </div>
+
+  {% comment %} ── RIGHT: spacer (mirrors locale width to keep messages centred) ── {% endcomment %}
+  <div class="announcement-bar__spacer" aria-hidden="true"></div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "First announcement",
+      "default": "FREE SHIPPING ON ORDERS $500+ (US)"
+    },
+    {
+      "type": "text",
+      "id": "message_2",
+      "label": "Second announcement",
+      "default": "FREE WORLDWIDE SHIPPING",
+      "info": "Leave blank to hide the second line."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#171717"
+    },
+    {
+      "type": "header",
+      "content": "Size"
+    },
+    {
+      "type": "range",
+      "id": "bar_height",
+      "label": "Bar height (px)",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size (px)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 13
+    }
+  ],
+  "presets": [
+    { "name": "Announcement Bar" }
+  ]
+}
+{% endschema %}

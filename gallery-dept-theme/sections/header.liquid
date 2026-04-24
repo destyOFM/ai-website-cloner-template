@@ -1,0 +1,298 @@
+<header class="gd-header" role="banner">
+
+  {% assign all_links = section.settings.menu.links %}
+  {% assign mid        = all_links.size | divided_by: 2 %}
+
+  {% comment %} ── DESKTOP LEFT: Search + first half of nav ── {% endcomment %}
+  <div class="gd-header__col gd-header__col--left">
+    <button type="button" class="gd-icon-btn" aria-label="Search">
+      {%- render 'icon-search' -%}
+    </button>
+    {%- for link in all_links limit: mid -%}
+      {%- if link.links.size > 0 -%}
+        <div class="gd-mega-item">
+          <a href="{{ link.url }}" class="gd-nav-link">{{- link.title -}}</a>
+          <div class="gd-mega-dropdown">
+            <div class="gd-mega-dropdown__inner">
+              {%- assign col_break = link.links.size | divided_by: 2 -%}
+              <div class="gd-mega-col">
+                {%- for sublink in link.links limit: col_break -%}
+                  <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
+                {%- endfor -%}
+              </div>
+              <div class="gd-mega-col">
+                {%- for sublink in link.links offset: col_break -%}
+                  <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- else -%}
+        <a href="{{ link.url }}" class="gd-nav-link">{{ link.title }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {% comment %} ── LOGO ── {% endcomment %}
+  <div class="gd-header__col gd-header__col--center">
+    <a href="/" class="gd-logo-link" aria-label="{{ shop.name }}">
+      {%- if section.settings.logo != blank -%}
+        <img
+          src="{{ section.settings.logo | image_url: width: 480 }}"
+          alt="{{ shop.name }}"
+          class="gd-logo-img"
+          loading="eager"
+        >
+      {%- else -%}
+        <img
+          src="{{ 'logo.svg' | asset_url }}"
+          alt="{{ shop.name }}"
+          class="gd-logo-img gd-logo-img--svg"
+          width="65"
+          height="72"
+          loading="eager"
+        >
+      {%- endif -%}
+    </a>
+  </div>
+
+  {% comment %} ── DESKTOP RIGHT: second half of nav + icons ── {% endcomment %}
+  <div class="gd-header__col gd-header__col--right">
+    {%- for link in all_links offset: mid -%}
+      {%- if link.links.size > 0 -%}
+        <div class="gd-mega-item">
+          <a href="{{ link.url }}" class="gd-nav-link">{{- link.title -}}</a>
+          <div class="gd-mega-dropdown gd-mega-dropdown--right">
+            <div class="gd-mega-dropdown__inner">
+              {%- assign col_break = link.links.size | divided_by: 2 -%}
+              <div class="gd-mega-col">
+                {%- for sublink in link.links limit: col_break -%}
+                  <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
+                {%- endfor -%}
+              </div>
+              <div class="gd-mega-col">
+                {%- for sublink in link.links offset: col_break -%}
+                  <a href="{{ sublink.url }}" class="gd-mega-link">{{ sublink.title }}</a>
+                {%- endfor -%}
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- else -%}
+        <a href="{{ link.url }}" class="gd-nav-link">{{ link.title }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+    <div class="gd-header__icons">
+      <button type="button" class="gd-icon-btn" aria-label="Search">
+        {%- render 'icon-search' -%}
+      </button>
+      <a href="{{ routes.account_url }}" class="gd-icon-btn" aria-label="Account">
+        {%- render 'icon-account' -%}
+      </a>
+      <a href="{{ routes.cart_url }}" class="gd-icon-btn gd-cart-btn" aria-label="Cart ({{ cart.item_count }} items)">
+        {%- render 'icon-cart' -%}
+        <span class="gd-cart-count"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  {% comment %} ── MOBILE LEFT: Burger + Search ── {% endcomment %}
+  <div class="gd-header__mobile-left">
+    <button
+      type="button"
+      class="gd-icon-btn gd-hamburger"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="gd-drawer"
+    >
+      <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
+        <line x1="0" y1="1"  x2="22" y2="1"  stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="0" y1="8"  x2="22" y2="8"  stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="0" y1="15" x2="22" y2="15" stroke="#171717" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button type="button" class="gd-icon-btn" aria-label="Search">
+      {%- render 'icon-search' -%}
+    </button>
+  </div>
+
+  {% comment %} ── MOBILE RIGHT: Account + Cart ── {% endcomment %}
+  <div class="gd-header__mobile-right">
+    <a href="{{ routes.account_url }}" class="gd-icon-btn" aria-label="Account">
+      {%- render 'icon-account' -%}
+    </a>
+    <a href="{{ routes.cart_url }}" class="gd-icon-btn gd-cart-btn" aria-label="Cart">
+      {%- render 'icon-cart' -%}
+      <span class="gd-cart-count"{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+    </a>
+  </div>
+
+</header>
+
+{% comment %} ══ MOBILE DRAWER ══ {% endcomment %}
+<div class="gd-drawer-backdrop" id="gd-backdrop" aria-hidden="true"></div>
+
+<nav class="gd-drawer" id="gd-drawer" role="dialog" aria-modal="true" aria-label="Navigation" hidden>
+
+  {% comment %} ── Header: logo centered, X absolute right ── {% endcomment %}
+  <div class="gd-drawer__head">
+    <a href="/" class="gd-drawer__head-logo" aria-label="{{ shop.name }}">
+      {%- if section.settings.logo != blank -%}
+        <img src="{{ section.settings.logo | image_url: width: 240 }}" alt="{{ shop.name }}" class="gd-drawer__logo-img">
+      {%- else -%}
+        <img src="{{ 'logo.svg' | asset_url }}" alt="{{ shop.name }}" class="gd-drawer__logo-img gd-logo-img--svg">
+      {%- endif -%}
+    </a>
+    <button type="button" class="gd-drawer__close" aria-label="Close menu" data-close-drawer>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <line x1="2" y1="2"  x2="18" y2="18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="18" y1="2" x2="2"  y2="18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  {% comment %} ── Scrollable body: nav links + tiles ── {% endcomment %}
+  <div class="gd-drawer__body">
+
+    <ul class="gd-drawer__nav" role="list">
+      {%- for link in all_links -%}
+        <li class="gd-drawer__item">
+          {%- if link.links.size > 0 -%}
+            <button type="button" class="gd-drawer__toggle" aria-expanded="false" data-accordion>
+              <span>{{ link.title }}</span>
+              <svg class="gd-drawer__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+                <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="gd-drawer__sub" hidden>
+              {%- for sublink in link.links -%}
+                <a href="{{ sublink.url }}" class="gd-drawer__sublink">{{ sublink.title }}</a>
+              {%- endfor -%}
+            </div>
+          {%- else -%}
+            <a href="{{ link.url }}" class="gd-drawer__link">{{ link.title }}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {% comment %} ── Two collection tiles ── {% endcomment %}
+    <div class="gd-drawer__tiles">
+      <a href="{{ section.settings.drawer_tile_1_link }}" class="gd-drawer__tile">
+        {%- if section.settings.drawer_tile_1_image != blank -%}
+          <img
+            src="{{ section.settings.drawer_tile_1_image | image_url: width: 400 }}"
+            alt="{{ section.settings.drawer_tile_1_label }}"
+            class="gd-drawer__tile-img"
+            loading="lazy"
+          >
+        {%- else -%}
+          <div class="gd-drawer__tile-placeholder"></div>
+        {%- endif -%}
+        <span class="gd-drawer__tile-label">{{ section.settings.drawer_tile_1_label }}</span>
+      </a>
+      <a href="{{ section.settings.drawer_tile_2_link }}" class="gd-drawer__tile">
+        {%- if section.settings.drawer_tile_2_image != blank -%}
+          <img
+            src="{{ section.settings.drawer_tile_2_image | image_url: width: 400 }}"
+            alt="{{ section.settings.drawer_tile_2_label }}"
+            class="gd-drawer__tile-img"
+            loading="lazy"
+          >
+        {%- else -%}
+          <div class="gd-drawer__tile-placeholder"></div>
+        {%- endif -%}
+        <span class="gd-drawer__tile-label">{{ section.settings.drawer_tile_2_label }}</span>
+      </a>
+    </div>
+
+  </div>
+
+  {% comment %} ── Footer: stores link ── {% endcomment %}
+  {%- if section.settings.drawer_footer_text != blank -%}
+    <div class="gd-drawer__footer">
+      <a href="{{ section.settings.drawer_footer_url }}" class="gd-drawer__footer-link">
+        {{ section.settings.drawer_footer_text }}
+      </a>
+    </div>
+  {%- endif -%}
+
+</nav>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo & Navigation"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Leave blank to use the default SVG logo."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu",
+      "info": "Add sub-links under any item to create a dropdown."
+    },
+    {
+      "type": "header",
+      "content": "Mobile Drawer — Tiles"
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_tile_1_image",
+      "label": "Tile 1 — image"
+    },
+    {
+      "type": "url",
+      "id": "drawer_tile_1_link",
+      "label": "Tile 1 — link URL"
+    },
+    {
+      "type": "text",
+      "id": "drawer_tile_1_label",
+      "label": "Tile 1 — label",
+      "default": "LATEST RELEASES"
+    },
+    {
+      "type": "image_picker",
+      "id": "drawer_tile_2_image",
+      "label": "Tile 2 — image"
+    },
+    {
+      "type": "url",
+      "id": "drawer_tile_2_link",
+      "label": "Tile 2 — link URL"
+    },
+    {
+      "type": "text",
+      "id": "drawer_tile_2_label",
+      "label": "Tile 2 — label",
+      "default": "DISCOVER MORE"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Drawer — Footer"
+    },
+    {
+      "type": "text",
+      "id": "drawer_footer_text",
+      "label": "Footer link text",
+      "default": "STORES",
+      "info": "Leave blank to hide the footer."
+    },
+    {
+      "type": "url",
+      "id": "drawer_footer_url",
+      "label": "Footer link URL"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,74 @@
+<div class="cart-page">
+  <h1 class="cart-page__title">Your Cart</h1>
+
+  {%- if cart.item_count > 0 -%}
+    <form action="/cart" method="post" novalidate>
+
+      {%- for item in cart.items -%}
+        <div class="cart-item">
+          <a href="{{ item.url }}">
+            <img
+              src="{{ item.image | img_url: '200x' }}"
+              alt="{{ item.title | escape }}"
+              class="cart-item__image"
+              loading="lazy"
+            >
+          </a>
+          <div class="cart-item__info">
+            <a href="{{ item.url }}">
+              <p class="cart-item__title">{{ item.product.title | upcase }}</p>
+            </a>
+            {%- unless item.product.has_only_default_variant -%}
+              <p class="cart-item__variant">{{ item.variant.title }}</p>
+            {%- endunless -%}
+            <p class="cart-item__price">{{ item.line_price | money }}</p>
+            <div class="cart-item__qty">
+              <a
+                href="/cart/change?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}"
+                class="cart-item__qty-btn"
+                aria-label="Decrease quantity"
+              >&#8722;</a>
+              <span class="cart-item__qty-count">{{ item.quantity }}</span>
+              <a
+                href="/cart/change?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}"
+                class="cart-item__qty-btn"
+                aria-label="Increase quantity"
+              >+</a>
+            </div>
+            <a
+              href="/cart/change?line={{ forloop.index }}&quantity=0"
+              class="cart-item__remove"
+            >Remove</a>
+          </div>
+        </div>
+      {%- endfor -%}
+
+      <div class="cart-totals">
+        <div class="cart-totals__row cart-totals__row--total">
+          <span>Total</span>
+          <span>{{ cart.total_price | money_with_currency }}</span>
+        </div>
+      </div>
+
+      <div class="cart-actions">
+        <button type="submit" name="checkout" class="cart-checkout-btn">
+          Checkout
+        </button>
+        <a href="/collections/all" class="cart-continue-btn">Continue Shopping</a>
+      </div>
+
+    </form>
+  {%- else -%}
+    <p class="cart-page__empty">
+      Your cart is empty.
+      <a href="/collections/all">Continue shopping</a>
+    </p>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": []
+}
+{% endschema %}

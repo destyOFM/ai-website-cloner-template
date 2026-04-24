@@ -1,0 +1,31 @@
+<div class="account-page">
+  <h1 class="account-page__title">Create Account</h1>
+
+  {%- form 'create_customer' -%}
+    {%- if form.errors -%}
+      <div class="account-form__errors">
+        {{ form.errors | default_errors }}
+      </div>
+    {%- endif -%}
+    <div class="account-form">
+      <div>
+        <label class="account-form__label" for="reg-first-name">First name</label>
+        <input type="text" name="customer[first_name]" id="reg-first-name" class="account-form__input" autocomplete="given-name">
+      </div>
+      <div>
+        <label class="account-form__label" for="reg-last-name">Last name</label>
+        <input type="text" name="customer[last_name]" id="reg-last-name" class="account-form__input" autocomplete="family-name">
+      </div>
+      <div>
+        <label class="account-form__label" for="reg-email">Email</label>
+        <input type="email" name="customer[email]" id="reg-email" class="account-form__input" autocomplete="email" required>
+      </div>
+      <div>
+        <label class="account-form__label" for="reg-password">Password</label>
+        <input type="password" name="customer[password]" id="reg-password" class="account-form__input" autocomplete="new-password" required>
+      </div>
+      <button type="submit" class="account-form__btn">Create Account</button>
+      <a href="/account/login" class="account-form__link">Already have an account?</a>
+    </div>
+  {%- endform -%}
+</div>
