@@ -1,62 +1,43 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
       "type": "main-product",
       "blocks": {
-        "artistic_details": {
-          "type": "artistic_details",
+        "details": {
+          "type": "collapsible_tab",
           "settings": {
             "heading": "Artistic Details",
             "content": "<p>Add artistic details, fit notes, and design information here.</p>"
           }
         },
         "material": {
-          "type": "material",
+          "type": "collapsible_tab",
           "settings": {
             "heading": "Material",
-            "content": "<p>100% Cotton</p>"
-          }
-        },
-        "care": {
-          "type": "care",
-          "settings": {
-            "heading": "Care Instructions",
-            "content": "<p>Machine wash cold. Tumble dry low. Do not bleach.</p>"
+            "content": "<p>100% Cotton. Made in Portugal.</p>"
           }
         },
         "shipping": {
-          "type": "shipping",
+          "type": "collapsible_tab",
           "settings": {
             "heading": "Shipping & Returns",
-            "content": "<p>Free standard shipping on orders over $150. Returns accepted within 30 days.</p>"
+            "content": "<p>Free standard shipping on orders over $500. Returns accepted within 30 days.</p>"
           }
         }
       },
-      "block_order": [
-        "artistic_details",
-        "material",
-        "care",
-        "shipping"
-      ],
-      "custom_css": [],
+      "block_order": ["details", "material", "shipping"],
       "settings": {
-        "gallery_type": "scroll",
+        "media_size": "medium",
+        "media_position": "left",
+        "enable_sticky_info": true,
         "variant_style": "buttons",
         "show_vendor": false,
-        "show_dynamic_checkout": false
+        "show_sku": false,
+        "show_quantity_selector": false,
+        "show_dynamic_checkout": false,
+        "show_share_button": false
       }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main"]
 }

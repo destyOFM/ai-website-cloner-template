@@ -33,6 +33,15 @@
   width: 100%;
 }
 
+/* Taille galerie */
+.pd-layout--small  { grid-template-columns: 40fr 60fr; }
+.pd-layout--medium { grid-template-columns: 1fr 1fr; }
+.pd-layout--large  { grid-template-columns: 60fr 40fr; }
+
+/* Position images à droite */
+.pd-layout--reverse .pd-gallery { order: 2; }
+.pd-layout--reverse .pd-info    { order: 1; }
+
 /* ── Gallery — left column ───────────────────────────────────── */
 
 .pd-gallery {
@@ -63,25 +72,25 @@
   display: none;
 }
 
-/* ── Info panel — right column, sticky ───────────────────────── */
+/* ── Info panel — right column ───────────────────────────────── */
 
 .pd-info {
-  position: sticky;
-  top: var(--header-h);
-  /* z-index sous le header (100) mais au-dessus du contenu de page */
-  z-index: 10;
-  max-height: calc(100vh - var(--header-h));
-  overflow-y: auto;
-  scrollbar-width: none;
   padding: 44px 52px 72px;
   background: var(--pd-white);
   box-sizing: border-box;
   border-left: 1px solid var(--pd-border);
 }
 
-.pd-info::-webkit-scrollbar {
-  display: none;
+/* Sticky activé via paramètre admin */
+.pd-info--sticky {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 10;
+  max-height: calc(100vh - var(--header-h));
+  overflow-y: auto;
+  scrollbar-width: none;
 }
+.pd-info--sticky::-webkit-scrollbar { display: none; }
 
 /* ── Vendor ──────────────────────────────────────────────────── */
 
@@ -265,6 +274,104 @@
   appearance: none;
   cursor: pointer;
   box-sizing: border-box;
+}
+
+/* ── SKU ─────────────────────────────────────────────────────── */
+
+.pd-sku {
+  font-family: var(--pd-font);
+  font-size: 10px;
+  color: var(--pd-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: -16px 0 20px;
+}
+
+/* ── Quantité ────────────────────────────────────────────────── */
+
+.pd-quantity {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--pd-black);
+  width: fit-content;
+  margin-bottom: 14px;
+}
+
+.pd-quantity__btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--pd-font);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--pd-black);
+  transition: background 0.12s;
+  flex-shrink: 0;
+}
+.pd-quantity__btn:hover { background: var(--pd-black); color: var(--pd-white); }
+
+.pd-quantity__input {
+  width: 52px;
+  height: 44px;
+  border: none;
+  border-left: 1px solid var(--pd-black);
+  border-right: 1px solid var(--pd-black);
+  text-align: center;
+  font-family: var(--pd-font);
+  font-size: 13px;
+  color: var(--pd-black);
+  background: var(--pd-white);
+  -moz-appearance: textfield;
+}
+.pd-quantity__input::-webkit-outer-spin-button,
+.pd-quantity__input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+/* ── Bouton de partage ───────────────────────────────────────── */
+
+.pd-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--pd-font);
+  font-size: 10px;
+  color: var(--pd-black);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0;
+  margin: 8px 0 20px;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+.pd-share:hover { opacity: 1; }
+
+/* ── Blocks génériques ───────────────────────────────────────── */
+
+.pd-blocks {
+  margin-top: 4px;
+}
+
+.pd-block-text {
+  font-family: var(--pd-font);
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--pd-black);
+  margin-bottom: 20px;
+}
+.pd-block-text p { margin: 0 0 6px; }
+.pd-block-text p:last-child { margin: 0; }
+
+.pd-separator {
+  border: 0;
+  border-top: 1px solid var(--pd-border);
+  margin: 20px 0;
 }
 
 /* ── Inventory badge ─────────────────────────────────────────── */

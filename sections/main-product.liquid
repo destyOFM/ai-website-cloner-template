@@ -1,12 +1,15 @@
-{%- comment -%} ─────────────────────────────────────────────────────────
-  main-product.liquid — Product Page
-  Layout : CSS Grid 50/50, left scrolls, right sticky (position:sticky)
-  Mobile : single-column, scroll-snap image slider
-────────────────────────────────────────────────────────────── {%- endcomment -%}
+{%- comment -%}
+  main-product.liquid
+  Tous les paramètres sont configurables via l'éditeur de thème Shopify Admin.
+{%- endcomment -%}
 
-<div class="pd-layout">
+{%- assign sticky = section.settings.enable_sticky_info -%}
+{%- assign media_size = section.settings.media_size -%}
+{%- assign media_pos  = section.settings.media_position -%}
 
-  {%- comment -%} ═══ GALLERY — LEFT ═══════════════════════════════════ {%- endcomment -%}
+<div class="pd-layout pd-layout--{{ media_size }}{% if media_pos == 'right' %} pd-layout--reverse{% endif %}">
+
+  {%- comment -%} ═══ GALLERY ═══════════════════════════════════════════ {%- endcomment -%}
   <div class="pd-gallery">
 
     <div class="pd-gallery__images" id="pd-images">
@@ -18,7 +21,7 @@
             {{ image | image_url: width: 750  }} 750w,
             {{ image | image_url: width: 1100 }} 1100w,
             {{ image | image_url: width: 1400 }} 1400w"
-          sizes="(max-width: 767px) 100vw, 50vw"
+          sizes="(max-width: 767px) 100vw, {{ media_size | default: '50' }}vw"
           alt="{{ image.alt | escape }}"
           width="{{ image.width }}"
           height="{{ image.height }}"
@@ -39,25 +42,25 @@
 
   </div>
 
-  {%- comment -%} ═══ INFO — RIGHT (sticky) ══════════════════════════════ {%- endcomment -%}
-  <div class="pd-info">
+  {%- comment -%} ═══ INFO PRODUIT ═══════════════════════════════════════ {%- endcomment -%}
+  <div class="pd-info{% if sticky %} pd-info--sticky{% endif %}">
 
     {%- comment -%} Vendor {%- endcomment -%}
     {%- if section.settings.show_vendor and product.vendor != blank -%}
       <p class="pd-vendor">{{ product.vendor | upcase }}</p>
     {%- endif -%}
 
-    {%- comment -%} Title + Bookmark {%- endcomment -%}
+    {%- comment -%} Titre + Bookmark {%- endcomment -%}
     <div class="pd-info__header">
       <h1 class="pd-title">{{ product.title | upcase }}</h1>
-      <button type="button" class="pd-bookmark" aria-label="Save">
+      <button type="button" class="pd-bookmark" aria-label="Sauvegarder">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"/>
         </svg>
       </button>
     </div>
 
-    {%- comment -%} Price {%- endcomment -%}
+    {%- comment -%} Prix {%- endcomment -%}
     <p class="pd-price" id="pd-price">
       {%- if product.price_varies -%}
         From {{ product.price_min | money }}
@@ -66,22 +69,37 @@
       {%- endif -%}
     </p>
 
-    {%- comment -%} Description {%- endcomment -%}
-    {%- if product.description != blank -%}
-      <div class="pd-description">{{ product.description }}</div>
+    {%- comment -%} SKU {%- endcomment -%}
+    {%- if section.settings.show_sku -%}
+      {%- assign current_variant = product.selected_or_first_available_variant -%}
+      <p class="pd-sku" id="pd-sku">
+        {%- if current_variant.sku != blank -%}
+          SKU: <span id="pd-sku-value">{{ current_variant.sku }}</span>
+        {%- endif -%}
+      </p>
     {%- endif -%}
 
-    {%- comment -%} ── Variants form ─────────────────────────────────── {%- endcomment -%}
+    {%- comment -%} Blocks placés AVANT le formulaire (type: text / separator) {%- endcomment -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'text' and block.settings.position == 'above_form' -%}
+        <div class="pd-block-text" {{ block.shopify_attributes }}>
+          {{ block.settings.content }}
+        </div>
+      {%- elsif block.type == 'separator' and block.settings.position == 'above_form' -%}
+        <hr class="pd-separator" {{ block.shopify_attributes }}>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- comment -%} ── Formulaire variants + ATC ────────────────────────── {%- endcomment -%}
     {%- form 'product', product, id: 'pd-form' -%}
 
       {%- unless product.has_only_default_variant -%}
         {%- for option in product.options_with_values -%}
 
           {%- if option.name == 'Color' or option.name == 'Couleur' or option.name == 'Colour' -%}
-
             <div class="pd-option">
               <div class="pd-option__label">
-                {{ option.name }}
+                {{ option.name }} &mdash;
                 <span class="pd-option__selected" data-option-label="{{ option.name | escape }}">{{ option.selected_value }}</span>
               </div>
               <div class="pd-swatches pd-swatches--color">
@@ -89,10 +107,7 @@
                   {%- assign swatch_img = nil -%}
                   {%- for variant in product.variants -%}
                     {%- if variant.option1 == value or variant.option2 == value or variant.option3 == value -%}
-                      {%- if variant.featured_image -%}
-                        {%- assign swatch_img = variant.featured_image -%}
-                        {%- break -%}
-                      {%- endif -%}
+                      {%- if variant.featured_image -%}{%- assign swatch_img = variant.featured_image -%}{%- break -%}{%- endif -%}
                     {%- endif -%}
                   {%- endfor -%}
                   <button
@@ -101,16 +116,13 @@
                     data-option="{{ option.name | escape }}"
                     data-value="{{ value | escape }}"
                     title="{{ value }}"
-                    {%- if swatch_img -%}
-                      style="background-image:url({{ swatch_img | image_url: width: 80, height: 80, crop: 'center' }})"
-                    {%- endif -%}
+                    {%- if swatch_img -%}style="background-image:url({{ swatch_img | image_url: width: 80, height: 80, crop: 'center' }})"{%- endif -%}
                   ></button>
                 {%- endfor -%}
               </div>
             </div>
 
           {%- else -%}
-
             <div class="pd-option">
               <div class="pd-option__label">{{ option.name }}</div>
               {%- if section.settings.variant_style == 'buttons' -%}
@@ -124,38 +136,28 @@
                     >{{ value }}</button>
                   {%- endfor -%}
                 </div>
-                <select
-                  id="pd-option-{{ option.position }}"
-                  name="options[{{ option.name | escape }}]"
-                  class="pd-select-hidden"
-                  aria-hidden="true"
-                >
+                <select id="pd-option-{{ option.position }}" name="options[{{ option.name | escape }}]" class="pd-select-hidden" aria-hidden="true">
                   {%- for value in option.values -%}
                     <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
                   {%- endfor -%}
                 </select>
               {%- else -%}
-                <select
-                  id="pd-option-{{ option.position }}"
-                  name="options[{{ option.name | escape }}]"
-                  class="pd-select"
-                >
+                <select id="pd-option-{{ option.position }}" name="options[{{ option.name | escape }}]" class="pd-select">
                   {%- for value in option.values -%}
                     <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
                   {%- endfor -%}
                 </select>
               {%- endif -%}
             </div>
-
           {%- endif -%}
-        {%- endfor -%}
 
+        {%- endfor -%}
         <input type="hidden" name="id" id="pd-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
       {%- else -%}
         <input type="hidden" name="id" id="pd-variant-id" value="{{ product.variants[0].id }}">
       {%- endunless -%}
 
-      {%- comment -%} Inventory badge {%- endcomment -%}
+      {%- comment -%} Badge inventaire {%- endcomment -%}
       {%- assign cv = product.selected_or_first_available_variant -%}
       {%- assign show_inv = false -%}
       {%- if cv.inventory_management == 'shopify' and cv.inventory_quantity > 0 and cv.inventory_quantity <= 5 -%}
@@ -165,13 +167,17 @@
         <span id="pd-inventory-text">{% if show_inv %}Only {{ cv.inventory_quantity }} left{% endif %}</span>
       </div>
 
+      {%- comment -%} Sélecteur de quantité {%- endcomment -%}
+      {%- if section.settings.show_quantity_selector -%}
+        <div class="pd-quantity">
+          <button type="button" class="pd-quantity__btn" id="pd-qty-minus" aria-label="Diminuer">−</button>
+          <input type="number" name="quantity" id="pd-quantity" class="pd-quantity__input" value="1" min="1" aria-label="Quantité">
+          <button type="button" class="pd-quantity__btn" id="pd-qty-plus" aria-label="Augmenter">+</button>
+        </div>
+      {%- endif -%}
+
       {%- comment -%} Add to Cart {%- endcomment -%}
-      <button
-        type="submit"
-        class="pd-atc"
-        id="pd-atc"
-        {% unless product.available %}disabled{% endunless %}
-      >
+      <button type="submit" class="pd-atc" id="pd-atc" {% unless product.available %}disabled{% endunless %}>
         {%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
       </button>
 
@@ -181,19 +187,46 @@
 
     {%- endform -%}
 
-    {%- comment -%} ── Accordion blocks ────────────────────────────── {%- endcomment -%}
-    {%- if section.blocks.size > 0 -%}
-      <div class="pd-accordions">
+    {%- comment -%} Bouton de partage {%- endcomment -%}
+    {%- if section.settings.show_share_button -%}
+      <button type="button" class="pd-share" id="pd-share">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185z"/>
+        </svg>
+        Share
+      </button>
+    {%- endif -%}
+
+    {%- comment -%} Blocks (accordéons, textes, séparateurs) {%- endcomment -%}
+    {%- assign has_below_blocks = false -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'collapsible_tab' or block.type == 'text' and block.settings.position != 'above_form' or block.type == 'separator' and block.settings.position != 'above_form' -%}
+        {%- assign has_below_blocks = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if has_below_blocks -%}
+      <div class="pd-blocks">
         {%- for block in section.blocks -%}
-          <div class="pd-accordion" {{ block.shopify_attributes }}>
-            <button type="button" class="pd-accordion__trigger" aria-expanded="false">
-              <span>{{ block.settings.heading }}</span>
-              <span class="pd-accordion__icon" aria-hidden="true">+</span>
-            </button>
-            <div class="pd-accordion__body" hidden>
+
+          {%- if block.type == 'collapsible_tab' -%}
+            <div class="pd-accordion" {{ block.shopify_attributes }}>
+              <button type="button" class="pd-accordion__trigger" aria-expanded="false">
+                <span>{{ block.settings.heading }}</span>
+                <span class="pd-accordion__icon" aria-hidden="true">+</span>
+              </button>
+              <div class="pd-accordion__body" hidden>{{ block.settings.content }}</div>
+            </div>
+
+          {%- elsif block.type == 'text' and block.settings.position != 'above_form' -%}
+            <div class="pd-block-text" {{ block.shopify_attributes }}>
               {{ block.settings.content }}
             </div>
-          </div>
+
+          {%- elsif block.type == 'separator' and block.settings.position != 'above_form' -%}
+            <hr class="pd-separator" {{ block.shopify_attributes }}>
+
+          {%- endif -%}
         {%- endfor -%}
       </div>
     {%- endif -%}
@@ -201,44 +234,31 @@
   </div>
 </div>
 
-{%- comment -%} ═══ MOBILE STICKY ATC BAR ════════════════════════════ {%- endcomment -%}
+{%- comment -%} ═══ BARRE ATC MOBILE ══════════════════════════════════════ {%- endcomment -%}
 <div class="pd-bar" id="pd-bar">
   <span class="pd-bar__price" id="pd-bar-price">
     {%- if product.price_varies -%}From {{ product.price_min | money }}{%- else -%}{{ product.price | money }}{%- endif -%}
   </span>
-  <button
-    type="submit"
-    form="pd-form"
-    class="pd-bar__btn"
-    id="pd-bar-btn"
-    {% unless product.available %}disabled{% endunless %}
-  >
+  <button type="submit" form="pd-form" class="pd-bar__btn" id="pd-bar-btn" {% unless product.available %}disabled{% endunless %}>
     {%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
   </button>
 </div>
 
-<script>
-  window.__variantData = {{ product.variants | json }};
-</script>
+<script>window.__variantData = {{ product.variants | json }};</script>
 
 <script>
 (function () {
   'use strict';
 
-  // ── Header height → CSS var used by sticky panel ─────────────
+  // ── Header height ─────────────────────────────────────────────
   function setHeaderVar() {
     var b = document.getElementById('gd-sticky-banner');
-    if (b && b.offsetHeight > 0) {
+    if (b && b.offsetHeight > 0)
       document.documentElement.style.setProperty('--header-h', b.offsetHeight + 'px');
-    }
   }
   setHeaderVar();
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setHeaderVar);
-  }
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () { setHeaderVar(); });
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setHeaderVar);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(setHeaderVar);
   window.addEventListener('resize', setHeaderVar);
 
   // ── Variant sync ──────────────────────────────────────────────
@@ -248,113 +268,111 @@
     if (!form || !variants.length) return;
 
     var selected = [];
-    form.querySelectorAll('select[name^="options["]').forEach(function (s) {
-      if (s.value) selected.push(s.value);
-    });
+    form.querySelectorAll('select[name^="options["]').forEach(function (s) { if (s.value) selected.push(s.value); });
     if (!selected.length) return;
 
     var match = null;
     for (var i = 0; i < variants.length; i++) {
-      var v    = variants[i];
+      var v = variants[i];
       var opts = [v.option1, v.option2, v.option3].filter(function (o) { return o != null; });
-      if (opts.length !== selected.length) continue;
-      if (opts.every(function (o, idx) { return o === selected[idx]; })) { match = v; break; }
+      if (opts.length === selected.length && opts.every(function (o, idx) { return o === selected[idx]; })) { match = v; break; }
     }
     if (!match) return;
 
-    // 1. Variant ID
-    var idInput = document.getElementById('pd-variant-id');
-    if (idInput) idInput.value = match.id;
+    document.getElementById('pd-variant-id').value = match.id;
 
-    // 2. Price
-    var price    = (match.price / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    var priceEl  = document.getElementById('pd-price');
-    var barPrice = document.getElementById('pd-bar-price');
-    if (priceEl)  priceEl.textContent  = price;
-    if (barPrice) barPrice.textContent = price;
+    var price = (match.price / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    ['pd-price', 'pd-bar-price'].forEach(function (id) { var el = document.getElementById(id); if (el) el.textContent = price; });
 
-    // 3. Inventory badge
-    var invEl   = document.getElementById('pd-inventory');
-    var invText = document.getElementById('pd-inventory-text');
+    var skuVal = document.getElementById('pd-sku-value');
+    if (skuVal) skuVal.textContent = match.sku || '';
+
+    var invEl = document.getElementById('pd-inventory'), invTxt = document.getElementById('pd-inventory-text');
     if (invEl) {
-      var low = match.inventory_management === 'shopify'
-             && match.inventory_quantity > 0
-             && match.inventory_quantity <= 5;
+      var low = match.inventory_management === 'shopify' && match.inventory_quantity > 0 && match.inventory_quantity <= 5;
       invEl.toggleAttribute('hidden', !low);
-      if (invText) invText.textContent = low ? 'Only ' + match.inventory_quantity + ' left' : '';
+      if (invTxt) invTxt.textContent = low ? 'Only ' + match.inventory_quantity + ' left' : '';
     }
 
-    // 4. ATC buttons
     var label = match.available ? 'Add to Cart' : 'Sold Out';
-    [document.getElementById('pd-atc'), document.getElementById('pd-bar-btn')].forEach(function (btn) {
+    ['pd-atc', 'pd-bar-btn'].forEach(function (id) {
+      var btn = document.getElementById(id);
       if (!btn) return;
-      btn.disabled    = !match.available;
+      btn.disabled = !match.available;
       btn.textContent = label;
     });
   }
 
-  // ── Swatch clicks ─────────────────────────────────────────────
+  // ── Swatches ──────────────────────────────────────────────────
   document.querySelectorAll('.pd-swatch').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var optName = this.dataset.option;
-      var val     = this.dataset.value;
-
-      var sel = document.querySelector('#pd-form select[name="options[' + optName + ']"]');
+      var opt = this.dataset.option, val = this.dataset.value;
+      var sel = document.querySelector('#pd-form select[name="options[' + opt + ']"]');
       if (sel) { sel.value = val; sel.dispatchEvent(new Event('change', { bubbles: true })); }
-
-      document.querySelectorAll('.pd-swatch[data-option="' + optName + '"]')
-        .forEach(function (b) { b.classList.remove('is-active'); });
+      document.querySelectorAll('.pd-swatch[data-option="' + opt + '"]').forEach(function (b) { b.classList.remove('is-active'); });
       this.classList.add('is-active');
-
-      var valueLabel = document.querySelector('.pd-option__selected[data-option-label="' + optName + '"]');
-      if (valueLabel) valueLabel.textContent = val;
-
+      var lbl = document.querySelector('.pd-option__selected[data-option-label="' + opt + '"]');
+      if (lbl) lbl.textContent = val;
       syncVariant();
     });
   });
 
-  // ── Accordion ─────────────────────────────────────────────────
+  // ── Quantité ──────────────────────────────────────────────────
+  var qtyInput = document.getElementById('pd-quantity');
+  var qtyMinus = document.getElementById('pd-qty-minus');
+  var qtyPlus  = document.getElementById('pd-qty-plus');
+  if (qtyInput) {
+    if (qtyMinus) qtyMinus.addEventListener('click', function () { qtyInput.value = Math.max(1, parseInt(qtyInput.value) - 1); });
+    if (qtyPlus)  qtyPlus.addEventListener('click',  function () { qtyInput.value = parseInt(qtyInput.value) + 1; });
+  }
+
+  // ── Accordéon ─────────────────────────────────────────────────
   document.querySelectorAll('.pd-accordion__trigger').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var el     = this.closest('.pd-accordion');
-      var body   = el.querySelector('.pd-accordion__body');
-      var icon   = this.querySelector('.pd-accordion__icon');
+      var el = this.closest('.pd-accordion'), body = el.querySelector('.pd-accordion__body'), icon = this.querySelector('.pd-accordion__icon');
       var isOpen = el.classList.contains('is-open');
       el.classList.toggle('is-open', !isOpen);
       this.setAttribute('aria-expanded', String(!isOpen));
-      if (body) body.hidden  = isOpen;
+      if (body) body.hidden = isOpen;
       if (icon) icon.textContent = isOpen ? '+' : '−';
     });
   });
 
-  // ── Mobile image slider (scroll-snap + buttons) ───────────────
-  var track   = document.getElementById('pd-images');
-  var prevBtn = document.getElementById('pd-prev');
-  var nextBtn = document.getElementById('pd-next');
-  var countEl = document.getElementById('pd-count');
+  // ── Partage ───────────────────────────────────────────────────
+  var shareBtn = document.getElementById('pd-share');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', function () {
+      if (navigator.share) {
+        navigator.share({ title: document.title, url: window.location.href });
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href).then(function () {
+          var orig = shareBtn.innerHTML;
+          shareBtn.textContent = 'Link copied!';
+          setTimeout(function () { shareBtn.innerHTML = orig; }, 2000);
+        });
+      }
+    });
+  }
 
+  // ── Slider mobile ─────────────────────────────────────────────
+  var track = document.getElementById('pd-images');
   if (track) {
-    var slides  = Array.from(track.querySelectorAll('.pd-gallery__img, .pd-gallery__placeholder'));
-    var current = 0;
-
+    var slides = Array.from(track.querySelectorAll('.pd-gallery__img, .pd-gallery__placeholder'));
+    var current = 0, countEl = document.getElementById('pd-count');
     function goTo(idx) {
       current = Math.max(0, Math.min(idx, slides.length - 1));
       slides[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
       if (countEl) countEl.textContent = (current + 1) + ' / ' + slides.length;
     }
-
-    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); });
-
-    // Sync count on native swipe
+    var prev = document.getElementById('pd-prev'), next = document.getElementById('pd-next');
+    if (prev) prev.addEventListener('click', function () { goTo(current - 1); });
+    if (next) next.addEventListener('click', function () { goTo(current + 1); });
     track.addEventListener('scrollend', function () {
-      var closest = 0;
-      var minDiff = Infinity;
+      var min = Infinity;
       slides.forEach(function (s, i) {
-        var diff = Math.abs(s.getBoundingClientRect().left - track.getBoundingClientRect().left);
-        if (diff < minDiff) { minDiff = diff; closest = i; }
+        var d = Math.abs(s.getBoundingClientRect().left - track.getBoundingClientRect().left);
+        if (d < min) { min = d; current = i; }
       });
-      current = closest;
       if (countEl) countEl.textContent = (current + 1) + ' / ' + slides.length;
     });
   }
@@ -367,14 +385,40 @@
   "name": "Product Page",
   "settings": [
     {
+      "type": "header",
+      "content": "Mise en page"
+    },
+    {
       "type": "select",
-      "id": "variant_style",
-      "label": "Style des variantes taille",
+      "id": "media_size",
+      "label": "Taille de la galerie",
       "options": [
-        { "value": "buttons", "label": "Boutons" },
-        { "value": "select",  "label": "Dropdown" }
+        { "value": "small",  "label": "Petite (40%)" },
+        { "value": "medium", "label": "Moyenne (50%)" },
+        { "value": "large",  "label": "Grande (60%)" }
       ],
-      "default": "buttons"
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Position des images",
+      "options": [
+        { "value": "left",  "label": "Gauche" },
+        { "value": "right", "label": "Droite" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_info",
+      "label": "Fixer le bloc d'infos (sticky)",
+      "info": "Le panneau produit reste visible pendant le scroll des images",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Informations produit"
     },
     {
       "type": "checkbox",
@@ -384,28 +428,104 @@
     },
     {
       "type": "checkbox",
+      "id": "show_sku",
+      "label": "Afficher le SKU",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Variantes"
+    },
+    {
+      "type": "select",
+      "id": "variant_style",
+      "label": "Style des boutons de taille",
+      "options": [
+        { "value": "buttons", "label": "Boutons" },
+        { "value": "select",  "label": "Menu déroulant" }
+      ],
+      "default": "buttons"
+    },
+    {
+      "type": "header",
+      "content": "Achat"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity_selector",
+      "label": "Afficher le sélecteur de quantité",
+      "default": false
+    },
+    {
+      "type": "checkbox",
       "id": "show_dynamic_checkout",
       "label": "Afficher le bouton Buy Now",
+      "info": "Utilise le paiement accéléré Shopify (Apple Pay, Google Pay…)",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share_button",
+      "label": "Afficher le bouton de partage",
+      "default": false
     }
   ],
   "blocks": [
     {
-      "type": "tab",
-      "name": "Accordion block",
+      "type": "collapsible_tab",
+      "name": "Accordéon",
       "settings": [
         { "type": "text",     "id": "heading", "label": "Titre",   "default": "Details" },
-        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Contenu du bloc.</p>" }
+        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Ajoute ton contenu ici.</p>" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Bloc de texte",
+      "settings": [
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Position",
+          "options": [
+            { "value": "above_form",  "label": "Au-dessus du formulaire" },
+            { "value": "below_form",  "label": "En-dessous du formulaire" }
+          ],
+          "default": "below_form"
+        },
+        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Texte libre.</p>" }
+      ]
+    },
+    {
+      "type": "separator",
+      "name": "Séparateur",
+      "settings": [
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Position",
+          "options": [
+            { "value": "above_form",  "label": "Au-dessus du formulaire" },
+            { "value": "below_form",  "label": "En-dessous du formulaire" }
+          ],
+          "default": "below_form"
+        }
       ]
     }
   ],
   "presets": [
     {
       "name": "Product Page",
+      "settings": {
+        "media_size": "medium",
+        "media_position": "left",
+        "enable_sticky_info": true,
+        "show_dynamic_checkout": true
+      },
       "blocks": [
-        { "type": "tab", "settings": { "heading": "Artistic Details" } },
-        { "type": "tab", "settings": { "heading": "Material" } },
-        { "type": "tab", "settings": { "heading": "Shipping & Returns" } }
+        { "type": "collapsible_tab", "settings": { "heading": "Artistic Details" } },
+        { "type": "collapsible_tab", "settings": { "heading": "Material" } },
+        { "type": "collapsible_tab", "settings": { "heading": "Shipping & Returns" } }
       ]
     }
   ]
