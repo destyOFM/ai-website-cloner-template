@@ -1,43 +1,62 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-product",
       "blocks": {
-        "details": {
-          "type": "collapsible_tab",
+        "artistic_details": {
+          "type": "artistic_details",
           "settings": {
             "heading": "Artistic Details",
             "content": "<p>Add artistic details, fit notes, and design information here.</p>"
           }
         },
         "material": {
-          "type": "collapsible_tab",
+          "type": "material",
           "settings": {
             "heading": "Material",
-            "content": "<p>100% Cotton. Made in Portugal.</p>"
+            "content": "<p>100% Cotton</p>"
+          }
+        },
+        "care": {
+          "type": "care",
+          "settings": {
+            "heading": "Care Instructions",
+            "content": "<p>Machine wash cold. Tumble dry low. Do not bleach.</p>"
           }
         },
         "shipping": {
-          "type": "collapsible_tab",
+          "type": "shipping",
           "settings": {
             "heading": "Shipping & Returns",
-            "content": "<p>Free standard shipping on orders over $500. Returns accepted within 30 days.</p>"
+            "content": "<p>Free standard shipping on orders over $150. Returns accepted within 30 days.</p>"
           }
         }
       },
-      "block_order": ["details", "material", "shipping"],
+      "block_order": [
+        "artistic_details",
+        "material",
+        "care",
+        "shipping"
+      ],
+      "custom_css": [],
       "settings": {
-        "media_size": "medium",
-        "media_position": "left",
-        "enable_sticky_info": true,
+        "gallery_type": "scroll",
         "variant_style": "buttons",
         "show_vendor": false,
-        "show_sku": false,
-        "show_quantity_selector": false,
-        "show_dynamic_checkout": false,
-        "show_share_button": false
+        "show_dynamic_checkout": false
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
