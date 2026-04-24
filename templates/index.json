@@ -22,6 +22,13 @@
         "products_limit": 6
       }
     },
+    "more": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "hoodie",
+        "products_limit": 5
+      }
+    },
     "tops-collections": {
       "type": "collection-list",
       "blocks": {
@@ -84,14 +91,6 @@
       "disabled": true,
       "settings": {}
     },
-    "more": {
-      "type": "featured-collection",
-      "disabled": true,
-      "settings": {
-        "collection": "",
-        "products_limit": 5
-      }
-    },
     "browse-links": {
       "type": "browse-links",
       "blocks": {
@@ -129,10 +128,10 @@
   "order": [
     "hero",
     "tops",
+    "more",
     "tops-collections",
     "bottoms",
     "bottoms-collections",
-    "more",
     "browse-links"
   ]
 }
