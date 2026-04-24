@@ -266,6 +266,89 @@
   }
   window.addEventListener('resize', setPdHeaderVar);
 
+  // ── JS Sticky (position:fixed — bypass overflow:hidden ancestors) ──────
+  (function () {
+    var info    = document.querySelector('.product-page__info');
+    var gallery = document.querySelector('.product-page__gallery');
+    if (!info || !gallery) return;
+
+    // Dynamic <style> tag we rewrite on each tick
+    var stickyStyle    = document.createElement('style');
+    stickyStyle.id     = 'pd-sticky-style';
+    document.head.appendChild(stickyStyle);
+
+    var isFixed    = false;
+    var snapLeft   = 0;
+    var snapW      = 0;
+    var snapDocTop = 0;
+
+    function hdrH() {
+      var b = document.getElementById('gd-sticky-banner');
+      return b ? b.offsetHeight : 120;
+    }
+
+    function capture() {
+      info.classList.remove('is-pd-sticky');
+      isFixed = false;
+      var r      = info.getBoundingClientRect();
+      snapLeft   = r.left;
+      snapW      = r.width;
+      snapDocTop = r.top + (window.scrollY || window.pageYOffset);
+    }
+
+    function buildCss(h) {
+      return '.product-page__info.is-pd-sticky{' +
+        'position:fixed!important;' +
+        'top:' + h + 'px!important;' +
+        'left:' + snapLeft + 'px!important;' +
+        'width:' + snapW + 'px!important;' +
+        'max-height:calc(100vh - ' + h + 'px)!important;' +
+        'overflow-y:auto!important;' +
+        'z-index:10!important;' +
+        'box-sizing:border-box!important;' +
+        '}';
+    }
+
+    function tick() {
+      if (window.innerWidth < 768) {
+        info.classList.remove('is-pd-sticky');
+        isFixed = false;
+        return;
+      }
+      var h         = hdrH();
+      var scrollY   = window.scrollY || window.pageYOffset;
+      var infoH     = info.offsetHeight;
+      var galBotAbs = gallery.getBoundingClientRect().bottom + scrollY;
+      var shouldFix = scrollY + h >= snapDocTop && galBotAbs >= scrollY + h + infoH;
+
+      if (shouldFix) {
+        stickyStyle.textContent = buildCss(h);
+        if (!isFixed) { info.classList.add('is-pd-sticky'); isFixed = true; }
+      } else {
+        if (isFixed) { info.classList.remove('is-pd-sticky'); isFixed = false; }
+      }
+    }
+
+    function init() {
+      info.classList.remove('is-pd-sticky');
+      isFixed = false;
+      if (window.innerWidth >= 768) { capture(); tick(); }
+    }
+
+    if (document.readyState === 'complete') { setTimeout(init, 50); }
+    else { window.addEventListener('load', init); }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { init(); });
+    }
+    window.addEventListener('scroll', tick, { passive: true });
+    window.addEventListener('resize', function () {
+      info.classList.remove('is-pd-sticky');
+      isFixed = false;
+      if (window.innerWidth >= 768) { capture(); tick(); }
+    });
+  })();
+  // ────────────────────────────────────────────────────────────────────────
+
   // Accordéon — icône + / −
   document.querySelectorAll('.product-accordion__trigger').forEach(function (btn) {
     btn.addEventListener('click', function () {

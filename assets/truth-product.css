@@ -106,16 +106,18 @@
 
 @media (min-width: 768px) {
   .product-page__info {
-    position: sticky !important;
-    top: var(--pd-header-h, 120px) !important;
-    max-height: calc(100vh - var(--pd-header-h, 120px)) !important;
-    overflow-y: auto !important;
-    scrollbar-width: none !important;
     background: #fff !important;
     border-left: 1px solid #000 !important;
   }
   .product-page__info::-webkit-scrollbar { display: none !important; }
 }
+
+/* Applied by JS sticky — position:fixed bypasses any overflow:hidden ancestor */
+.product-page__info.is-pd-sticky {
+  scrollbar-width: none !important;
+  background: #fff !important;
+}
+.product-page__info.is-pd-sticky::-webkit-scrollbar { display: none !important; }
 
 @media (max-width: 767px) {
   .product-page__info {
