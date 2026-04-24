@@ -39,15 +39,13 @@
 .pd-gallery__img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  object-position: center top;
+  height: auto;
 }
 
 .pd-gallery__placeholder {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  padding-bottom: 125%; /* 4:5 fallback quand aucune image */
   background: #f4f4f4;
 }
 
@@ -400,6 +398,8 @@
   .pd-gallery__img,
   .pd-gallery__placeholder {
     flex: 0 0 100%;
+    width: 100%;
+    height: auto;
     scroll-snap-align: start;
   }
 
