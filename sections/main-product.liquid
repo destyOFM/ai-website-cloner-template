@@ -1,10 +1,9 @@
-<<<<<<< HEAD
 {%- comment -%}
   main-product.liquid
   Tous les paramètres sont configurables via l'éditeur de thème Shopify Admin.
 {%- endcomment -%}
 
-{%- assign sticky = section.settings.enable_sticky_info -%}
+{%- assign sticky     = section.settings.enable_sticky_info -%}
 {%- assign media_size = section.settings.media_size -%}
 {%- assign media_pos  = section.settings.media_position -%}
 
@@ -22,7 +21,7 @@
             {{ image | image_url: width: 750  }} 750w,
             {{ image | image_url: width: 1100 }} 1100w,
             {{ image | image_url: width: 1400 }} 1400w"
-          sizes="(max-width: 767px) 100vw, {{ media_size | default: '50' }}vw"
+          sizes="(max-width: 767px) 100vw, 50vw"
           alt="{{ image.alt | escape }}"
           width="{{ image.width }}"
           height="{{ image.height }}"
@@ -38,173 +37,51 @@
         <button type="button" class="pd-gallery__nav-btn" id="pd-prev" aria-label="Image précédente">&#8592;</button>
         <span class="pd-gallery__nav-count" id="pd-count">1 / {{ product.images.size }}</span>
         <button type="button" class="pd-gallery__nav-btn" id="pd-next" aria-label="Image suivante">&#8594;</button>
-=======
-<style>
-  @media (min-width: 768px) {
-    .product-page__info {
-      position: fixed !important;
-      top: var(--pd-header-h, 120px) !important;
-      left: var(--pd-info-left, 55%) !important;
-      width: var(--pd-info-width, 45%) !important;
-      max-height: calc(100vh - var(--pd-header-h, 120px)) !important;
-      overflow-y: auto !important;
-      scrollbar-width: none !important;
-      z-index: 999 !important;
-      background: #fff !important;
-      box-sizing: border-box !important;
-    }
-    .product-page__info::-webkit-scrollbar { display: none !important; }
-    .product-page::after {
-      content: '' !important;
-      display: block !important;
-      flex: 0 0 45% !important;
-    }
-  }
-  @media (max-width: 767px) {
-    .product-page__info { position: static !important; }
-    .product-page::after { display: none !important; }
-  }
-</style>
-
-<div class="product-page">
-
-  <!-- ═══ GALERIE GAUCHE ═══════════════════════════════════════ -->
-  <div class="product-page__gallery product-page__gallery--{{ section.settings.gallery_type }}">
-
-    {%- if section.settings.gallery_type == 'scroll' -%}
-      <div class="product-page__images-stack">
-        {%- for image in product.images -%}
-          <img
-            src="{{ image | img_url: '1200x' }}"
-            alt="{{ image.alt | escape }}"
-            class="product-page__stack-image"
-            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-            width="{{ image.width }}"
-            height="{{ image.height }}"
-          >
-        {%- else -%}
-          <div style="aspect-ratio:4/5;background:#f0efed;width:100%;display:block;"></div>
-        {%- endfor -%}
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
       </div>
-    {%- else -%}
-      <div class="product-page__slider-wrap" id="pd-slider-wrap">
-        {%- if product.featured_image -%}
-          <img
-            id="product-main-image"
-            src="{{ product.featured_image | img_url: '900x' }}"
-            alt="{{ product.featured_image.alt | escape }}"
-            class="product-page__image"
-            loading="eager"
-          >
-        {%- else -%}
-          <div class="product-page__image" style="background:#f0efed;"></div>
-        {%- endif -%}
-        {%- if product.images.size > 1 -%}
-          <button type="button" class="product-page__slider-btn product-page__slider-btn--prev" id="pd-prev" aria-label="Image précédente">&#8592;</button>
-          <button type="button" class="product-page__slider-btn product-page__slider-btn--next" id="pd-next" aria-label="Image suivante">&#8594;</button>
-        {%- endif -%}
-      </div>
-      {%- if product.images.size > 1 -%}
-        <div class="product-page__thumbnails" id="pd-thumbs">
-          {%- for image in product.images -%}
-            <img
-              src="{{ image | img_url: '200x' }}"
-              alt="{{ image.alt | escape }}"
-              class="product-page__thumbnail{% if forloop.first %} is-active{% endif %}"
-              data-full="{{ image | img_url: '900x' }}"
-              loading="lazy"
-            >
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
     {%- endif -%}
+
   </div>
 
-<<<<<<< HEAD
   {%- comment -%} ═══ INFO PRODUIT ═══════════════════════════════════════ {%- endcomment -%}
   <div class="pd-info{% if sticky %} pd-info--sticky{% endif %}">
 
-    {%- comment -%} Vendor {%- endcomment -%}
     {%- if section.settings.show_vendor and product.vendor != blank -%}
       <p class="pd-vendor">{{ product.vendor | upcase }}</p>
     {%- endif -%}
 
-    {%- comment -%} Titre + Bookmark {%- endcomment -%}
     <div class="pd-info__header">
       <h1 class="pd-title">{{ product.title | upcase }}</h1>
       <button type="button" class="pd-bookmark" aria-label="Sauvegarder">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"/>
-=======
-  <!-- ═══ INFO DROITE ══════════════════════════════════════════ -->
-  <div class="product-page__info">
-
-    <!-- Titre + bookmark -->
-    <div class="product-page__info-header">
-      <h1 class="product-page__title">{{ product.title | upcase }}</h1>
-      <button type="button" class="product-page__bookmark" aria-label="Sauvegarder">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
         </svg>
       </button>
     </div>
 
-<<<<<<< HEAD
-    {%- comment -%} Prix {%- endcomment -%}
     <p class="pd-price" id="pd-price">
-=======
-    <!-- Prix -->
-    <p class="product-page__price" id="product-price">
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
-      {%- if product.price_varies -%}
-        From {{ product.price_min | money }}
-      {%- else -%}
-        {{ product.price | money }}
-      {%- endif -%}
+      {%- if product.price_varies -%}From {{ product.price_min | money }}{%- else -%}{{ product.price | money }}{%- endif -%}
     </p>
 
-<<<<<<< HEAD
-    {%- comment -%} SKU {%- endcomment -%}
     {%- if section.settings.show_sku -%}
-      {%- assign current_variant = product.selected_or_first_available_variant -%}
-      <p class="pd-sku" id="pd-sku">
-        {%- if current_variant.sku != blank -%}
-          SKU: <span id="pd-sku-value">{{ current_variant.sku }}</span>
-        {%- endif -%}
-      </p>
+      {%- assign cv_sku = product.selected_or_first_available_variant -%}
+      {%- if cv_sku.sku != blank -%}
+        <p class="pd-sku">SKU: <span id="pd-sku-value">{{ cv_sku.sku }}</span></p>
+      {%- endif -%}
     {%- endif -%}
 
-    {%- comment -%} Blocks placés AVANT le formulaire (type: text / separator) {%- endcomment -%}
     {%- for block in section.blocks -%}
       {%- if block.type == 'text' and block.settings.position == 'above_form' -%}
-        <div class="pd-block-text" {{ block.shopify_attributes }}>
-          {{ block.settings.content }}
-        </div>
+        <div class="pd-block-text" {{ block.shopify_attributes }}>{{ block.settings.content }}</div>
       {%- elsif block.type == 'separator' and block.settings.position == 'above_form' -%}
         <hr class="pd-separator" {{ block.shopify_attributes }}>
       {%- endif -%}
     {%- endfor -%}
 
-    {%- comment -%} ── Formulaire variants + ATC ────────────────────────── {%- endcomment -%}
     {%- form 'product', product, id: 'pd-form' -%}
-=======
-    <!-- Description inline -->
-    {%- if product.description != blank -%}
-      <div class="product-page__description">{{ product.description }}</div>
-    {%- endif -%}
 
-    <!-- Formulaire variants + ATC -->
-    {%- form 'product', product, id: 'product-form' -%}
-      <div class="product-page__form">
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
+      {%- unless product.has_only_default_variant -%}
+        {%- for option in product.options_with_values -%}
 
-        {%- unless product.has_only_default_variant -%}
-          {%- for option in product.options_with_values -%}
-            <div class="product-page__option">
-
-<<<<<<< HEAD
           {%- if option.name == 'Color' or option.name == 'Couleur' or option.name == 'Colour' -%}
             <div class="pd-option">
               <div class="pd-option__label">
@@ -236,38 +113,15 @@
               <div class="pd-option__label">{{ option.name }}</div>
               {%- if section.settings.variant_style == 'buttons' -%}
                 <div class="pd-swatches pd-swatches--size">
-=======
-              {%- if option.name == 'Color' or option.name == 'Couleur' or option.name == 'Colour' -%}
-                <!-- Label "Color — Tiger Camo" -->
-                <label class="product-page__option-label">
-                  {{ option.name }} &mdash; <span class="option-selected-value" data-option-label="{{ option.name | escape }}">{{ option.selected_value }}</span>
-                </label>
-                <!-- Swatches cercles -->
-                <div class="product-page__color-swatches">
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
                   {%- for value in option.values -%}
-                    {%- assign variant_image = nil -%}
-                    {%- for variant in product.variants -%}
-                      {%- if variant.option1 == value or variant.option2 == value or variant.option3 == value -%}
-                        {%- if variant.featured_image -%}
-                          {%- assign variant_image = variant.featured_image -%}
-                          {%- break -%}
-                        {%- endif -%}
-                      {%- endif -%}
-                    {%- endfor -%}
                     <button
                       type="button"
-                      class="product-page__color-swatch{% if option.selected_value == value %} is-active{% endif %}"
+                      class="pd-swatch pd-swatch--size{% if option.selected_value == value %} is-active{% endif %}"
                       data-option="{{ option.name | escape }}"
                       data-value="{{ value | escape }}"
-                      title="{{ value }}"
-                      {%- if variant_image -%}
-                        style="background-image:url('{{ variant_image | img_url: '100x100', crop: 'center' }}')"
-                      {%- endif -%}
-                    ></button>
+                    >{{ value }}</button>
                   {%- endfor -%}
                 </div>
-<<<<<<< HEAD
                 <select id="pd-option-{{ option.position }}" name="options[{{ option.name | escape }}]" class="pd-select-hidden" aria-hidden="true">
                   {%- for value in option.values -%}
                     <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
@@ -279,50 +133,8 @@
                     <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
                   {%- endfor -%}
                 </select>
-=======
-              {%- else -%}
-                <!-- Label "Size" -->
-                <label class="product-page__option-label" for="option-{{ option.position }}">
-                  {{ option.name }}
-                </label>
-                <!-- Swatches carrés -->
-                {%- if section.settings.variant_style == 'buttons' -%}
-                  <div class="product-page__swatches">
-                    {%- for value in option.values -%}
-                      <button
-                        type="button"
-                        class="product-page__swatch{% if option.selected_value == value %} is-active{% endif %}"
-                        data-option="{{ option.name | escape }}"
-                        data-value="{{ value | escape }}"
-                      >{{ value }}</button>
-                    {%- endfor -%}
-                  </div>
-                  <select
-                    id="option-{{ option.position }}"
-                    name="options[{{ option.name | escape }}]"
-                    aria-hidden="true"
-                    style="display:none;position:absolute;visibility:hidden;"
-                  >
-                    {%- for value in option.values -%}
-                      <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
-                    {%- endfor -%}
-                  </select>
-                {%- else -%}
-                  <select
-                    id="option-{{ option.position }}"
-                    name="options[{{ option.name | escape }}]"
-                    class="product-page__select"
-                  >
-                    {%- for value in option.values -%}
-                      <option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>
-                    {%- endfor -%}
-                  </select>
-                {%- endif -%}
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
               {%- endif -%}
-
             </div>
-<<<<<<< HEAD
           {%- endif -%}
 
         {%- endfor -%}
@@ -331,7 +143,6 @@
         <input type="hidden" name="id" id="pd-variant-id" value="{{ product.variants[0].id }}">
       {%- endunless -%}
 
-      {%- comment -%} Badge inventaire {%- endcomment -%}
       {%- assign cv = product.selected_or_first_available_variant -%}
       {%- assign show_inv = false -%}
       {%- if cv.inventory_management == 'shopify' and cv.inventory_quantity > 0 and cv.inventory_quantity <= 5 -%}
@@ -341,7 +152,6 @@
         <span id="pd-inventory-text">{% if show_inv %}Only {{ cv.inventory_quantity }} left{% endif %}</span>
       </div>
 
-      {%- comment -%} Sélecteur de quantité {%- endcomment -%}
       {%- if section.settings.show_quantity_selector -%}
         <div class="pd-quantity">
           <button type="button" class="pd-quantity__btn" id="pd-qty-minus" aria-label="Diminuer">−</button>
@@ -350,7 +160,6 @@
         </div>
       {%- endif -%}
 
-      {%- comment -%} Add to Cart {%- endcomment -%}
       <button type="submit" class="pd-atc" id="pd-atc" {% unless product.available %}disabled{% endunless %}>
         {%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
       </button>
@@ -361,7 +170,6 @@
 
     {%- endform -%}
 
-    {%- comment -%} Bouton de partage {%- endcomment -%}
     {%- if section.settings.show_share_button -%}
       <button type="button" class="pd-share" id="pd-share">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -371,18 +179,9 @@
       </button>
     {%- endif -%}
 
-    {%- comment -%} Blocks (accordéons, textes, séparateurs) {%- endcomment -%}
-    {%- assign has_below_blocks = false -%}
-    {%- for block in section.blocks -%}
-      {%- if block.type == 'collapsible_tab' or block.type == 'text' and block.settings.position != 'above_form' or block.type == 'separator' and block.settings.position != 'above_form' -%}
-        {%- assign has_below_blocks = true -%}
-      {%- endif -%}
-    {%- endfor -%}
-
-    {%- if has_below_blocks -%}
+    {%- if section.blocks.size > 0 -%}
       <div class="pd-blocks">
         {%- for block in section.blocks -%}
-
           {%- if block.type == 'collapsible_tab' -%}
             <div class="pd-accordion" {{ block.shopify_attributes }}>
               <button type="button" class="pd-accordion__trigger" aria-expanded="false">
@@ -391,69 +190,10 @@
               </button>
               <div class="pd-accordion__body" hidden>{{ block.settings.content }}</div>
             </div>
-
           {%- elsif block.type == 'text' and block.settings.position != 'above_form' -%}
-            <div class="pd-block-text" {{ block.shopify_attributes }}>
-=======
-          {%- endfor -%}
-          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-        {%- else -%}
-          <input type="hidden" name="id" value="{{ product.variants[0].id }}">
-        {%- endunless -%}
-
-        <!-- Badge inventaire "Only X left" -->
-        {%- assign current_variant = product.selected_or_first_available_variant -%}
-        {%- if current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= 5 -%}
-          <div class="product-page__inventory" id="pd-inventory">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span id="pd-inventory-text">Only {{ current_variant.inventory_quantity }} left</span>
-          </div>
-        {%- else -%}
-          <div class="product-page__inventory" id="pd-inventory" hidden>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span id="pd-inventory-text"></span>
-          </div>
-        {%- endif -%}
-
-        <!-- Bouton Add to Cart -->
-        <button
-          type="submit"
-          class="product-page__add-btn"
-          {% unless product.available %}disabled{% endunless %}
-        >
-          {%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
-        </button>
-
-        <!-- Buy Now (optionnel) -->
-        {%- if section.settings.show_dynamic_checkout -%}
-          {{ form | payment_button }}
-        {%- endif -%}
-
-      </div>
-    {%- endform -%}
-
-    <!-- Accordéon blocks -->
-    {%- if section.blocks.size > 0 -%}
-      <hr class="product-page__blocks-divider">
-      <div class="product-page__blocks">
-        {%- for block in section.blocks -%}
-          <div class="product-accordion" {{ block.shopify_attributes }}>
-            <button type="button" class="product-accordion__trigger" aria-expanded="false">
-              <span>{{ block.settings.heading }}</span>
-              <span class="product-accordion__icon">+</span>
-            </button>
-            <div class="product-accordion__body" hidden>
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
-              {{ block.settings.content }}
-            </div>
-
+            <div class="pd-block-text" {{ block.shopify_attributes }}>{{ block.settings.content }}</div>
           {%- elsif block.type == 'separator' and block.settings.position != 'above_form' -%}
             <hr class="pd-separator" {{ block.shopify_attributes }}>
-
           {%- endif -%}
         {%- endfor -%}
       </div>
@@ -462,27 +202,11 @@
   </div>
 </div>
 
-<<<<<<< HEAD
-{%- comment -%} ═══ BARRE ATC MOBILE ══════════════════════════════════════ {%- endcomment -%}
 <div class="pd-bar" id="pd-bar">
   <span class="pd-bar__price" id="pd-bar-price">
     {%- if product.price_varies -%}From {{ product.price_min | money }}{%- else -%}{{ product.price | money }}{%- endif -%}
   </span>
   <button type="submit" form="pd-form" class="pd-bar__btn" id="pd-bar-btn" {% unless product.available %}disabled{% endunless %}>
-=======
-<!-- Mobile ATC fixe -->
-<div class="product-page__mobile-atc">
-  <span class="product-page__mobile-atc-price" id="pd-mobile-price">
-    {%- if product.price_varies -%}From {{ product.price_min | money }}{%- else -%}{{ product.price | money }}{%- endif -%}
-  </span>
-  <button
-    type="submit"
-    form="product-form"
-    class="product-page__mobile-atc-btn"
-    id="pd-mobile-atc-btn"
-    {% unless product.available %}disabled{% endunless %}
-  >
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
     {%- if product.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
   </button>
 </div>
@@ -493,111 +217,41 @@
 (function () {
   'use strict';
 
-<<<<<<< HEAD
-  // ── Header height ─────────────────────────────────────────────
   function setHeaderVar() {
     var b = document.getElementById('gd-sticky-banner');
-    if (b && b.offsetHeight > 0)
-      document.documentElement.style.setProperty('--header-h', b.offsetHeight + 'px');
+    if (b && b.offsetHeight > 0) document.documentElement.style.setProperty('--header-h', b.offsetHeight + 'px');
   }
   setHeaderVar();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setHeaderVar);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(setHeaderVar);
   window.addEventListener('resize', setHeaderVar);
 
-  // ── Variant sync ──────────────────────────────────────────────
   function syncVariant() {
-    var variants = window.__variantData || [];
-    var form     = document.getElementById('pd-form');
+    var variants = window.__variantData || [], form = document.getElementById('pd-form');
     if (!form || !variants.length) return;
-
     var selected = [];
     form.querySelectorAll('select[name^="options["]').forEach(function (s) { if (s.value) selected.push(s.value); });
     if (!selected.length) return;
-
     var match = null;
     for (var i = 0; i < variants.length; i++) {
-      var v = variants[i];
-      var opts = [v.option1, v.option2, v.option3].filter(function (o) { return o != null; });
+      var v = variants[i], opts = [v.option1, v.option2, v.option3].filter(function (o) { return o != null; });
       if (opts.length === selected.length && opts.every(function (o, idx) { return o === selected[idx]; })) { match = v; break; }
     }
     if (!match) return;
-
-    document.getElementById('pd-variant-id').value = match.id;
-
+    var idEl = document.getElementById('pd-variant-id'); if (idEl) idEl.value = match.id;
     var price = (match.price / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    ['pd-price', 'pd-bar-price'].forEach(function (id) { var el = document.getElementById(id); if (el) el.textContent = price; });
-
-    var skuVal = document.getElementById('pd-sku-value');
-    if (skuVal) skuVal.textContent = match.sku || '';
-
+    ['pd-price','pd-bar-price'].forEach(function (id) { var el = document.getElementById(id); if (el) el.textContent = price; });
+    var skuVal = document.getElementById('pd-sku-value'); if (skuVal) skuVal.textContent = match.sku || '';
     var invEl = document.getElementById('pd-inventory'), invTxt = document.getElementById('pd-inventory-text');
     if (invEl) {
       var low = match.inventory_management === 'shopify' && match.inventory_quantity > 0 && match.inventory_quantity <= 5;
       invEl.toggleAttribute('hidden', !low);
       if (invTxt) invTxt.textContent = low ? 'Only ' + match.inventory_quantity + ' left' : '';
-=======
-  // Sticky offset = hauteur réelle du banner
-  // On attend que le layout soit calculé avant de lire offsetHeight
-  function setPdHeaderVar() {
-    var b = document.getElementById('gd-sticky-banner');
-    if (b && b.offsetHeight > 0) {
-      document.documentElement.style.setProperty('--pd-header-h', b.offsetHeight + 'px');
     }
-  }
-
-  setPdHeaderVar();
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      requestAnimationFrame(setPdHeaderVar);
-    });
-  } else {
-    requestAnimationFrame(setPdHeaderVar);
-  }
-  // Re-measure after web fonts load — Fjalla One / Courier Prime affect banner height
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () { requestAnimationFrame(setPdHeaderVar); });
-  }
-  window.addEventListener('resize', setPdHeaderVar);
-
-  // ── Info panel position — set CSS vars once, CSS position:fixed does the rest
-  (function () {
-    function setPos() {
-      var gallery = document.querySelector('.product-page__gallery');
-      var banner  = document.getElementById('gd-sticky-banner');
-      if (!gallery) return;
-      var r  = gallery.getBoundingClientRect();
-      var cw = document.documentElement.clientWidth;
-      document.documentElement.style.setProperty('--pd-info-left', r.right + 'px');
-      document.documentElement.style.setProperty('--pd-info-width', (cw - r.right) + 'px');
-      if (banner && banner.offsetHeight > 0) {
-        document.documentElement.style.setProperty('--pd-header-h', banner.offsetHeight + 'px');
-      }
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', setPos);
-    } else {
-      setPos();
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
-    }
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(setPos);
-    }
-    window.addEventListener('resize', setPos);
-  })();
-  // ────────────────────────────────────────────────────────────────────────
-
-<<<<<<< HEAD
     var label = match.available ? 'Add to Cart' : 'Sold Out';
-    ['pd-atc', 'pd-bar-btn'].forEach(function (id) {
-      var btn = document.getElementById(id);
-      if (!btn) return;
-      btn.disabled = !match.available;
-      btn.textContent = label;
-    });
+    ['pd-atc','pd-bar-btn'].forEach(function (id) { var btn = document.getElementById(id); if (!btn) return; btn.disabled = !match.available; btn.textContent = label; });
   }
 
-  // ── Swatches ──────────────────────────────────────────────────
   document.querySelectorAll('.pd-swatch').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var opt = this.dataset.option, val = this.dataset.value;
@@ -611,53 +265,37 @@
     });
   });
 
-  // ── Quantité ──────────────────────────────────────────────────
   var qtyInput = document.getElementById('pd-quantity');
-  var qtyMinus = document.getElementById('pd-qty-minus');
-  var qtyPlus  = document.getElementById('pd-qty-plus');
   if (qtyInput) {
-    if (qtyMinus) qtyMinus.addEventListener('click', function () { qtyInput.value = Math.max(1, parseInt(qtyInput.value) - 1); });
-    if (qtyPlus)  qtyPlus.addEventListener('click',  function () { qtyInput.value = parseInt(qtyInput.value) + 1; });
+    var minus = document.getElementById('pd-qty-minus'), plus = document.getElementById('pd-qty-plus');
+    if (minus) minus.addEventListener('click', function () { qtyInput.value = Math.max(1, parseInt(qtyInput.value) - 1); });
+    if (plus)  plus.addEventListener('click',  function () { qtyInput.value = parseInt(qtyInput.value) + 1; });
   }
 
-  // ── Accordéon ─────────────────────────────────────────────────
   document.querySelectorAll('.pd-accordion__trigger').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var el = this.closest('.pd-accordion'), body = el.querySelector('.pd-accordion__body'), icon = this.querySelector('.pd-accordion__icon');
-=======
-  // Accordéon — icône + / −
-  document.querySelectorAll('.product-accordion__trigger').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var el     = this.closest('.product-accordion');
-      var body   = el.querySelector('.product-accordion__body');
-      var icon   = this.querySelector('.product-accordion__icon');
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
-      var isOpen = el.classList.contains('is-open');
-      el.classList.toggle('is-open', !isOpen);
-      this.setAttribute('aria-expanded', String(!isOpen));
-      if (body) body.hidden = isOpen;
-      if (icon) icon.textContent = isOpen ? '+' : '−';
+      var open = el.classList.contains('is-open');
+      el.classList.toggle('is-open', !open);
+      this.setAttribute('aria-expanded', String(!open));
+      if (body) body.hidden = open;
+      if (icon) icon.textContent = open ? '+' : '−';
     });
   });
 
-<<<<<<< HEAD
-  // ── Partage ───────────────────────────────────────────────────
   var shareBtn = document.getElementById('pd-share');
   if (shareBtn) {
     shareBtn.addEventListener('click', function () {
-      if (navigator.share) {
-        navigator.share({ title: document.title, url: window.location.href });
-      } else if (navigator.clipboard) {
+      if (navigator.share) { navigator.share({ title: document.title, url: window.location.href }); }
+      else if (navigator.clipboard) {
         navigator.clipboard.writeText(window.location.href).then(function () {
-          var orig = shareBtn.innerHTML;
-          shareBtn.textContent = 'Link copied!';
+          var orig = shareBtn.innerHTML; shareBtn.textContent = 'Link copied!';
           setTimeout(function () { shareBtn.innerHTML = orig; }, 2000);
         });
       }
     });
   }
 
-  // ── Slider mobile ─────────────────────────────────────────────
   var track = document.getElementById('pd-images');
   if (track) {
     var slides = Array.from(track.querySelectorAll('.pd-gallery__img, .pd-gallery__placeholder'));
@@ -672,75 +310,11 @@
     if (next) next.addEventListener('click', function () { goTo(current + 1); });
     track.addEventListener('scrollend', function () {
       var min = Infinity;
-      slides.forEach(function (s, i) {
-        var d = Math.abs(s.getBoundingClientRect().left - track.getBoundingClientRect().left);
-        if (d < min) { min = d; current = i; }
-      });
+      slides.forEach(function (s, i) { var d = Math.abs(s.getBoundingClientRect().left - track.getBoundingClientRect().left); if (d < min) { min = d; current = i; } });
       if (countEl) countEl.textContent = (current + 1) + ' / ' + slides.length;
-=======
-  // Swatches taille → sync select caché → theme.js syncVariant
-  document.querySelectorAll('.product-page__swatch').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var optName = this.dataset.option;
-      var val     = this.dataset.value;
-      var sel     = document.querySelector('#product-form select[name="options[' + optName + ']"]');
-      if (sel) { sel.value = val; sel.dispatchEvent(new Event('change', { bubbles: true })); }
-      document.querySelectorAll('.product-page__swatch[data-option="' + optName + '"]')
-        .forEach(function (b) { b.classList.remove('is-active'); });
-      this.classList.add('is-active');
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
     });
-  });
-
-  // Swatches couleur → même logique + update label "Color — [value]"
-  document.querySelectorAll('.product-page__color-swatch').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var optName = this.dataset.option;
-      var val     = this.dataset.value;
-      var sel     = document.querySelector('#product-form select[name="options[' + optName + ']"]');
-      if (sel) { sel.value = val; sel.dispatchEvent(new Event('change', { bubbles: true })); }
-      document.querySelectorAll('.product-page__color-swatch[data-option="' + optName + '"]')
-        .forEach(function (b) { b.classList.remove('is-active'); });
-      this.classList.add('is-active');
-      // Met à jour le label "Color — Tiger Camo"
-      var labelSpan = document.querySelector('.option-selected-value[data-option-label="' + optName + '"]');
-      if (labelSpan) labelSpan.textContent = val;
-    });
-  });
-
-  // Slider
-  var prevBtn  = document.getElementById('pd-prev');
-  var nextBtn  = document.getElementById('pd-next');
-  var thumbsEl = document.getElementById('pd-thumbs');
-  var thumbs   = thumbsEl ? Array.from(thumbsEl.querySelectorAll('.product-page__thumbnail')) : [];
-  var current  = 0;
-  function goTo(idx) {
-    if (!thumbs.length) return;
-    current = (idx + thumbs.length) % thumbs.length;
-    var m = document.getElementById('product-main-image');
-    if (m) m.src = thumbs[current].dataset.full || thumbs[current].src;
-    thumbs.forEach(function (t, i) { t.classList.toggle('is-active', i === current); });
   }
-  if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); });
-  if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); });
-  thumbs.forEach(function (t, i) { t.addEventListener('click', function () { current = i; }); });
 
-  // Mobile ATC — sync prix et état
-  var mobileBtn     = document.getElementById('pd-mobile-atc-btn');
-  var mobilePriceEl = document.getElementById('pd-mobile-price');
-  var desktopPrice  = document.getElementById('product-price');
-  var desktopBtn    = document.querySelector('#product-form .product-page__add-btn');
-  if (desktopPrice && mobilePriceEl) {
-    new MutationObserver(function () {
-      mobilePriceEl.textContent = desktopPrice.textContent.trim();
-    }).observe(desktopPrice, { childList: true, subtree: true, characterData: true });
-  }
-  if (desktopBtn && mobileBtn) {
-    new MutationObserver(function () {
-      mobileBtn.disabled    = desktopBtn.disabled;
-      mobileBtn.textContent = desktopBtn.textContent.trim();
-    }).observe(desktopBtn, { attributes: true, childList: true, characterData: true });
-  }
 })();
 </script>
 
@@ -754,30 +328,12 @@
     },
     {
       "type": "select",
-<<<<<<< HEAD
       "id": "media_size",
       "label": "Taille de la galerie",
       "options": [
         { "value": "small",  "label": "Petite (40%)" },
         { "value": "medium", "label": "Moyenne (50%)" },
         { "value": "large",  "label": "Grande (60%)" }
-=======
-      "id": "gallery_type",
-      "label": "Galerie",
-      "options": [
-        { "value": "scroll", "label": "Défilement vertical" },
-        { "value": "slider", "label": "Slider" }
-      ],
-      "default": "scroll"
-    },
-    {
-      "type": "select",
-      "id": "variant_style",
-      "label": "Style des variantes (taille)",
-      "options": [
-        { "value": "buttons", "label": "Boutons XS S M L" },
-        { "value": "select", "label": "Dropdown" }
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
       ],
       "default": "medium"
     },
@@ -842,7 +398,7 @@
       "type": "checkbox",
       "id": "show_dynamic_checkout",
       "label": "Afficher le bouton Buy Now",
-      "info": "Utilise le paiement accéléré Shopify (Apple Pay, Google Pay…)",
+      "info": "Apple Pay, Google Pay, etc.",
       "default": true
     },
     {
@@ -854,7 +410,6 @@
   ],
   "blocks": [
     {
-<<<<<<< HEAD
       "type": "collapsible_tab",
       "name": "Accordéon",
       "settings": [
@@ -871,8 +426,8 @@
           "id": "position",
           "label": "Position",
           "options": [
-            { "value": "above_form",  "label": "Au-dessus du formulaire" },
-            { "value": "below_form",  "label": "En-dessous du formulaire" }
+            { "value": "above_form", "label": "Au-dessus du formulaire" },
+            { "value": "below_form", "label": "En-dessous du formulaire" }
           ],
           "default": "below_form"
         },
@@ -888,55 +443,11 @@
           "id": "position",
           "label": "Position",
           "options": [
-            { "value": "above_form",  "label": "Au-dessus du formulaire" },
-            { "value": "below_form",  "label": "En-dessous du formulaire" }
+            { "value": "above_form", "label": "Au-dessus du formulaire" },
+            { "value": "below_form", "label": "En-dessous du formulaire" }
           ],
           "default": "below_form"
         }
-=======
-      "type": "artistic_details",
-      "name": "Artistic Details",
-      "limit": 1,
-      "settings": [
-        { "type": "text", "id": "heading", "label": "Titre", "default": "Artistic Details" },
-        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Décrivez les détails artistiques du produit ici.</p>" }
-      ]
-    },
-    {
-      "type": "material",
-      "name": "Material",
-      "limit": 1,
-      "settings": [
-        { "type": "text", "id": "heading", "label": "Titre", "default": "Material" },
-        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>100% Cotton</p>" }
-      ]
-    },
-    {
-      "type": "care",
-      "name": "Care Instructions",
-      "limit": 1,
-      "settings": [
-        { "type": "text", "id": "heading", "label": "Titre", "default": "Care Instructions" },
-        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Machine wash cold. Tumble dry low.</p>" }
-      ]
-    },
-    {
-      "type": "shipping",
-      "name": "Shipping & Returns",
-      "limit": 1,
-      "settings": [
-        { "type": "text", "id": "heading", "label": "Titre", "default": "Shipping & Returns" },
-        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>Livraison gratuite à partir de 150$. Retours sous 30 jours.</p>" }
-      ]
-    },
-    {
-      "type": "size_guide",
-      "name": "Size Guide",
-      "limit": 1,
-      "settings": [
-        { "type": "text", "id": "heading", "label": "Titre", "default": "Size Guide" },
-        { "type": "richtext", "id": "content", "label": "Contenu", "default": "<p>XS: Poitrine 86cm / S: 91cm / M: 96cm / L: 101cm / XL: 106cm</p>" }
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
       ]
     }
   ],
@@ -950,15 +461,9 @@
         "show_dynamic_checkout": true
       },
       "blocks": [
-<<<<<<< HEAD
         { "type": "collapsible_tab", "settings": { "heading": "Artistic Details" } },
         { "type": "collapsible_tab", "settings": { "heading": "Material" } },
         { "type": "collapsible_tab", "settings": { "heading": "Shipping & Returns" } }
-=======
-        { "type": "artistic_details" },
-        { "type": "care" },
-        { "type": "shipping" }
->>>>>>> 3150828610ffe247b7f2086165c319538f6257e9
       ]
     }
   ]
