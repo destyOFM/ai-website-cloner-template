@@ -13,12 +13,11 @@
 }
 
 .product-page {
-  display: grid !important;
-  grid-template-columns: 55% 45% !important;
+  display: flex !important;
+  align-items: flex-start !important;
   gap: 0 !important;
   padding: 0 !important;
   margin: 0 !important;
-  align-items: start !important;
   width: 100% !important;
   background: #fff !important;
   box-sizing: border-box !important;
@@ -26,13 +25,15 @@
 
 @media (max-width: 767px) {
   .product-page {
-    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
   }
 }
 
 /* ── Galerie — images flottantes sur fond blanc ─────────────── */
 
 .product-page__gallery {
+  flex: 0 0 55% !important;
+  min-width: 0 !important;
   background: #fff !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -94,9 +95,10 @@
 /* ── Info panel — zéro bordure, whitespace généreux ─────────── */
 
 .product-page__info {
+  flex: 0 0 45% !important;
+  min-width: 0 !important;
   background: #fff !important;
   border: none !important;
-  border-left: none !important;
   padding: 48px 48px 120px !important;
   margin: 0 !important;
   box-sizing: border-box !important;
@@ -105,20 +107,20 @@
 @media (min-width: 768px) {
   .product-page__info {
     position: sticky !important;
-    /* fallback 0px : le header (z-index:100) passe par-dessus visuellement */
-    top: 0 !important;
-    top: var(--pd-header-h, 0px) !important;
-    max-height: calc(100vh - var(--pd-header-h, 0px)) !important;
+    top: var(--pd-header-h, 120px) !important;
+    max-height: calc(100vh - var(--pd-header-h, 120px)) !important;
     overflow-y: auto !important;
     scrollbar-width: none !important;
-    /* fond blanc solide pour couvrir les images lors du scroll */
     background: #fff !important;
+    border-left: 1px solid #000 !important;
   }
   .product-page__info::-webkit-scrollbar { display: none !important; }
 }
 
 @media (max-width: 767px) {
   .product-page__info {
+    flex: 0 0 100% !important;
+    width: 100% !important;
     padding: 28px 24px 110px !important;
     position: static !important;
     border: none !important;
@@ -530,6 +532,11 @@
   }
 
   /* Galerie full-bleed mobile */
+  .product-page__gallery {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+  }
+
   .product-page__stack-image,
   .product-page__image {
     width: 100% !important;

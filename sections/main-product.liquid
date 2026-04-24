@@ -252,7 +252,6 @@
     }
   }
 
-  // Tente immédiatement, puis après le layout complet
   setPdHeaderVar();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
@@ -260,6 +259,10 @@
     });
   } else {
     requestAnimationFrame(setPdHeaderVar);
+  }
+  // Re-measure after web fonts load — Fjalla One / Courier Prime affect banner height
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { requestAnimationFrame(setPdHeaderVar); });
   }
   window.addEventListener('resize', setPdHeaderVar);
 
