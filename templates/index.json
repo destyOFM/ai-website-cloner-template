@@ -15,13 +15,6 @@
         "image_desktop": "shopify://shop_images/630692742_17851837527672482_3021513312761141661_n_1.jpg"
       }
     },
-    "tops": {
-      "type": "featured-collection",
-      "settings": {
-        "collection": "hoodie",
-        "products_limit": 6
-      }
-    },
     "more": {
       "type": "featured-collection",
       "settings": {
@@ -127,7 +120,6 @@
   },
   "order": [
     "hero",
-    "tops",
     "more",
     "tops-collections",
     "bottoms",
