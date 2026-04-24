@@ -293,29 +293,41 @@
   }
   window.addEventListener('resize', setPdHeaderVar);
 
-  // ── Info panel position — set CSS vars once, CSS position:fixed does the rest
+  // ── Info panel: position:fixed via JS setProperty('important') ──────────
+  // Inline !important overrides every CSS rule without exception.
   (function () {
-    function setPos() {
-      var gallery = document.querySelector('.product-page__gallery');
-      var banner  = document.getElementById('gd-sticky-banner');
-      if (!gallery) return;
+    var info    = document.querySelector('.product-page__info');
+    var gallery = document.querySelector('.product-page__gallery');
+    if (!info || !gallery) return;
+
+    function apply() {
+      if (window.innerWidth < 768) {
+        ['position','top','left','width','max-height','overflow-y','z-index'].forEach(function (p) {
+          info.style.removeProperty(p);
+        });
+        return;
+      }
+      var banner = document.getElementById('gd-sticky-banner');
+      var h  = (banner && banner.offsetHeight > 0) ? banner.offsetHeight : 120;
       var r  = gallery.getBoundingClientRect();
       var cw = document.documentElement.clientWidth;
-      document.documentElement.style.setProperty('--pd-info-left', r.right + 'px');
-      document.documentElement.style.setProperty('--pd-info-width', (cw - r.right) + 'px');
-      if (banner && banner.offsetHeight > 0) {
-        document.documentElement.style.setProperty('--pd-header-h', banner.offsetHeight + 'px');
-      }
+      var w  = cw - r.right;
+      info.style.setProperty('position',   'fixed',                      'important');
+      info.style.setProperty('top',        h + 'px',                     'important');
+      info.style.setProperty('left',       r.right + 'px',               'important');
+      info.style.setProperty('width',      w + 'px',                     'important');
+      info.style.setProperty('max-height', 'calc(100vh - ' + h + 'px)', 'important');
+      info.style.setProperty('overflow-y', 'auto',                       'important');
+      info.style.setProperty('z-index',    '9999',                       'important');
     }
+
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', setPos);
+      document.addEventListener('DOMContentLoaded', apply);
     } else {
-      setPos();
+      apply();
     }
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(setPos);
-    }
-    window.addEventListener('resize', setPos);
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(apply); }
+    window.addEventListener('resize', apply);
   })();
   // ────────────────────────────────────────────────────────────────────────
 
