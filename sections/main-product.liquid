@@ -266,86 +266,226 @@
   }
   window.addEventListener('resize', setPdHeaderVar);
 
-  // ── JS Sticky (position:fixed — bypass overflow:hidden ancestors) ──────
+  // ── Sticky info panel (CSS sticky + JS fixed fallback) ────────────────
+  // Strategy:
+  //   1. CSS provides position:sticky as the primary mechanism (fast, GPU).
+  //   2. JS detects whether sticky is actually working (some Shopify
+  //      ancestors have overflow:hidden / contain that breaks sticky).
+  //      If broken, JS switches to position:fixed using a dynamic <style>
+  //      tag and a sibling .pd-info-spacer placeholder to preserve the
+  //      flex slot so the gallery keeps its 55% width and doesn't expand.
+  //   3. Bottom bound: when the gallery's bottom edge reaches the info
+  //      panel's bottom, the panel "releases" and scrolls with the page
+  //      so it never overlaps the footer / following content.
   (function () {
+    var page    = document.querySelector('.product-page');
     var info    = document.querySelector('.product-page__info');
     var gallery = document.querySelector('.product-page__gallery');
-    if (!info || !gallery) return;
+    if (!page || !info || !gallery) return;
 
-    // Dynamic <style> tag we rewrite on each tick
-    var stickyStyle    = document.createElement('style');
-    stickyStyle.id     = 'pd-sticky-style';
-    document.head.appendChild(stickyStyle);
+    // Dynamic <style> appended LAST in <head> so it beats every stylesheet
+    // on cascade order (specificity is already (0,2,0) + !important).
+    var stickyStyle = document.getElementById('pd-sticky-style');
+    if (!stickyStyle) {
+      stickyStyle    = document.createElement('style');
+      stickyStyle.id = 'pd-sticky-style';
+      document.head.appendChild(stickyStyle);
+    }
 
-    var isFixed    = false;
-    var snapLeft   = 0;
-    var snapW      = 0;
-    var snapDocTop = 0;
+    // Placeholder that holds the info panel's flex slot when it goes fixed
+    var spacer = document.querySelector('.pd-info-spacer');
+    if (!spacer) {
+      spacer = document.createElement('div');
+      spacer.className = 'pd-info-spacer';
+      info.parentNode.insertBefore(spacer, info.nextSibling);
+    }
+
+    var isFixed       = false;
+    var useJsFallback = null; // null = unknown, true = need JS, false = CSS works
+    var snapLeft      = 0;
+    var snapWidth     = 0;
+    var snapDocTop    = 0;
+    var rafPending    = false;
 
     function hdrH() {
       var b = document.getElementById('gd-sticky-banner');
-      return b ? b.offsetHeight : 120;
+      return (b && b.offsetHeight > 0) ? b.offsetHeight : 120;
     }
 
-    function capture() {
-      info.classList.remove('is-pd-sticky');
-      isFixed = false;
-      var r      = info.getBoundingClientRect();
-      snapLeft   = r.left;
-      snapW      = r.width;
-      snapDocTop = r.top + (window.scrollY || window.pageYOffset);
+    // Check whether CSS position:sticky actually works for our info panel.
+    // It's broken if any ancestor has overflow:hidden/auto/scroll OR a
+    // contain/transform/filter/perspective that creates a containing block.
+    function detectStickyBroken() {
+      var el = info.parentElement;
+      while (el && el !== document.body && el !== document.documentElement) {
+        var cs = getComputedStyle(el);
+        var ov = cs.overflow + ' ' + cs.overflowX + ' ' + cs.overflowY;
+        if (/hidden|auto|scroll|clip/.test(ov)) return true;
+        if (cs.contain && /(layout|paint|strict|content)/.test(cs.contain)) return true;
+        el = el.parentElement;
+      }
+      return false;
     }
 
-    function buildCss(h) {
-      return '.product-page__info.is-pd-sticky{' +
-        'position:fixed!important;' +
-        'top:' + h + 'px!important;' +
-        'left:' + snapLeft + 'px!important;' +
-        'width:' + snapW + 'px!important;' +
-        'max-height:calc(100vh - ' + h + 'px)!important;' +
-        'overflow-y:auto!important;' +
-        'z-index:10!important;' +
-        'box-sizing:border-box!important;' +
-        '}';
+    function captureBox() {
+      // Temporarily strip JS state so we measure the natural in-flow box
+      var wasFixed = isFixed;
+      if (wasFixed) {
+        info.classList.remove('is-pd-sticky');
+        spacer.style.display = 'none';
+      }
+      var r        = info.getBoundingClientRect();
+      var scrollY  = window.scrollY || window.pageYOffset;
+      snapLeft     = r.left;
+      snapWidth    = r.width;
+      snapDocTop   = r.top + scrollY;
+      // Spacer must reserve the same vertical space the info panel uses.
+      // We reserve 1px; the flex basis (.pd-info-spacer { flex: 0 0 45% })
+      // handles horizontal width. Vertical space isn't actually needed
+      // because flex items don't push siblings vertically — but keeping
+      // a sane min-height avoids layout shift in some edge cases.
+      spacer.style.minHeight = '1px';
+      if (wasFixed) {
+        info.classList.add('is-pd-sticky');
+        spacer.style.display = 'block';
+      }
+    }
+
+    function writeFixedCss(headerH) {
+      // Rebuilt every tick because window resize / scrollbar may shift left.
+      var maxH = 'calc(100vh - ' + headerH + 'px)';
+      stickyStyle.textContent =
+        '.product-page__info.is-pd-sticky{' +
+          'position:fixed!important;' +
+          'top:' + headerH + 'px!important;' +
+          'left:' + snapLeft + 'px!important;' +
+          'right:auto!important;' +
+          'width:' + snapWidth + 'px!important;' +
+          'max-width:' + snapWidth + 'px!important;' +
+          'max-height:' + maxH + '!important;' +
+          'overflow-y:auto!important;' +
+          'z-index:10!important;' +
+          'background:#fff!important;' +
+          'box-sizing:border-box!important;' +
+          'margin:0!important;' +
+        '}' +
+        '.pd-info-spacer{display:block!important;}';
+    }
+
+    function clearFixedCss() {
+      stickyStyle.textContent = '';
+    }
+
+    function setFixed(on) {
+      if (on === isFixed) return;
+      if (on) {
+        info.classList.add('is-pd-sticky');
+        spacer.style.display = 'block';
+      } else {
+        info.classList.remove('is-pd-sticky');
+        spacer.style.display = 'none';
+        clearFixedCss();
+      }
+      isFixed = on;
     }
 
     function tick() {
-      if (window.innerWidth < 768) {
-        info.classList.remove('is-pd-sticky');
-        isFixed = false;
-        return;
-      }
-      var h         = hdrH();
-      var scrollY   = window.scrollY || window.pageYOffset;
-      var infoH     = info.offsetHeight;
-      var galBotAbs = gallery.getBoundingClientRect().bottom + scrollY;
-      var shouldFix = scrollY + h >= snapDocTop && galBotAbs >= scrollY + h + infoH;
+      rafPending = false;
+      if (window.innerWidth < 768) { setFixed(false); return; }
+      // Only manage fixed mode if CSS sticky is broken
+      if (useJsFallback === false) return;
 
-      if (shouldFix) {
-        stickyStyle.textContent = buildCss(h);
-        if (!isFixed) { info.classList.add('is-pd-sticky'); isFixed = true; }
+      var headerH = hdrH();
+      var scrollY = window.scrollY || window.pageYOffset;
+      var infoH   = info.offsetHeight;
+      var galRect = gallery.getBoundingClientRect();
+      var galBotAbs = galRect.bottom + scrollY;
+
+      // Activate when the panel's natural top has scrolled under the header
+      var shouldFix = (scrollY + headerH) >= snapDocTop;
+      // Deactivate when the gallery's bottom would push the panel's bottom
+      // above what we want — release so it scrolls naturally with the page.
+      var galleryEnded = galBotAbs <= (scrollY + headerH + infoH);
+
+      if (shouldFix && !galleryEnded) {
+        writeFixedCss(headerH);
+        setFixed(true);
       } else {
-        if (isFixed) { info.classList.remove('is-pd-sticky'); isFixed = false; }
+        setFixed(false);
       }
+    }
+
+    function scheduleTick() {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(tick);
     }
 
     function init() {
-      info.classList.remove('is-pd-sticky');
-      isFixed = false;
-      if (window.innerWidth >= 768) { capture(); tick(); }
+      setFixed(false);
+      if (window.innerWidth < 768) return;
+
+      // Decide once whether CSS sticky will work
+      if (useJsFallback === null) {
+        // Force a layout / paint then test computed position
+        info.offsetHeight;
+        var pos = getComputedStyle(info).position;
+        // If CSS sticky is supported AND no breaking ancestor, trust CSS
+        var supportsSticky = (pos === 'sticky' || pos === '-webkit-sticky');
+        useJsFallback = !supportsSticky || detectStickyBroken();
+      }
+
+      if (useJsFallback) {
+        captureBox();
+        tick();
+      } else {
+        // CSS sticky is doing the work — make sure spacer is hidden
+        spacer.style.display = 'none';
+        clearFixedCss();
+      }
     }
 
-    if (document.readyState === 'complete') { setTimeout(init, 50); }
-    else { window.addEventListener('load', init); }
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { init(); });
+    function reset() {
+      // Full reset on resize / orientation change / late layout shifts
+      useJsFallback = null;
+      setFixed(false);
+      init();
     }
-    window.addEventListener('scroll', tick, { passive: true });
-    window.addEventListener('resize', function () {
-      info.classList.remove('is-pd-sticky');
-      isFixed = false;
-      if (window.innerWidth >= 768) { capture(); tick(); }
-    });
+
+    // ── Boot sequence ──────────────────────────────────────────────────
+    // Run init ASAP, then re-run after images/fonts to catch layout shifts.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+    window.addEventListener('load', function () { reset(); });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { reset(); });
+    }
+
+    // Re-capture when product images finish loading (they grow the gallery)
+    var galleryImgs = gallery.querySelectorAll('img');
+    var loadedCount = 0;
+    function onImgLoad() {
+      loadedCount++;
+      // Recapture after each image to track the panel's correct snapDocTop.
+      // Only matters for JS fallback path.
+      if (useJsFallback) { captureBox(); scheduleTick(); }
+    }
+    for (var i = 0; i < galleryImgs.length; i++) {
+      var img = galleryImgs[i];
+      if (!img.complete) {
+        img.addEventListener('load',  onImgLoad, { once: true });
+        img.addEventListener('error', onImgLoad, { once: true });
+      } else {
+        loadedCount++;
+      }
+    }
+
+    // Scroll + resize handlers
+    window.addEventListener('scroll', scheduleTick, { passive: true });
+    window.addEventListener('resize', reset);
   })();
   // ────────────────────────────────────────────────────────────────────────
 
