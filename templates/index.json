@@ -51,6 +51,7 @@
     },
     "bottoms": {
       "type": "featured-collection",
+      "disabled": true,
       "settings": {
         "collection": "",
         "products_limit": 6
@@ -80,10 +81,12 @@
         "bottoms-item",
         "denim-item"
       ],
+      "disabled": true,
       "settings": {}
     },
     "more": {
       "type": "featured-collection",
+      "disabled": true,
       "settings": {
         "collection": "",
         "products_limit": 5
@@ -119,6 +122,7 @@
         "men",
         "women"
       ],
+      "disabled": true,
       "settings": {}
     }
   },

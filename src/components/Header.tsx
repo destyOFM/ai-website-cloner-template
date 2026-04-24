@@ -227,8 +227,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
       {/* Full-height slide-in panel */}
       <div
         className="fixed top-0 left-0 h-screen w-[85vw] max-w-[360px] bg-white flex flex-col transition-transform duration-300 ease-in-out"
-        style={{ zIndex: 9999 }}
-        style={{ transform: open ? "translateX(0)" : "translateX(-100%)" }}
+        style={{ zIndex: 9999, transform: open ? "translateX(0)" : "translateX(-100%)" }}
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"

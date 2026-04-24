@@ -293,6 +293,7 @@
   }
   window.addEventListener('resize', setPdHeaderVar);
 
+<<<<<<< HEAD
   // ── Info panel: position:fixed via JS setProperty('important') ──────────
   // Inline !important overrides every CSS rule without exception.
   (function () {
@@ -328,6 +329,30 @@
     }
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(apply); }
     window.addEventListener('resize', apply);
+=======
+  // ── Info panel position — set CSS vars once, CSS position:fixed does the rest
+  (function () {
+    function setPos() {
+      var gallery = document.querySelector('.product-page__gallery');
+      var banner  = document.getElementById('gd-sticky-banner');
+      if (!gallery) return;
+      var r  = gallery.getBoundingClientRect();
+      var cw = document.documentElement.clientWidth;
+      document.documentElement.style.setProperty('--pd-info-left', r.right + 'px');
+      document.documentElement.style.setProperty('--pd-info-width', (cw - r.right) + 'px');
+      if (banner && banner.offsetHeight > 0) {
+        document.documentElement.style.setProperty('--pd-header-h', banner.offsetHeight + 'px');
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setPos);
+    } else {
+      setPos();
+    }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(setPos);
+    }
+    window.addEventListener('resize', setPos);
   })();
   // ────────────────────────────────────────────────────────────────────────
 
