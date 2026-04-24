@@ -1,3 +1,30 @@
+<style>
+  @media (min-width: 768px) {
+    .product-page__info {
+      position: fixed !important;
+      top: var(--pd-header-h, 120px) !important;
+      left: var(--pd-info-left, 55%) !important;
+      width: var(--pd-info-width, 45%) !important;
+      max-height: calc(100vh - var(--pd-header-h, 120px)) !important;
+      overflow-y: auto !important;
+      scrollbar-width: none !important;
+      z-index: 999 !important;
+      background: #fff !important;
+      box-sizing: border-box !important;
+    }
+    .product-page__info::-webkit-scrollbar { display: none !important; }
+    .product-page::after {
+      content: '' !important;
+      display: block !important;
+      flex: 0 0 45% !important;
+    }
+  }
+  @media (max-width: 767px) {
+    .product-page__info { position: static !important; }
+    .product-page::after { display: none !important; }
+  }
+</style>
+
 <div class="product-page">
 
   <!-- ═══ GALERIE GAUCHE ═══════════════════════════════════════ -->
