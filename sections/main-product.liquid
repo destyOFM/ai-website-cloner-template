@@ -425,24 +425,11 @@
       setFixed(false);
       if (window.innerWidth < 768) return;
 
-      // Decide once whether CSS sticky will work
-      if (useJsFallback === null) {
-        // Force a layout / paint then test computed position
-        info.offsetHeight;
-        var pos = getComputedStyle(info).position;
-        // If CSS sticky is supported AND no breaking ancestor, trust CSS
-        var supportsSticky = (pos === 'sticky' || pos === '-webkit-sticky');
-        useJsFallback = !supportsSticky || detectStickyBroken();
-      }
-
-      if (useJsFallback) {
-        captureBox();
-        tick();
-      } else {
-        // CSS sticky is doing the work — make sure spacer is hidden
-        spacer.style.display = 'none';
-        clearFixedCss();
-      }
+      // Always use JS fixed — CSS sticky is not reliable in Shopify
+      // (<body>/<html> overflow:hidden or Shopify core wrappers break it)
+      useJsFallback = true;
+      captureBox();
+      tick();
     }
 
     function reset() {
