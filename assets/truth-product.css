@@ -106,55 +106,26 @@
 
 @media (min-width: 768px) {
   .product-page__info {
-    background: #fff !important;
-    border-left: 1px solid #000 !important;
-  }
-  .product-page__info::-webkit-scrollbar { display: none !important; }
-}
-
-/* ── Sticky info panel ─────────────────────────────────────────
-   Two-layer strategy to defeat any ancestor overflow:hidden / contain
-   - Layer 1 (CSS): position:sticky on desktop. Works if no ancestor
-     has overflow:hidden / contain. Cheap and smooth.
-   - Layer 2 (JS):  if/when JS detects sticky is broken, it switches
-     to position:fixed via the .is-pd-sticky class. The placeholder
-     element (.pd-info-spacer) preserves the flex slot so the gallery
-     keeps its width (45%).                                              */
-
-@media (min-width: 768px) {
-  .product-page__info {
-    position: sticky !important;
+    position: fixed !important;
     top: var(--pd-header-h, 120px) !important;
-    align-self: flex-start !important;
+    left: var(--pd-info-left, 55%) !important;
+    width: var(--pd-info-width, 45%) !important;
     max-height: calc(100vh - var(--pd-header-h, 120px)) !important;
     overflow-y: auto !important;
     scrollbar-width: none !important;
+    z-index: 10 !important;
+    background: #fff !important;
+    box-sizing: border-box !important;
+  }
+  .product-page__info::-webkit-scrollbar { display: none !important; }
+
+  /* Reserve the 45% flex slot the fixed panel vacates */
+  .product-page::after {
+    content: '' !important;
+    display: block !important;
+    flex: 0 0 45% !important;
   }
 }
-
-/* Placeholder that occupies the flex slot while info is fixed.
-   Hidden by default; JS sets display:block + width when activating fixed. */
-.pd-info-spacer {
-  display: none;
-  flex: 0 0 45% !important;
-  min-width: 0 !important;
-  align-self: stretch !important;
-}
-
-/* JS-driven fixed mode — bypasses overflow:hidden / contain ancestors.
-   Coordinates (top/left/width/max-height) are written by JS into a
-   dynamic <style id="pd-sticky-style"> appended to <head> last. */
-.product-page__info.is-pd-sticky {
-  position: fixed !important;
-  /* position:sticky must be overridden when fixed kicks in */
-  top: var(--pd-header-h, 120px) !important;
-  z-index: 10 !important;
-  background: #fff !important;
-  scrollbar-width: none !important;
-  box-sizing: border-box !important;
-  overflow-y: auto !important;
-}
-.product-page__info.is-pd-sticky::-webkit-scrollbar { display: none !important; }
 
 @media (max-width: 767px) {
   .product-page__info {
